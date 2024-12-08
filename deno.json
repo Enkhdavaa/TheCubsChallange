@@ -1,0 +1,22 @@
+{
+  "imports": {
+    "@oak/oak": "jsr:@oak/oak@^17.1.3",
+    "bootstrap": "npm:bootstrap@^5.3.3",
+    "lit-html": "npm:lit-html@^3.2.1",
+    "vite": "npm:vite@^5.4.10"
+  },
+  "tasks": {
+    "dev": "deno run -A npm:vite --host",
+    "clean": "rm -rf ./node_modules && rm -rf ./vendor && rm -rf ./.vite && rm -rf ./deno.lock",
+    "serve": "deno run --allow-all ./server.ts",
+    "build": "deno run -A npm:vite build"
+  },
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
+    "noImplicitOverride": true,
+    "strict": true,
+    "useUnknownInCatchVariables": true
+  },
+  "exclude": [".vite"]
+}

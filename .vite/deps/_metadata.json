@@ -1,0 +1,15 @@
+{
+  "hash": "bdbdf160",
+  "configHash": "3d143fbb",
+  "lockfileHash": "e3b0c442",
+  "browserHash": "d0373e16",
+  "optimized": {
+    "@popperjs/core": {
+      "src": "../../node_modules/.deno/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/index.js",
+      "file": "@popperjs_core.js",
+      "fileHash": "232f38b2",
+      "needsInterop": false
+    }
+  },
+  "chunks": {}
+}
