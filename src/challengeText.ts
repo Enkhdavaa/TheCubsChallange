@@ -1,4 +1,4 @@
-export const challange = [
+export const challenge = [
   {
     ch: "asasjdhf kjas dhf kasdf hklas hdflk kljah jkh df klahskdfh klash dfk askdfh kas hdfdf",
     deadline: "2024-12-14",

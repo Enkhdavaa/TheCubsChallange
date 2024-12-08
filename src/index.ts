@@ -1,4 +1,4 @@
-import { challange } from "./challangeText.ts";
+import { challenge } from "./challengeText.ts";
 
 const elements = [];
 
@@ -45,7 +45,7 @@ const todayFormatted = year + "-" + month + "-" + day;
 
 for (const [index, element] of elements.entries()) {
   // Check deadline
-  const deadline = new Date(challange[index].deadline);
+  const deadline = new Date(challenge[index].deadline);
   const currentDay = new Date(todayFormatted);
 
   if (deadline < currentDay) {
@@ -56,7 +56,7 @@ for (const [index, element] of elements.entries()) {
   } else {
     // Make clickable
     element?.addEventListener("click", () => {
-      const challangeText = challange[index].ch;
+      const challangeText = challenge[index].ch;
       if (popover != null) {
         if (popover.hidden) {
           if (popoverText != null) {
