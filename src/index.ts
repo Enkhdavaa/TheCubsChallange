@@ -30,6 +30,7 @@ elements.push(day12Element);
 const popover = document.getElementById("ch-popover");
 const popoverText = document.getElementById("popover-text");
 const popoverButton = document.getElementById("popover-button");
+const popoverTitle = document.getElementById("popover-title");
 
 popoverButton?.addEventListener("click", () => {
   if (popover != null) {
@@ -57,9 +58,11 @@ for (const [index, element] of elements.entries()) {
     // Make clickable
     element?.addEventListener("click", () => {
       const challangeText = challenge[index].ch;
+      const challangeTitle = challenge[index].title;
       if (popover != null) {
         if (popover.hidden) {
-          if (popoverText != null) {
+          if (popoverText != null && popoverTitle != null) {
+            popoverTitle.innerText = challangeTitle;
             popoverText.innerText = challangeText;
             popover.hidden = false;
           }

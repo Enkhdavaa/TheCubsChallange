@@ -1,41 +1,86 @@
 export const challenge = [
   {
-    ch: "asasjdhf kjas dhf kasdf hklas hdflk kljah jkh df klahskdfh klash dfk askdfh kas hdfdf",
+    title: "Scavenger Hunt Run",
+    ch: `Go for a run and find:
+A bench
+Nice lights or Christmas decorations outside
+A red car
+A dog
+Santa or a Christmas tree
+Nice decorated window
+mailbox
+
+Make creative pictures of all your finds! Share it with us!`,
     deadline: "2024-12-14",
   },
   {
-    ch: "as asdf alsd fkjzhxckvh ksjdh f jklhckjvh kashd fkl acjvh kasd f asdfh zkxjch v klzxh df",
+    title: "12 Minutes for Yourself",
+    ch: "Take a 12-minute jog or walk to reflect on your year. Think about achievements and set new goals.",
     deadline: "2024-12-15",
   },
   {
-    ch: "xz asjdhf klzxcjkvh kasjdh f kxh cv haskld fkh cv zxklch vklzjxch v kzx hcvk jhdfh akl hcvz",
-    deadline: "2023-12-16",
+    title: "Seven Strides",
+    ch: `After a 3-5 km warm-up, do 7 strides (100m each) focusing on form and speed. 
+Rest 30-60 seconds between strides. 
+Strides are short bursts of running, done at a controlled but fast pace.
+They are not an all-out sprint but are faster than your normal running pace.`,
+    deadline: "2024-12-16",
   },
   {
-    ch: "we asdjhf klzxc nv euiry fiozdrjfh sd fjh asxkfh asjkhj jkahj jasdfhasjdhfkash asdfrt",
+    title: "Festive 12-Minute HIIT Workout",
+    ch: `Boost your strength with this circuit:
+30 seconds squats
+30 seconds push-ups
+30 seconds plank
+Repeat 4 rounds`,
     deadline: "2024-12-17",
   },
   {
-    ch: "tyxgv lasdh flk jalkdj lkaswd jfkl jxclf jl;asd jfl; ajc;f ja;sldjf;lz jcvlksdhfrkhskdjvh kljxhkljhdf b",
+    title: "Picture Perfect Run",
+    ch: "Go for a run and snap a photo of something festive or beautiful. Share it with us!",
     deadline: "2024-12-18",
   },
   {
-    ch: "er5dklfja sl;kcv jklasd jfl kjxclkvj dlkfjflkrj  l;dc jvx jlej gl; xc;vbj xdjhg skldjfh klj thgx",
+    title: "Playlist Swap",
+    ch: "Share your favorite running playlist with a friend and run to their playlist.",
     deadline: "2024-12-19",
   },
   {
-    ch: "56yhasd fkljas dfkh kdcvh kj fk jadckv hja hfjke fka hv jksdh g kljdh fg kshdclkv hsdkljfh dcgn",
-    deadline: "2024-12-8",
+    title: "Leg Burners Workout",
+    ch: `A quick 10-minute leg-focused workout:
+20 walking lunges
+20 step-ups (use stairs or a stable platform)
+15 jump squats
+Repeat 2-3 rounds`,
+    deadline: "2024-12-20",
   },
   {
-    ch: "76khkasjxcv klerh f uhzdxcvh klsj hgkl jsklcjvh ejrh gisdjh vljkdh vb kljsh gkl jsdhfkljh jfg",
-    deadline: "2024-12-7",
+    title: "Run with a Buddy",
+    ch: "Call a friend and invite them for a run. Take a picture together and share it with us!",
+    deadline: "2024-12-21",
   },
   {
-    ch: "ew5adcvj kc hvkl jsdflkj hsdklcjh xckljv bhklejhg klsjcvh  lksjhgvskljdfh rgsdf",
+    title: "Strength Day – Santa’s Sled Push",
+    ch: `Do this single-leg strength workout:
+15 single-leg squats per side
+15 single-leg glute bridges per side
+10 Bulgarian split squats per side
+Repeat 2 rounds`,
     deadline: "2024-12-22",
   },
-  { ch: "xer3r", deadline: "2024-12-23" },
-  { ch: "zxdfgfu7f", deadline: "2024-12-24" },
-  { ch: "sergts45tg", deadline: "2024-12-25" },
+  {
+    title: "Mariah Carey 16-Minute Endurance Run or Workout",
+    ch: `Run or work out for 16 minutes with "All I Want for Christmas Is You" on repeat.`,
+    deadline: "2024-12-23",
+  },
+  {
+    title: "Going in Hot! 1KM Time Trial",
+    ch: "Try to run a 1 km personal best! Warm up properly beforehand and cool down after.",
+    deadline: "2024-12-24",
+  },
+  {
+    title: "Christmas Card Photo Run",
+    ch: "Run to a spot with festive decorations, take a selfie, and use it as a virtual holiday card. Send it to a friend or share it with us!",
+    deadline: "2024-12-25",
+  },
 ];
