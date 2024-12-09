@@ -1,6 +1,6 @@
 body {
   min-block-size: 100vh;
-  min-block-size: 100dvh;
+  min-block-size: 100svh;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto auto 1fr;
