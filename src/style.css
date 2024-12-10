@@ -1,6 +1,7 @@
 body {
   min-block-size: 100vh;
   min-block-size: 100svh;
+  background-color: #c01a1a;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto auto 1fr;
@@ -12,6 +13,7 @@ body {
 }
 
 .ch-header {
+  background-color: white;
   grid-area: header;
   display: flex;
   justify-content: center;
@@ -25,7 +27,6 @@ body {
 
 .ch-main {
   grid-area: main;
-  background-color: #b12e26;
 }
 
 .challenges {
@@ -42,7 +43,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #b12e26;
   align-items: center;
 }
 
