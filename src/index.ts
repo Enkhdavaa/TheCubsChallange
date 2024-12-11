@@ -49,12 +49,12 @@ for (const [index, element] of elements.entries()) {
   const currentDay = new Date(todayFormatted);
   if (deadline < currentDay) {
     if (element != null) {
-      setSvgDay(element, (index + 1).toString());
+      setOpenedSvg(element, (index + 1).toString());
     }
   } else {
     // Make clickable
     element?.addEventListener("click", () => {
-      setSvgDay(popoverUseElement, (index + 1).toString());
+      setDaySvg(popoverUseElement, (index + 1).toString());
       if (popover != null) {
         if (popover.hidden) {
           popover.hidden = false;
@@ -66,9 +66,17 @@ for (const [index, element] of elements.entries()) {
   }
 }
 
-function setSvgDay(element: HTMLElement | null, index: string) {
+function setDaySvg(element: HTMLElement | null, index: string) {
   const href = popoverUseElement?.getAttribute("href") ?? "";
   const fileName = href.split("#")[0];
   const newHref = fileName + "#day" + index;
+  element?.setAttribute("href", newHref);
+}
+
+function setOpenedSvg(element: HTMLElement | null, index: string) {
+  const href = element?.getAttribute("href") ?? "";
+  const fileName = href.split("#")[0];
+  const newHref = fileName + "#opened" + index;
+  console.log(newHref);
   element?.setAttribute("href", newHref);
 }
