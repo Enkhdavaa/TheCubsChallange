@@ -28,9 +28,8 @@ const day12Element = document.getElementById("day12");
 elements.push(day12Element);
 
 const popover = document.getElementById("ch-popover");
-const popoverText = document.getElementById("popover-text");
 const popoverButton = document.getElementById("popover-button");
-const popoverTitle = document.getElementById("popover-title");
+const popoverUseElement = document.getElementById("ch-use");
 
 popoverButton?.addEventListener("click", () => {
   if (popover != null) {
@@ -48,28 +47,27 @@ for (const [index, element] of elements.entries()) {
   // Check deadline
   const deadline = new Date(challenge[index].deadline);
   const currentDay = new Date(todayFormatted);
-
   if (deadline < currentDay) {
     if (element != null) {
-      element.style.backgroundColor = "red";
-      element.innerHTML = "";
+      setSvgDay(element, (index + 1).toString());
+      console.log("Expired");
     }
   } else {
     // Make clickable
     element?.addEventListener("click", () => {
-      const challangeText = challenge[index].ch;
-      const challangeTitle = challenge[index].title;
+      setSvgDay(popoverUseElement, (index + 1).toString());
       if (popover != null) {
         if (popover.hidden) {
-          if (popoverText != null && popoverTitle != null) {
-            popoverTitle.innerText = challangeTitle;
-            popoverText.innerText = challangeText;
-            popover.hidden = false;
-          }
+          popover.hidden = false;
         } else {
           popover.hidden = true;
         }
       }
     });
   }
+}
+
+function setSvgDay(element: HTMLElement | null, index: string) {
+  const href = "/assets/challenge/svg/day/day.svg#day" + index;
+  element?.setAttribute("href", href);
 }

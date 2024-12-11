@@ -10,6 +10,7 @@
     />
     <link rel="stylesheet" href="./src/style.css" />
     <link rel="prefetch" href="./assets/challenge/svg/challenge.svg" />
+    <link rel="prefetch" href="./assets/challenge/svg/day/day.svg" />
     <script
       type="module"
       src="./node_modules/bootstrap/dist/js/bootstrap.esm.js"
@@ -30,64 +31,64 @@
     </div>
     <main class="ch-main">
       <div class="challenges">
-        <div id="day1">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day1" />
+            <use id="day1" href="/assets/challenge/svg/challenge.svg#day1" />
           </svg>
         </div>
-        <div id="day2">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day2" />
+            <use id="day2" href="/assets/challenge/svg/challenge.svg#day2" />
           </svg>
         </div>
-        <div id="day3">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day3" />
+            <use id="day3" href="/assets/challenge/svg/challenge.svg#day3" />
           </svg>
         </div>
-        <div id="day4">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day4" />
+            <use id="day4" href="/assets/challenge/svg/challenge.svg#day4" />
           </svg>
         </div>
-        <div id="day5">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day5" />
+            <use id="day5" href="/assets/challenge/svg/challenge.svg#day5" />
           </svg>
         </div>
-        <div id="day6">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day6" />
+            <use id="day6" href="/assets/challenge/svg/challenge.svg#day6" />
           </svg>
         </div>
-        <div id="day7">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day7" />
+            <use id="day7" href="/assets/challenge/svg/challenge.svg#day7" />
           </svg>
         </div>
-        <div id="day8">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day8" />
+            <use id="day8" href="/assets/challenge/svg/challenge.svg#day8" />
           </svg>
         </div>
-        <div id="day9">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day9" />
+            <use id="day9" href="/assets/challenge/svg/challenge.svg#day9" />
           </svg>
         </div>
-        <div id="day10">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day10" />
+            <use id="day10" href="/assets/challenge/svg/challenge.svg#day10" />
           </svg>
         </div>
-        <div id="day11">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day11" />
+            <use id="day11" href="/assets/challenge/svg/challenge.svg#day11" />
           </svg>
         </div>
-        <div id="day12">
+        <div>
           <svg width="100%" viewbox="0 0 256 256">
-            <use href="/assets/challenge/svg/challenge.svg#day12" />
+            <use id="day12" href="/assets/challenge/svg/challenge.svg#day12" />
           </svg>
         </div>
       </div>
@@ -98,18 +99,10 @@
         style="object-fit: contain; max-height: 70px; margin: 5px"
       />
     </div>
-    <div popover id="ch-popover" class="popover p-3 ch-popover" hidden>
-      <span
-        id="popover-title"
-        style="
-          display: block;
-          font-size: x-large;
-          color: rgb(21, 213, 21);
-          text-decoration: underline;
-        "
-        >Challenge</span
-      >
-      <span id="popover-text" style="display: block"></span>
+    <div popover id="ch-popover" class="popover ch-popover" hidden>
+      <svg id="ch-svg" class="ch-svg" width="100%" viewbox="0 0 256 256">
+        <use id="ch-use" href="/assets/challenge/svg/day/day.svg#day1" />
+      </svg>
       <button id="popover-button" class="button">Got it!</button>
     </div>
   </body>
