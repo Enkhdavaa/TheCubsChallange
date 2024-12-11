@@ -1,9 +1,9 @@
 export const challenge = [
   {
-    deadline: "2024-12-07",
+    deadline: "2024-12-14",
   },
   {
-    deadline: "2024-12-01",
+    deadline: "2024-12-15",
   },
   {
     deadline: "2024-12-16",
