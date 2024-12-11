@@ -50,7 +50,6 @@ for (const [index, element] of elements.entries()) {
   if (deadline < currentDay) {
     if (element != null) {
       setSvgDay(element, (index + 1).toString());
-      console.log("Expired");
     }
   } else {
     // Make clickable
@@ -68,6 +67,6 @@ for (const [index, element] of elements.entries()) {
 }
 
 function setSvgDay(element: HTMLElement | null, index: string) {
-  const href = "/assets/challenge/svg/day/day.svg#day" + index;
+  const href = "/assets/challenge/svg/day.svg#day" + index;
   element?.setAttribute("href", href);
 }
