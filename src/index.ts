@@ -67,6 +67,8 @@ for (const [index, element] of elements.entries()) {
 }
 
 function setSvgDay(element: HTMLElement | null, index: string) {
-  const href = "/assets/challenge/svg/day.svg#day" + index;
-  element?.setAttribute("href", href);
+  const href = popoverUseElement?.getAttribute("href") ?? "";
+  const fileName = href.split("#")[0];
+  const newHref = fileName + "#day" + index;
+  element?.setAttribute("href", newHref);
 }
