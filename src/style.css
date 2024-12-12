@@ -71,3 +71,7 @@ body {
 .ch-svg {
   border-radius: 10px;
 }
+
+.body-content {
+  filter: blur(0px);
+}

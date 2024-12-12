@@ -27,6 +27,7 @@ elements.push(day11Element);
 const day12Element = document.getElementById("day12");
 elements.push(day12Element);
 
+const content = document.getElementById("body-content")!;
 const popover = document.getElementById("ch-popover");
 const popoverButton = document.getElementById("popover-button");
 const popoverUseElement = document.getElementById("ch-use");
@@ -34,6 +35,7 @@ const popoverUseElement = document.getElementById("ch-use");
 popoverButton?.addEventListener("click", () => {
   if (popover != null) {
     popover.hidden = true;
+    unblurContent();
   }
 });
 
@@ -45,7 +47,7 @@ const todayFormatted = year + "-" + month + "-" + day;
 
 for (const [index, element] of elements.entries()) {
   // Check deadline
-  const openDay = new Date("2024-12-13");
+  const openDay = new Date("2024-12-11");
   const deadline = new Date(challenge[index].deadline);
   const currentDay = new Date(todayFormatted);
   if (element != null) {
@@ -58,8 +60,10 @@ for (const [index, element] of elements.entries()) {
           setDaySvg(popoverUseElement, (index + 1).toString());
           if (popover != null) {
             if (popover.hidden) {
+              blurContent();
               popover.hidden = false;
             } else {
+              unblurContent();
               popover.hidden = true;
             }
           }
@@ -68,6 +72,16 @@ for (const [index, element] of elements.entries()) {
     }
     element.removeAttribute("hidden");
   }
+}
+
+function blurContent() {
+  content.style.filter = "blur(10px)";
+  document.body.style.overflow = "hidden";
+}
+
+function unblurContent() {
+  content.style.filter = "blur(0px)";
+  document.body.style.overflow = "auto";
 }
 
 function setDaySvg(element: HTMLElement | null, index: string) {
