@@ -36,6 +36,7 @@ body {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 10px;
+  padding: 10px;
 }
 
 .ch-footer {
@@ -74,4 +75,22 @@ body {
 
 .body-content {
   filter: blur(0px);
+}
+
+.glow {
+  background-color: #ccc;
+  animation: glow 1s infinite alternate;
+}
+
+.dim {
+  filter: brightness(90%);
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px -10px #aef4af;
+  }
+  to {
+    box-shadow: 0 0 10px 10px #aef4af;
+  }
 }

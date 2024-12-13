@@ -47,15 +47,15 @@ const todayFormatted = year + "-" + month + "-" + day;
 
 for (const [index, element] of elements.entries()) {
   // Check deadline
-  const openDay = new Date("2024-12-13");
   const deadline = new Date(challenge[index].deadline);
   const currentDay = new Date(todayFormatted);
   if (element != null) {
     if (deadline < currentDay) {
       setOpenedSvg(element, (index + 1).toString());
     } else {
-      if (openDay < currentDay) {
+      if (deadline.toDateString() == currentDay.toDateString()) {
         // Make clickable
+        element.parentElement!.classList.add("glow");
         element.addEventListener("click", () => {
           setDaySvg(popoverUseElement, (index + 1).toString());
           if (popover != null) {
@@ -68,6 +68,8 @@ for (const [index, element] of elements.entries()) {
             }
           }
         });
+      } else {
+        element.parentElement!.classList.add("dim");
       }
     }
     element.removeAttribute("hidden");
