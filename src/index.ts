@@ -28,7 +28,7 @@ const day12Element = document.getElementById("day12");
 elements.push(day12Element);
 
 const content = document.getElementById("body-content")!;
-const popover = document.getElementById("ch-popover");
+const popover = document.getElementById("ch-popover-container");
 const popoverButton = document.getElementById("popover-button");
 const popoverUseElement = document.getElementById("ch-use");
 

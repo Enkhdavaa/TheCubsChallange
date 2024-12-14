@@ -4,33 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KerstChallenge</title>
-    <link
-      rel="stylesheet"
-      href="./node_modules/bootstrap/dist/css/bootstrap.css"
-    />
+    <link rel="icon" href="./assets/challenge/cubslogo_christmas.png" />
+    <link rel="stylesheet" href="./lib/style.css" />
     <link rel="stylesheet" href="./src/style.css" />
     <link rel="prefetch" href="./assets/challenge/svg/challenge.svg" />
     <link rel="prefetch" href="./assets/challenge/svg/day.svg" />
-    <script
-      type="module"
-      src="./node_modules/bootstrap/dist/js/bootstrap.esm.js"
-    ></script>
     <script type="module" src="/src/index.ts"></script>
   </head>
   <body>
     <div id="body-content" class="body-content">
-      <header class="ch-header p-2">
+      <div class="ch-header">
         <svg width="250px" viewbox="0 0 393.5 59.86">
           <use href="/assets/challenge/svg/challenge.svg#header" />
         </svg>
-      </header>
+      </div>
       <div class="ch-intro">
         <img
           src="/assets/challenge/img/holiday_challenges.jpg"
           style="max-width: 100%"
         />
       </div>
-      <main class="ch-main">
+      <main>
         <div class="challenges">
           <svg class="ch-svg" width="100%" viewbox="0 0 256 256">
             <use
@@ -125,11 +119,13 @@
         />
       </div>
     </div>
-    <div popover id="ch-popover" class="popover ch-popover" hidden>
-      <svg id="ch-svg" class="ch-svg" width="100%" viewbox="0 0 256 256">
-        <use id="ch-use" href="/assets/challenge/svg/day.svg#day1" />
-      </svg>
-      <button id="popover-button" class="button"><b>Let's go!</b></button>
+    <div id="ch-popover-container" class="ch-popover-container" hidden>
+      <div id="ch-popover" class="ch-popover">
+        <svg id="ch-svg" class="ch-svg" width="100%" viewbox="0 0 256 256">
+          <use id="ch-use" href="/assets/challenge/svg/day.svg#day1" />
+        </svg>
+        <button id="popover-button" class="button"><b>Let's go!</b></button>
+      </div>
     </div>
   </body>
 </html>

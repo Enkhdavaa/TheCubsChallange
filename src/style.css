@@ -2,37 +2,30 @@ body {
   min-block-size: 100vh;
   min-block-size: 100svh;
   background-color: #c01a1a;
+  padding: 0;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto auto auto 1fr;
-  grid-template-areas:
-    "header"
-    "intro"
-    "main"
-    "footer";
 }
 
 .ch-header {
-  background-color: white;
-  grid-area: header;
+  width: 100%;
   display: flex;
   justify-content: center;
+  background-color: white;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .ch-intro {
-  grid-area: intro;
+  max-width: 1000px;
   display: flex;
   justify-content: center;
-}
-
-.ch-main {
-  grid-area: main;
 }
 
 .challenges {
   display: grid;
-  width: 100vw;
-  width: 100dvw;
+  width: fit-content;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 10px;
@@ -40,22 +33,28 @@ body {
 }
 
 .ch-footer {
-  grid-area: footer;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.ch-popover-container {
+  position: fixed;
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .ch-popover {
-  width: 90vw;
+  padding: 3px;
+  max-width: 90vw;
   text-align: center;
-  max-width: fit-content;
   border-radius: 10px;
   background-color: white;
-  border: none;
-  box-shadow: inset 0 -3em 3em c01a1a, 0 0 0 2px white,
-    0.3em 0.3em 1em rgb(200 0 0 / 60%);
 }
 
 .button {
@@ -64,7 +63,7 @@ body {
   color: white;
   padding: 10px 20px;
   font-size: 16px;
-  margin: 6px 0px 2px 0px;
+  margin: 1px 0px 2px 0px;
   cursor: pointer;
   background-color: #116f56;
 }
@@ -74,6 +73,9 @@ body {
 }
 
 .body-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   filter: blur(0px);
 }
 
@@ -84,6 +86,10 @@ body {
 
 .dim {
   filter: brightness(90%);
+}
+
+[hidden] {
+  display: none;
 }
 
 @keyframes glow {
