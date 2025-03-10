@@ -97,6 +97,5 @@ function setOpenedSvg(element: HTMLElement | null, index: string) {
   const href = element?.getAttribute("href") ?? "";
   const fileName = href.split("#")[0];
   const newHref = fileName + "#opened" + index;
-  console.log(newHref);
   element?.setAttribute("href", newHref);
 }
