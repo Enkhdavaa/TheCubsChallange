@@ -1,9 +1,16 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html,
 body {
-    min-block-size: 100vh;
-    min-block-size: 100svh;
-    background-color: white;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr;
+  overflow: hidden;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
 }

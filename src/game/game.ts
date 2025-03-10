@@ -12,16 +12,35 @@ const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
+// Axes Helper
+const axesHelper = new THREE.AxesHelper(2);
+scene.add(axesHelper);
+
 // Sizes
 const sizes = {
-  width: 800,
-  height: 600,
+  width: globalThis.innerWidth,
+  height: globalThis.innerHeight,
 };
+
+globalThis.addEventListener("resize", () => {
+  // Update sizes
+  sizes.width = globalThis.innerWidth;
+  sizes.height = globalThis.innerHeight;
+
+  // Update camera
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  // Update renderer
+  renderer.setSize(sizes.width, sizes.height);
+});
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
 camera.position.z = 3;
 scene.add(camera);
+
+camera.lookAt(mesh.position);
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -29,4 +48,18 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setSize(sizes.width, sizes.height);
-renderer.render(scene, camera);
+
+// Clock
+const clock = new THREE.Clock();
+
+// Animation
+const tick = () => {
+  // Time
+  const elapsedTime = clock.getElapsedTime();
+  //   Update objects
+  mesh.rotation.y = elapsedTime;
+  renderer.render(scene, camera);
+  globalThis.requestAnimationFrame(tick);
+};
+
+tick();
