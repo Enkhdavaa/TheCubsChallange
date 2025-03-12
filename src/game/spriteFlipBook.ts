@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import getDeltaTime from "./time.ts";
 
 export class SpriteFlipBook {
   private tilesHorizontal: number;
@@ -7,6 +8,12 @@ export class SpriteFlipBook {
 
   private map: THREE.Texture;
   private sprite: THREE.Sprite;
+
+  private playSpriteIndices: number[] = [];
+  private runningTileArrayIndex = 0;
+
+  private maxDisplayTime = 0;
+  private elapsedTime = 0;
 
   constructor(
     spriteTexture: string,
@@ -23,14 +30,8 @@ export class SpriteFlipBook {
 
     const material = new THREE.SpriteMaterial({ map: this.map });
     this.sprite = new THREE.Sprite(material);
-
     scene.add(this.sprite);
   }
-
-  private playSpriteIndices: number[] = [];
-  private runningTileArrayIndex = 0;
-  private maxDisplayTime = 0;
-  private elapsedTime = 0;
 
   public loop(playerSpriteIndices: number[], totalDuration: number) {
     this.playSpriteIndices = playerSpriteIndices;
@@ -39,8 +40,29 @@ export class SpriteFlipBook {
     this.maxDisplayTime = totalDuration / playerSpriteIndices.length;
   }
 
-  public update(deltaTime: number) {
-    this.elapsedTime += deltaTime;
+  public setPosition(x: number, y: number, z: number) {
+    this.sprite.position.set(x, y, z);
+  }
+
+  public getPosition() {
+    return this.sprite.position;
+  }
+
+  public addPosition(x: number, y: number, z: number) {
+    this.sprite.position.add(new THREE.Vector3(x, y, z));
+  }
+
+  public hide() {
+    this.sprite.visible = false;
+  }
+
+  public show() {
+    this.sprite.visible = true;
+  }
+
+  public update() {
+    this.elapsedTime += getDeltaTime();
+
     if (this.elapsedTime > 0 && this.elapsedTime >= this.maxDisplayTime) {
       this.elapsedTime = 0;
       this.runningTileArrayIndex =
