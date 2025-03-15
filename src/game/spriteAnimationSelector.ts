@@ -1,8 +1,10 @@
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
+import * as THREE from "three";
 
 export class SpriteAnimationSelector {
   private spriteFlipBooks: SpriteFlipBook[] = [];
   private currentSelected: SpriteFlipBook;
+  private currentPosition: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
   constructor(
     spriteFlipBook: SpriteFlipBook[],
@@ -15,14 +17,25 @@ export class SpriteAnimationSelector {
 
   public selectSpriteIndex(spriteIndex: number) {
     this.spriteFlipBooks.forEach((spriteFlipBook, index) => {
-      if (index === spriteIndex) {
-        this.currentSelected = spriteFlipBook;
-        spriteFlipBook.show();
-      } else spriteFlipBook.hide();
+      if (index !== spriteIndex) {
+        spriteFlipBook.hide();
+      }
     });
+    this.currentSelected = this.spriteFlipBooks[spriteIndex];
+    this.currentSelected.setPosition(this.currentPosition);
+    this.currentSelected.show();
   }
 
   public update() {
     this.currentSelected.update();
+  }
+
+  public setPosition(x: number, y: number, z: number) {
+    this.currentPosition = new THREE.Vector3(x, y, z);
+    this.currentSelected.setPosition(this.currentPosition);
+  }
+
+  public getPosition() {
+    return this.currentSelected.getPosition();
   }
 }

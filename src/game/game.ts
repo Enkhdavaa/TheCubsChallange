@@ -12,7 +12,10 @@ const walk = new SpriteFlipBook("/sprites/player/walk.png", 8, 1);
 walk.loop([0, 1, 2, 3, 4, 5, 6, 7], 0.7);
 
 // Animation selector
-const spriteAnimationSelector = new SpriteAnimationSelector([idle, walk, run]);
+const spriteAnimationSelector = new SpriteAnimationSelector(
+  [idle, walk, run],
+  2
+);
 
 // Set the default animation
 const tick = () => {

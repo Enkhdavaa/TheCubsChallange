@@ -41,8 +41,8 @@ export class SpriteFlipBook {
     this.maxDisplayTime = totalDuration / playerSpriteIndices.length;
   }
 
-  public setPosition(x: number, y: number, z: number) {
-    this.sprite.position.set(x, y, z);
+  public setPosition(position: THREE.Vector3) {
+    this.sprite.position.set(position.x, position.y, position.z);
   }
 
   public getPosition() {
