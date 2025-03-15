@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import getDeltaTime from "./time.ts";
+import scene from "./scene.ts";
 
 export class SpriteFlipBook {
   private tilesHorizontal: number;
@@ -18,8 +19,7 @@ export class SpriteFlipBook {
   constructor(
     spriteTexture: string,
     tilesHorizontal: number,
-    tilesVertical: number,
-    scene: THREE.Scene
+    tilesVertical: number
   ) {
     this.tilesHorizontal = tilesHorizontal;
     this.tilesVertical = tilesVertical;
@@ -30,6 +30,7 @@ export class SpriteFlipBook {
 
     const material = new THREE.SpriteMaterial({ map: this.map });
     this.sprite = new THREE.Sprite(material);
+    this.sprite.visible = false;
     scene.add(this.sprite);
   }
 

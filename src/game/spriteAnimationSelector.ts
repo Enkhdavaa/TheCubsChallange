@@ -5,11 +5,11 @@ export class SpriteAnimationSelector {
   private currentSelected: SpriteFlipBook;
 
   constructor(
-    spriteFlipBooks: SpriteFlipBook[],
+    spriteFlipBook: SpriteFlipBook[],
     defaultFlipbookIndex: number = 0
   ) {
-    this.spriteFlipBooks = spriteFlipBooks;
-    this.currentSelected = spriteFlipBooks[defaultFlipbookIndex];
+    this.spriteFlipBooks = spriteFlipBook;
+    this.currentSelected = this.spriteFlipBooks[defaultFlipbookIndex];
     this.selectSpriteIndex(defaultFlipbookIndex);
   }
 
