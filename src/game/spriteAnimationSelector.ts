@@ -1,10 +1,11 @@
+import { normalizedToCanvas } from "./helper/helper.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
 
 export class SpriteAnimationSelector {
   private spriteFlipBooks: SpriteFlipBook[] = [];
   private currentSelected: SpriteFlipBook;
-  private currentPosition: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+  private currentPosition: THREE.Vector3 = normalizedToCanvas(-0.8, 0);
 
   constructor(
     spriteFlipBook: SpriteFlipBook[],
