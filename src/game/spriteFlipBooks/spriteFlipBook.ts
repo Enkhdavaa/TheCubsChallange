@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import getDeltaTime from "./time.ts";
-import scene from "./scene.ts";
+import scene from "../scene.ts";
+import { getDeltaTime } from "../helper/frameCallback.ts";
 
 export class SpriteFlipBook {
   private tilesHorizontal: number;

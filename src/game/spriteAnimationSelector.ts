@@ -1,5 +1,6 @@
+import { addFrameCallback } from "./helper/frameCallback.ts";
 import { normalizedToCanvas } from "./helper/helper.ts";
-import { SpriteFlipBook } from "./spriteFlipBook.ts";
+import { SpriteFlipBook } from "./spriteFlipBooks/spriteFlipBook.ts";
 import * as THREE from "three";
 
 export class SpriteAnimationSelector {
@@ -14,6 +15,11 @@ export class SpriteAnimationSelector {
     this.spriteFlipBooks = spriteFlipBook;
     this.currentSelected = this.spriteFlipBooks[defaultFlipbookIndex];
     this.selectSpriteIndex(defaultFlipbookIndex);
+    this.startAnimation();
+  }
+
+  private startAnimation() {
+    addFrameCallback(() => this.currentSelected.update());
   }
 
   public selectSpriteIndex(spriteIndex: number) {
@@ -25,10 +31,6 @@ export class SpriteAnimationSelector {
     this.currentSelected = this.spriteFlipBooks[spriteIndex];
     this.currentSelected.setPosition(this.currentPosition);
     this.currentSelected.show();
-  }
-
-  public update() {
-    this.currentSelected.update();
   }
 
   public setPosition(x: number, y: number, z: number) {
