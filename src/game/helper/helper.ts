@@ -47,3 +47,7 @@ export function normalizedToCanvas(
 
   return worldPos;
 }
+
+export function generateAscendingArray(n: number): number[] {
+  return Array.from({ length: n }, (_, i) => i);
+}

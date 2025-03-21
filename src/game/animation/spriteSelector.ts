@@ -1,12 +1,12 @@
-import { addFrameCallback } from "./helper/frameCallback.ts";
-import { normalizedToCanvas } from "./helper/helper.ts";
-import { SpriteFlipBook } from "./spriteFlipBooks/spriteFlipBook.ts";
+import { addFrameCallback } from "../helper/frameCallback.ts";
+import { normalizedToCanvas } from "../helper/helper.ts";
+import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
 
-export class SpriteAnimationSelector {
+export class SpriteSelector {
   private spriteFlipBooks: SpriteFlipBook[] = [];
   private currentSelected: SpriteFlipBook;
-  private currentPosition: THREE.Vector3 = normalizedToCanvas(-0.8, 0);
+  private currentPosition: THREE.Vector3;
 
   constructor(
     spriteFlipBook: SpriteFlipBook[],
@@ -14,6 +14,7 @@ export class SpriteAnimationSelector {
   ) {
     this.spriteFlipBooks = spriteFlipBook;
     this.currentSelected = this.spriteFlipBooks[defaultFlipbookIndex];
+    this.currentPosition = normalizedToCanvas(0, 0);
     this.selectSpriteIndex(defaultFlipbookIndex);
     this.startAnimation();
   }

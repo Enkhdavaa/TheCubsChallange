@@ -1,7 +1,9 @@
-import { SpriteAnimationSelector } from "./spriteAnimationSelector.ts";
-import idle from "./spriteFlipBooks/idle.ts";
-import run from "./spriteFlipBooks/run.ts";
-import walk from "./spriteFlipBooks/walk.ts";
+import { SpriteSelector } from "./animation/spriteSelector.ts";
+import idle from "./animation/sprites/idle.ts";
+import jump from "./animation/sprites/jump.ts";
+import run from "./animation/sprites/run.ts";
+import walk from "./animation/sprites/walk.ts";
 
 // Animation selector
-const spriteAnimationSelector = new SpriteAnimationSelector([idle, walk, run]);
+const spriteAnimationSelector = new SpriteSelector([idle, walk, run, jump]);
+spriteAnimationSelector.selectSpriteIndex(3);
