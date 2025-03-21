@@ -16,4 +16,11 @@ animationMap.set("walk", walk);
 // Animation selector
 const spriteAnimationSelector = new SpriteSelector(animationMap, "idle");
 spriteAnimationSelector.selectAnimation("idle");
-spriteAnimationSelector.selectAnimation("jump", false);
+
+document.addEventListener("keydown", (event) => {
+  spriteAnimationSelector.selectAnimation("jump", false);
+});
+
+document.addEventListener("touchstart", (event) => {
+  spriteAnimationSelector.selectAnimation("jump", false);
+});

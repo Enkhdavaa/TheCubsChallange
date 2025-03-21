@@ -72,8 +72,9 @@ export class SpriteFlipBook {
     this.loop = loop;
     this.elapsedTime = 0;
     this.animationFinished = false;
-    this.currentTile = this.playSpriteIndices[0];
     this.totolDurationBuff = this.totalDuration;
+    this.runningTileArrayIndex = 0;
+    this.setOffset();
     this.sprite.visible = true;
   }
 
@@ -99,19 +100,24 @@ export class SpriteFlipBook {
       }
 
       this.elapsedTime = 0;
-      this.runningTileArrayIndex =
-        (this.runningTileArrayIndex + 1) % this.playSpriteIndices.length;
-      this.currentTile = this.playSpriteIndices[this.runningTileArrayIndex];
 
-      const offsetX =
-        (this.currentTile % this.tilesHorizontal) / this.tilesHorizontal;
-      const offsetY =
-        (this.tilesVertical -
-          Math.floor(this.currentTile / this.tilesHorizontal) -
-          1) /
-        this.tilesVertical;
-
-      this.map.offset.set(offsetX, offsetY);
+      this.setOffset();
     }
+  }
+
+  private setOffset() {
+    this.runningTileArrayIndex =
+      (this.runningTileArrayIndex + 1) % this.playSpriteIndices.length;
+    this.currentTile = this.playSpriteIndices[this.runningTileArrayIndex];
+
+    const offsetX =
+      (this.currentTile % this.tilesHorizontal) / this.tilesHorizontal;
+    const offsetY =
+      (this.tilesVertical -
+        Math.floor(this.currentTile / this.tilesHorizontal) -
+        1) /
+      this.tilesVertical;
+
+    this.map.offset.set(offsetX, offsetY);
   }
 }
