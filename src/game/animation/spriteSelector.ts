@@ -1,37 +1,44 @@
 import { addFrameCallback } from "../helper/frameCallback.ts";
 import { normalizedToCanvas } from "../helper/helper.ts";
+import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
 
 export class SpriteSelector {
-  private spriteFlipBooks: SpriteFlipBook[] = [];
+  private spriteFlipBooks: Map<string, SpriteFlipBook>;
   private currentSelected: SpriteFlipBook;
   private currentPosition: THREE.Vector3;
 
+  private spriteAnimationEvent = SpriteAnimationEvent.getInstance();
+
   constructor(
-    spriteFlipBook: SpriteFlipBook[],
-    defaultFlipbookIndex: number = 0
+    spriteFlipBook: Map<string, SpriteFlipBook>,
+    defaultAnimation: string
   ) {
     this.spriteFlipBooks = spriteFlipBook;
-    this.currentSelected = this.spriteFlipBooks[defaultFlipbookIndex];
+    this.currentSelected = spriteFlipBook.get(defaultAnimation)!;
     this.currentPosition = normalizedToCanvas(0, 0);
-    this.selectSpriteIndex(defaultFlipbookIndex);
+    this.selectAnimation(defaultAnimation);
     this.startAnimation();
+
+    this.spriteAnimationEvent.subscribe(() => {
+      this.selectAnimation("run");
+    });
   }
 
   private startAnimation() {
     addFrameCallback(() => this.currentSelected.update());
   }
 
-  public selectSpriteIndex(spriteIndex: number) {
-    this.spriteFlipBooks.forEach((spriteFlipBook, index) => {
-      if (index !== spriteIndex) {
+  public selectAnimation(animationName: string, loop = true) {
+    this.spriteFlipBooks.forEach((spriteFlipBook, name) => {
+      if (name !== animationName) {
         spriteFlipBook.hide();
       }
     });
-    this.currentSelected = this.spriteFlipBooks[spriteIndex];
+    this.currentSelected = this.spriteFlipBooks.get(animationName)!;
     this.currentSelected.setPosition(this.currentPosition);
-    this.currentSelected.show();
+    this.currentSelected.show(loop);
   }
 
   public setPosition(x: number, y: number, z: number) {

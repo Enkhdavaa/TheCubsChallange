@@ -9,6 +9,6 @@ const run = new SpriteFlipBook(path, frames, columns);
 const totalDuration = 0.7;
 
 const tileIndexArray = generateAscendingArray(frames);
-run.loop(tileIndexArray, totalDuration);
+run.setArrayAndDuration(tileIndexArray, totalDuration);
 
 export default run;

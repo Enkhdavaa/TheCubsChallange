@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import scene from "../scene.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
+import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 
 export class SpriteFlipBook {
   private tilesHorizontal: number;
@@ -13,8 +14,13 @@ export class SpriteFlipBook {
   private playSpriteIndices: number[] = [];
   private runningTileArrayIndex = 0;
 
-  private maxDisplayTime = 0;
+  private totalDuration = 0;
+  private animationFinished = false;
+  private loop = false;
+  private tileDisplayTime = 0;
   private elapsedTime = 0;
+
+  private spriteAnimationEvent = SpriteAnimationEvent.getInstance();
 
   constructor(
     spriteTexture: string,
@@ -34,11 +40,15 @@ export class SpriteFlipBook {
     scene.add(this.sprite);
   }
 
-  public loop(playerSpriteIndices: number[], totalDuration: number) {
+  public setArrayAndDuration(
+    playerSpriteIndices: number[],
+    totalDuration: number
+  ) {
+    this.totalDuration = totalDuration;
     this.playSpriteIndices = playerSpriteIndices;
     this.runningTileArrayIndex = 0;
     this.currentTile = playerSpriteIndices[this.runningTileArrayIndex];
-    this.maxDisplayTime = totalDuration / playerSpriteIndices.length;
+    this.tileDisplayTime = totalDuration / playerSpriteIndices.length;
   }
 
   public setPosition(position: THREE.Vector3) {
@@ -54,17 +64,40 @@ export class SpriteFlipBook {
   }
 
   public hide() {
+    this.elapsedTime = 0;
     this.sprite.visible = false;
   }
 
-  public show() {
+  public show(loop: boolean = true) {
+    this.loop = loop;
+    this.elapsedTime = 0;
+    this.animationFinished = false;
+    this.currentTile = this.playSpriteIndices[0];
+    this.totolDurationBuff = this.totalDuration;
     this.sprite.visible = true;
   }
 
+  totolDurationBuff = this.totalDuration;
+
   public update() {
+    if (this.animationFinished) {
+      return;
+    }
+
     this.elapsedTime += getDeltaTime();
 
-    if (this.elapsedTime > 0 && this.elapsedTime >= this.maxDisplayTime) {
+    if (this.elapsedTime > 0 && this.elapsedTime >= this.tileDisplayTime) {
+      if (this.loop === false) {
+        this.totolDurationBuff -= this.elapsedTime;
+        if (this.totolDurationBuff <= 0) {
+          this.animationFinished = true;
+          this.sprite.visible = false;
+
+          this.spriteAnimationEvent.publish("animationFinished");
+          return;
+        }
+      }
+
       this.elapsedTime = 0;
       this.runningTileArrayIndex =
         (this.runningTileArrayIndex + 1) % this.playSpriteIndices.length;

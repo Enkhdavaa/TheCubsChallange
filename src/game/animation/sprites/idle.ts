@@ -9,6 +9,6 @@ const idle = new SpriteFlipBook(path, frames, columns);
 const totalDuration = 0.7;
 
 const tileIndexArray = generateAscendingArray(frames);
-idle.loop(tileIndexArray, totalDuration);
+idle.setArrayAndDuration(tileIndexArray, totalDuration);
 
 export default idle;
