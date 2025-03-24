@@ -10,6 +10,7 @@ export class SpriteSelector {
   private currentPosition: THREE.Vector3;
 
   private spriteAnimationEvent = SpriteAnimationEvent.getInstance();
+  private oneTimeActionPlaying = false;
 
   constructor(
     spriteFlipBook: Map<string, SpriteFlipBook>,
@@ -22,6 +23,7 @@ export class SpriteSelector {
     this.startAnimation();
 
     this.spriteAnimationEvent.subscribe(() => {
+      this.oneTimeActionPlaying = false;
       this.selectAnimation("run");
     });
   }
@@ -31,6 +33,14 @@ export class SpriteSelector {
   }
 
   public selectAnimation(animationName: string, loop = true) {
+    if (this.oneTimeActionPlaying) {
+      return;
+    }
+
+    if (!loop) {
+      this.oneTimeActionPlaying = true;
+    }
+
     this.spriteFlipBooks.forEach((spriteFlipBook, name) => {
       if (name !== animationName) {
         spriteFlipBook.hide();
