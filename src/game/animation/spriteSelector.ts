@@ -51,8 +51,8 @@ export class SpriteSelector {
     this.currentSelected.show(loop);
   }
 
-  public setPosition(x: number, y: number, z: number) {
-    this.currentPosition = new THREE.Vector3(x, y, z);
+  public setPosition(x: number, y: number) {
+    this.currentPosition = normalizedToCanvas(x, y);
     this.currentSelected.setPosition(this.currentPosition);
   }
 
