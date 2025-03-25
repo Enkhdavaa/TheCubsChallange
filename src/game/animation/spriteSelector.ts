@@ -11,6 +11,7 @@ export class SpriteSelector {
 
   private spriteAnimationEvent = SpriteAnimationEvent.getInstance();
   private oneTimeActionPlaying = false;
+  private defaultAnimation: string;
 
   constructor(
     spriteFlipBook: Map<string, SpriteFlipBook>,
@@ -21,10 +22,11 @@ export class SpriteSelector {
     this.currentPosition = normalizedToCanvas(0, 0);
     this.selectAnimation(defaultAnimation);
     this.startAnimation();
+    this.defaultAnimation = defaultAnimation;
 
     this.spriteAnimationEvent.subscribe(() => {
       this.oneTimeActionPlaying = false;
-      this.selectAnimation("run");
+      this.selectAnimation(this.defaultAnimation);
     });
   }
 
@@ -39,6 +41,8 @@ export class SpriteSelector {
 
     if (!loop) {
       this.oneTimeActionPlaying = true;
+    } else {
+      this.defaultAnimation = animationName;
     }
 
     this.spriteFlipBooks.forEach((spriteFlipBook, name) => {

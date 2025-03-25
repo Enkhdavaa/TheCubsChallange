@@ -18,7 +18,13 @@ const spriteAnimationSelector = new SpriteSelector(animationMap, "idle");
 spriteAnimationSelector.selectAnimation("idle");
 
 document.addEventListener("keydown", (event) => {
-  spriteAnimationSelector.selectAnimation("jump", false);
+  if (event.key === "ArrowUp") {
+    spriteAnimationSelector.selectAnimation("jump", false);
+  } else if (event.key === "ArrowRight") {
+    spriteAnimationSelector.selectAnimation("run");
+  } else if (event.key === "ArrowLeft") {
+    spriteAnimationSelector.selectAnimation("walk");
+  }
 });
 
 document.addEventListener("touchstart", (event) => {
