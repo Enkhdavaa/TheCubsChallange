@@ -28,12 +28,11 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("touchstart", (event) => {
-  if (event.touches[0].clientX > globalThis.innerWidth / 2) {
+  if (event.touches[0].clientY < globalThis.innerHeight / 2) {
+    spriteAnimationSelector.selectAnimation("jump", false);
+  } else if (event.touches[0].clientX > globalThis.innerWidth / 2) {
     spriteAnimationSelector.selectAnimation("run");
   } else if (event.touches[0].clientX < globalThis.innerWidth / 2) {
     spriteAnimationSelector.selectAnimation("walk");
-  }
-  if (event.touches[0].clientY < globalThis.innerHeight / 2) {
-    spriteAnimationSelector.selectAnimation("jump", false);
   }
 });
