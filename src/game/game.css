@@ -14,3 +14,15 @@ body {
   left: 0;
   outline: none;
 }
+
+.logo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15vw;
+  height: auto;
+  max-width: 100px;
+}

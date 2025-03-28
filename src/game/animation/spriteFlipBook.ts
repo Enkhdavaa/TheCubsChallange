@@ -12,6 +12,8 @@ export class SpriteFlipBook {
   private sprite: THREE.Sprite;
 
   private playSpriteIndices: number[] = [];
+  private positionIndices: THREE.Vector3[] = []; //TODO: use this to set the position of the sprite
+
   private runningTileArrayIndex = 0;
 
   private totalDuration = 0;
@@ -51,6 +53,12 @@ export class SpriteFlipBook {
     this.tileDisplayTime = totalDuration / playerSpriteIndices.length;
   }
 
+  public setDuration(totalDuration: number) {
+    this.totalDuration = totalDuration;
+    this.tileDisplayTime = totalDuration / this.playSpriteIndices.length;
+    this.totolDurationBuff = totalDuration;
+  }
+
   public setPosition(position: THREE.Vector3) {
     this.sprite.position.set(position.x, position.y, position.z);
   }
@@ -59,8 +67,8 @@ export class SpriteFlipBook {
     return this.sprite.position;
   }
 
-  public addPosition(x: number, y: number, z: number) {
-    this.sprite.position.add(new THREE.Vector3(x, y, z));
+  public setPositionIndex(THREEPositionIndex: THREE.Vector3[]) {
+    this.positionIndices = THREEPositionIndex;
   }
 
   public hide() {
@@ -74,7 +82,7 @@ export class SpriteFlipBook {
     this.animationFinished = false;
     this.totolDurationBuff = this.totalDuration;
     this.runningTileArrayIndex = 0;
-    this.setOffset();
+    this.setOffsetToSetTile();
     this.sprite.visible = true;
   }
 
@@ -101,11 +109,11 @@ export class SpriteFlipBook {
 
       this.elapsedTime = 0;
 
-      this.setOffset();
+      this.setOffsetToSetTile();
     }
   }
 
-  private setOffset() {
+  private setOffsetToSetTile() {
     this.runningTileArrayIndex =
       (this.runningTileArrayIndex + 1) % this.playSpriteIndices.length;
     this.currentTile = this.playSpriteIndices[this.runningTileArrayIndex];
