@@ -1,8 +1,9 @@
 import { defineConfig } from "vite";
+import glsl from "vite-plugin-glsl";
 
 export default defineConfig({
   appType: "mpa",
-  plugins: [],
+  plugins: [glsl()],
   server: {
     open: true,
     proxy: {
