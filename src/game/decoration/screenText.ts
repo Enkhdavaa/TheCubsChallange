@@ -13,7 +13,7 @@ export const RenderScreenText = () => {
     const textGeometry = new TextGeometry("The Cubs Run Club", {
       font: font,
       size: 0.3,
-      depth: 0.2,
+      depth: 0.1,
       curveSegments: 5,
       bevelEnabled: true,
       bevelThickness: 0.1,
