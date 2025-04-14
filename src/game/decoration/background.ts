@@ -15,7 +15,7 @@ export const LoadBackground = () => {
     },
   });
 
-  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  //   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
-  scene.add(plane);
+  //   scene.add(plane);
 };

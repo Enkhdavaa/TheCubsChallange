@@ -48,6 +48,26 @@ export function normalizedToCanvas(
   return worldPos;
 }
 
+export function normalizedToCanvasX(normX: number): number {
+  // Ensure normX and normY are within the expected range (-1 to 1)
+  normX = THREE.MathUtils.clamp(normX, -1, 1);
+
+  // Get camera aspect ratio
+  const aspect = sizes.width / sizes.height;
+
+  // Depth
+  const depth = camera.position.z;
+
+  // Compute frustum height at given depth
+  const frustumHeight =
+    2 * Math.tan((camera.fov * Math.PI) / 360) * Math.abs(depth);
+  const frustumWidth = frustumHeight * aspect;
+
+  // Convert normalized coordinates to world space
+  const worldX = (normX * frustumWidth) / 2;
+  return worldX;
+}
+
 export function generateAscendingArray(n: number): number[] {
   return Array.from({ length: n }, (_, i) => i);
 }

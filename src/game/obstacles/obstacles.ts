@@ -1,22 +1,25 @@
-import * as THREE from "three";
 import scene from "../scene.ts";
 import { addFrameCallback } from "../helper/frameCallback.ts";
+import Add3DTextMesh from "./add3dTextMesh.ts";
+import { normalizedToCanvasX } from "../helper/helper.ts";
 
 // Obstacle list
 const obstacles: any = [];
 const obstacleSpeed = 0.05;
 const spawnInterval = 2500; // milliseconds
 
+const randomTexts = ["Turbo Tuesday", "Long Run", "Social Run", "Regular Run"];
+const xAxisMax = normalizedToCanvasX(1);
+const xAxisMin = normalizedToCanvasX(-1);
+
 // Spawn obstacle
 function spawnObstacle() {
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-  const obstacle = new THREE.Mesh(geometry, material);
+  const index = Math.floor(Math.random() * randomTexts.length);
+  const obstacleMesh = Add3DTextMesh(randomTexts[index], 0.2);
 
-  // Random Y position and fixed X offscreen to the right
-  obstacle.position.set(2, Math.random() * 3 - 1.5, 0);
-  scene.add(obstacle);
-  obstacles.push(obstacle);
+  obstacleMesh.position.set(xAxisMax + 0.2, Math.random(), 0);
+  scene.add(obstacleMesh);
+  obstacles.push(obstacleMesh);
 }
 
 // Remove obstacle from scene and array
@@ -39,7 +42,7 @@ function updateObstacles() {
     obstacles[i].position.x -= obstacleSpeed;
 
     // Offscreen to the left of the camera view
-    if (obstacles[i].position.x < -4) {
+    if (obstacles[i].position.x < xAxisMin - 0.5) {
       removeObstacle(obstacles[i]);
       obstacles.splice(i, 1);
     }
