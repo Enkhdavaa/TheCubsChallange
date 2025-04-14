@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import sizes from "../size.ts";
+import { sizes } from "../size.ts";
 import camera from "../camera.ts";
 
 function screenToWorld(
@@ -29,7 +29,8 @@ export function normalizedToCanvas(
   normY = THREE.MathUtils.clamp(normY, -1, 1);
 
   // Get camera aspect ratio
-  const aspect = sizes.width / sizes.height;
+  const { width, height } = sizes();
+  const aspect = width / height;
 
   // Depth
   const depth = camera.position.z;
@@ -53,7 +54,8 @@ export function normalizedToCanvasX(normX: number): number {
   normX = THREE.MathUtils.clamp(normX, -1, 1);
 
   // Get camera aspect ratio
-  const aspect = sizes.width / sizes.height;
+  const { width, height } = sizes();
+  const aspect = width / height;
 
   // Depth
   const depth = camera.position.z;

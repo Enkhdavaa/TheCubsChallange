@@ -1,18 +1,18 @@
 import * as THREE from "three";
-import sizes from "./size.ts";
+import { sizes } from "./size.ts";
 import camera from "./camera.ts";
 
 globalThis.addEventListener("resize", () => {
   // Update sizes
-  sizes.width = globalThis.innerWidth;
-  sizes.height = globalThis.innerHeight;
+  const { width, height } = sizes();
 
   // Update camera
-  camera.aspect = sizes.width / sizes.height;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
 
   // Update renderer
-  renderer.setSize(sizes.width, sizes.height);
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio, 2));
 });
 
 // Scene
@@ -25,7 +25,9 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
 
-renderer.setSize(sizes.width, sizes.height);
+const { width, height } = sizes();
+
+renderer.setSize(width, height);
 renderer.render(scene, camera);
 
 const tick = () => {

@@ -1,6 +1,11 @@
-const sizes = {
-  width: globalThis.innerWidth,
-  height: globalThis.innerHeight,
+export const sizes = () => {
+  return {
+    width: globalThis.innerWidth,
+    height: globalThis.innerHeight,
+  };
 };
 
-export default sizes;
+export const aspectRatio = () => {
+  const { width, height } = sizes();
+  return width / height;
+};
