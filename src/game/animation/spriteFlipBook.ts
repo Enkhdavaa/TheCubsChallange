@@ -110,11 +110,8 @@ export class SpriteFlipBook {
     this.playerBoxHelper.visible = true;
   }
 
-  public intersect(other: THREE.Box3): boolean {
-    if (this.enabledColision) {
-      return false;
-    }
-    return this.playerBox.intersectsBox(other);
+  public getPlayerBox() {
+    return this.playerBox;
   }
 
   totolDurationBuff = this.totalDuration;

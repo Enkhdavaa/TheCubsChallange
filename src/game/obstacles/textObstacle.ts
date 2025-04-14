@@ -31,6 +31,10 @@ export class TextObstacle {
     return this.textMesh.position;
   }
 
+  public getBoundingBox() {
+    return this.box;
+  }
+
   public dispose() {
     RemoveFromScene(this.textMesh);
     RemoveFromScene(this.boxHelper);

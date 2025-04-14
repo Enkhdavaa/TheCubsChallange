@@ -34,6 +34,18 @@ export class SpriteSelector {
     addFrameCallback(() => this.currentSelected.update());
   }
 
+  public collidedWith(otherBoxes: THREE.Box3[]) {
+    otherBoxes.forEach((otherBox) => {
+      if (this.currentSelected.getPlayerBox().intersectsBox(otherBox)) {
+        console.log("Collision detected");
+      }
+    });
+  }
+
+  public getPlayerBox() {
+    return this.currentSelected.getPlayerBox();
+  }
+
   public selectAnimation(animationName: string, loop = true) {
     if (this.oneTimeActionPlaying) {
       return;

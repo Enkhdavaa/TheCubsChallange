@@ -1,3 +1,4 @@
+import { GetBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
 import { TextObstacle } from "./textObstacle.ts";
@@ -33,8 +34,19 @@ setInterval(() => {
 // Update obstacles position
 function updateObstacles() {
   const movementSpeed = 1.5 * getDeltaTime();
+  const playerBoudingBox = GetBoudingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
+    // Check if obstacle is colliding with the player
+    const obstacleBoudingBox = obstacles[i].getBoundingBox();
+
+    if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
+      console.log("Collision detected");
+      removeObstacle(obstacles[i]);
+      obstacles.splice(i, 1);
+      continue;
+    }
+
     const position = obstacles[i].getPosition();
 
     // Offscreen to the left of the camera view
