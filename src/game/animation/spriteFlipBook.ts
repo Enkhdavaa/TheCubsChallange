@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import scene from "../scene.ts";
+import { AddToScene } from "../scene.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 
@@ -49,8 +49,8 @@ export class SpriteFlipBook {
 
     this.hide();
 
-    scene.add(this.sprite);
-    scene.add(this.playerBoxHelper);
+    AddToScene(this.sprite);
+    AddToScene(this.playerBoxHelper);
   }
 
   public setArrayAndDuration(

@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { aspectRatio } from "./size.ts";
+import { getAspectRatio } from "./size.ts";
 
-const camera = new THREE.PerspectiveCamera(75, aspectRatio());
+const camera = new THREE.PerspectiveCamera(75, getAspectRatio());
 camera.position.z = 3;
 
 export default camera;

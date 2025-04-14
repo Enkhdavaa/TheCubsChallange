@@ -5,7 +5,7 @@ export const sizes = () => {
   };
 };
 
-export const aspectRatio = () => {
+export const getAspectRatio = () => {
   const { width, height } = sizes();
   return width / height;
 };

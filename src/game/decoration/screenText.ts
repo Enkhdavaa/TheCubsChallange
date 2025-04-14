@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import scene from "../scene.ts";
+import { AddToScene } from "../scene.ts";
 import { normalizedToCanvas } from "../helper/helper.ts";
+import { getAspectRatio } from "../size.ts";
 
 const fontLoader = new FontLoader();
 const textureLoader = new THREE.TextureLoader();
@@ -31,6 +32,7 @@ export const RenderScreenText = () => {
     const position = normalizedToCanvas(0, 0.8);
     textMesh.position.set(position.x, position.y, 0);
     textMesh.rotation.x = (Math.PI / 2) * 0.2;
-    scene.add(textMesh);
+
+    AddToScene(textMesh);
   });
 };

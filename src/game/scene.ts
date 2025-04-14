@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { sizes } from "./size.ts";
+import { getAspectRatio, sizes } from "./size.ts";
 import camera from "./camera.ts";
 
 globalThis.addEventListener("resize", () => {
@@ -37,4 +37,12 @@ const tick = () => {
 
 tick();
 
-export default scene;
+export function AddToScene(mesh: THREE.Mesh) {
+  const aspectRation = getAspectRatio();
+  mesh.scale.set(aspectRation, aspectRation, 1);
+  scene.add(mesh);
+}
+
+export function RemoveFromScene(mesh: THREE.Mesh) {
+  scene.remove(mesh);
+}
