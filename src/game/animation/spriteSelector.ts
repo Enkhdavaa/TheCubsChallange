@@ -1,5 +1,6 @@
-import { addFrameCallback } from "../helper/frameCallback.ts";
+import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvas } from "../helper/helper.ts";
+import { getAspectRatio } from "../size.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
@@ -12,6 +13,9 @@ export class SpriteSelector {
   private spriteAnimationEvent = SpriteAnimationEvent.getInstance();
   private oneTimeActionPlaying = false;
   private defaultAnimation: string;
+
+  private isJumping = false;
+  private jumpDuration = 0.7;
 
   constructor(
     spriteFlipBook: Map<string, SpriteFlipBook>,
@@ -31,7 +35,10 @@ export class SpriteSelector {
   }
 
   private startAnimation() {
-    addFrameCallback(() => this.currentSelected.update());
+    addFrameCallback(() => {
+      this.currentSelected.update();
+      this.applyMovement();
+    });
   }
 
   public collidedWith(otherBoxes: THREE.Box3[]) {
@@ -51,6 +58,13 @@ export class SpriteSelector {
       return;
     }
 
+    if (
+      this.defaultAnimation === animationName &&
+      this.currentSelected.isVisible()
+    ) {
+      return;
+    }
+
     if (!loop) {
       this.oneTimeActionPlaying = true;
     } else {
@@ -65,6 +79,12 @@ export class SpriteSelector {
     this.currentSelected = this.spriteFlipBooks.get(animationName)!;
     this.currentSelected.setPosition(this.currentPosition);
     this.currentSelected.show(loop);
+
+    if (animationName === "jump") {
+      this.jumpHeight = 0.5 * getAspectRatio();
+      this.isJumping = true;
+      this.jumpDuration = this.currentSelected.getAnimationDuration();
+    }
   }
 
   public setPosition(x: number, y: number) {
@@ -74,5 +94,29 @@ export class SpriteSelector {
 
   public getPosition() {
     return this.currentSelected.getPosition();
+  }
+
+  private elapsedTime = 0;
+  private jumpHeight = 0.5 * getAspectRatio();
+
+  private applyMovement() {
+    if (this.isJumping) {
+      this.elapsedTime += getDeltaTime();
+
+      if (this.elapsedTime <= this.jumpDuration) {
+        const t = this.elapsedTime / this.jumpDuration;
+        const jumpOffset = this.jumpHeight * Math.sin(Math.PI * t);
+        this.currentSelected.setPosition(
+          new THREE.Vector3(
+            this.currentPosition.x,
+            this.currentPosition.y + jumpOffset,
+            this.currentPosition.z
+          )
+        );
+      } else {
+        this.isJumping = false;
+        this.elapsedTime = 0;
+      }
+    }
   }
 }

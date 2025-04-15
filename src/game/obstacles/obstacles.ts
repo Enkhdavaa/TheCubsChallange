@@ -1,6 +1,7 @@
 import { GetBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
+import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
 
 // Obstacle list
@@ -10,13 +11,14 @@ const spawnInterval = 2500; // milliseconds
 const randomTexts = ["Turbo Tuesday", "Long Run", "Social Run", "Regular Run"];
 const xAxisMax = normalizedToCanvasX(1);
 const xAxisMin = normalizedToCanvasX(-1);
+const aspectRatio = getAspectRatio();
 
 // Spawn obstacle
 function spawnObstacle() {
   const index = Math.floor(Math.random() * randomTexts.length);
   const obstacleMesh = new TextObstacle(randomTexts[index], 0.2);
 
-  obstacleMesh.setPosition(xAxisMax + 0.2, Math.random());
+  obstacleMesh.setPosition(xAxisMax + 0.2, Math.random() * aspectRatio);
   obstacles.push(obstacleMesh);
 }
 
@@ -33,7 +35,7 @@ setInterval(() => {
 
 // Update obstacles position
 function updateObstacles() {
-  const movementSpeed = 1.5 * getDeltaTime();
+  const movementSpeed = 1.5 * getDeltaTime() * aspectRatio;
   const playerBoudingBox = GetBoudingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {

@@ -100,6 +100,10 @@ export class SpriteFlipBook {
     this.enabledColision = true;
   }
 
+  public isVisible() {
+    return this.sprite.visible;
+  }
+
   private setBoudingBox() {
     this.playerBox.setFromCenterAndSize(
       this.sprite.position,
@@ -112,6 +116,14 @@ export class SpriteFlipBook {
 
   public getPlayerBox() {
     return this.playerBox;
+  }
+
+  public getAnimationDuration() {
+    return this.totalDuration;
+  }
+
+  public getElapsedTime() {
+    return this.elapsedTime;
   }
 
   totolDurationBuff = this.totalDuration;
