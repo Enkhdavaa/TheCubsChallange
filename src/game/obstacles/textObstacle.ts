@@ -6,14 +6,16 @@ export class TextObstacle {
   private textMesh: THREE.Mesh;
   private box: THREE.Box3;
   private boxHelper: THREE.Box3Helper;
+  private text: string;
 
-  constructor(text: string, size: number) {
+  constructor(text: string, size: number, color: number = 0xffff00) {
+    this.text = text;
     this.textMesh = add3dTextMesh(text, size);
     this.textMesh.position.set(0, 0, 0);
     this.textMesh.visible = true;
 
     this.box = new THREE.Box3().setFromObject(this.textMesh);
-    this.boxHelper = new THREE.Box3Helper(this.box, 0xffff00);
+    this.boxHelper = new THREE.Box3Helper(this.box, color);
     this.boxHelper.visible = true;
     this.boxHelper.position.copy(this.textMesh.position);
 
@@ -33,6 +35,10 @@ export class TextObstacle {
 
   public getBoundingBox() {
     return this.box;
+  }
+
+  public getText() {
+    return this.text;
   }
 
   public dispose() {

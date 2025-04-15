@@ -3,7 +3,6 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { AddToScene } from "../scene.ts";
 import { normalizedToCanvas } from "../helper/helper.ts";
-import { getAspectRatio } from "../size.ts";
 
 const fontLoader = new FontLoader();
 const textureLoader = new THREE.TextureLoader();

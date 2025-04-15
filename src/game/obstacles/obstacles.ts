@@ -8,14 +8,18 @@ import { TextObstacle } from "./textObstacle.ts";
 const obstacles: TextObstacle[] = [];
 const spawnInterval = 2500; // milliseconds
 
-const randomTexts = [
-  "Turbo Tuesday",
-  "Long Run",
-  "Social Run",
-  "Regular Run",
-  "Alcohol",
-  "Injury",
-];
+const randomTexts = {
+  good: ["Turbo Tuesday", "Long Run", "Social Run", "Regular Run"],
+  bad: [
+    "Bad Weather",
+    "Alcohol",
+    "Injury",
+    "No Run",
+    "No Food",
+    "No Water",
+    "No Sleep",
+  ],
+};
 
 const xAxisMax = normalizedToCanvasX(1);
 const xAxisMin = normalizedToCanvasX(-1);
@@ -23,9 +27,14 @@ const aspectRatio = getAspectRatio();
 
 // Spawn obstacle
 function spawnObstacle() {
-  const index = Math.floor(Math.random() * randomTexts.length);
-  const obstacleMesh = new TextObstacle(randomTexts[index], 0.2);
+  const combined = randomTexts["good"].concat(randomTexts["bad"]);
+  const index = Math.floor(Math.random() * combined.length);
+  const obstacleText = combined[index];
 
+  setRandomPosition(new TextObstacle(obstacleText, 0.2));
+}
+
+function setRandomPosition(obstacleMesh: TextObstacle) {
   obstacleMesh.setPosition(xAxisMax + 0.2, Math.random() * aspectRatio);
   obstacles.push(obstacleMesh);
 }
@@ -43,7 +52,6 @@ setInterval(() => {
 
 // Update obstacles position
 function updateObstacles() {
-  const movementSpeed = 1.5 * getDeltaTime() * aspectRatio;
   const playerBoudingBox = GetBoudingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -64,9 +72,30 @@ function updateObstacles() {
       removeObstacle(obstacles[i]);
       obstacles.splice(i, 1);
     } else {
-      obstacles[i].setPosition(position.x - movementSpeed, position.y);
+      addEffect(obstacles[i]);
     }
   }
+}
+
+function addEffect(obstacle: TextObstacle) {
+  const obstacleText = obstacle.getText();
+  const movementSpeed = 1.5 * getDeltaTime() * aspectRatio;
+  const shake = 0.04;
+  const position = obstacle.getPosition();
+  const randomShake = (Math.random() - 0.5) * shake;
+
+  if (isGoodObstacle(obstacleText)) {
+    obstacle.setPosition(position.x - movementSpeed, position.y);
+  } else {
+    obstacle.setPosition(
+      position.x - movementSpeed + randomShake,
+      position.y + randomShake
+    );
+  }
+}
+
+function isGoodObstacle(obstacleText: string) {
+  return randomTexts["good"].includes(obstacleText);
 }
 
 export const LoadObstacles = () => {
