@@ -13,7 +13,7 @@ export const RenderScreenText = () => {
   fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font: any) => {
     const textGeometry = new TextGeometry("The Cubs Run Club", {
       font: font,
-      size: 0.3,
+      size: 0.2,
       depth: 0.1,
       curveSegments: 5,
       bevelEnabled: true,
