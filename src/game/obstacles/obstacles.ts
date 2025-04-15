@@ -8,7 +8,15 @@ import { TextObstacle } from "./textObstacle.ts";
 const obstacles: TextObstacle[] = [];
 const spawnInterval = 2500; // milliseconds
 
-const randomTexts = ["Turbo Tuesday", "Long Run", "Social Run", "Regular Run"];
+const randomTexts = [
+  "Turbo Tuesday",
+  "Long Run",
+  "Social Run",
+  "Regular Run",
+  "Alcohol",
+  "Injury",
+];
+
 const xAxisMax = normalizedToCanvasX(1);
 const xAxisMin = normalizedToCanvasX(-1);
 const aspectRatio = getAspectRatio();
