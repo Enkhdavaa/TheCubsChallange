@@ -9,9 +9,14 @@ export class TextObstacle {
   private boxHelper: THREE.Box3Helper;
   private text: string;
 
-  constructor(text: string, size: number, color: number = 0xffff00) {
+  constructor(
+    text: string,
+    size: number,
+    font: any = helvetiker_regular_font,
+    color: number = 0xffff00
+  ) {
     this.text = text;
-    this.textMesh = add3dTextMesh(text, size, helvetiker_regular_font);
+    this.textMesh = add3dTextMesh(text, size, font);
     this.textMesh.position.set(0, 0, 0);
     this.textMesh.visible = true;
 

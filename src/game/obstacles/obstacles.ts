@@ -1,6 +1,7 @@
 import { GetBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
+import { superrugged_regular_font } from "../helper/text3dFonts.ts";
 import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
 
@@ -31,7 +32,13 @@ function spawnObstacle() {
   const index = Math.floor(Math.random() * combined.length);
   const obstacleText = combined[index];
 
-  setRandomPosition(new TextObstacle(obstacleText, 0.2));
+  if (isGoodObstacle(obstacleText)) {
+    setRandomPosition(new TextObstacle(obstacleText, 0.2));
+  } else {
+    setRandomPosition(
+      new TextObstacle(obstacleText, 0.2, superrugged_regular_font)
+    );
+  }
 }
 
 function setRandomPosition(obstacleMesh: TextObstacle) {
