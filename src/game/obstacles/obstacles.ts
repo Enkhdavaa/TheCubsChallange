@@ -37,18 +37,21 @@ function spawnObstacle() {
   const obstacleText = combined[index];
 
   if (isGoodObstacle(obstacleText)) {
-    setRandomPosition(
-      new TextObstacle(
-        obstacleText,
-        0.2,
-        helvetiker_regular_font,
-        matcapMaterial2
-      )
+    const textObstacle = new TextObstacle(
+      obstacleText,
+      0.2,
+      helvetiker_regular_font,
+      matcapMaterial2
     );
+    setRandomPosition(textObstacle);
   } else {
-    setRandomPosition(
-      new TextObstacle(obstacleText, 0.2, glitch_regular_font, matcapMaterial2)
+    const textObstacle = new TextObstacle(
+      obstacleText,
+      0.2,
+      glitch_regular_font,
+      matcapMaterial2
     );
+    setRandomPosition(textObstacle);
   }
 }
 
