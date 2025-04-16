@@ -23,8 +23,8 @@ const glitch_regular = await fontLoader.loadAsync(
   }
 );
 
-const superrugged_regular = await fontLoader.loadAsync(
-  "/fonts/superrugged/superrugged_regular.json",
+const trace_regular = await fontLoader.loadAsync(
+  "/fonts/trace/tracing_worksheets_regular.json",
   (font: any) => {
     return font;
   }
@@ -33,4 +33,4 @@ const superrugged_regular = await fontLoader.loadAsync(
 export const helvetiker_regular_font = helvetiker_regular;
 export const matrixtype_regular_font = matrixtype_regular;
 export const glitch_regular_font = glitch_regular;
-export const superrugged_regular_font = superrugged_regular;
+export const trace_regular_font = trace_regular;
