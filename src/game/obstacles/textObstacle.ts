@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import add3dTextMesh from "../helper/add3dTextMesh.ts";
 import { AddToScene, RemoveFromScene } from "../scene.ts";
-import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 
 export class TextObstacle {
   private textMesh: THREE.Mesh;
@@ -12,11 +11,12 @@ export class TextObstacle {
   constructor(
     text: string,
     size: number,
-    font: any = helvetiker_regular_font,
+    font: THREE.Font,
+    matcap: THREE.MeshMatcapMaterial,
     color: number = 0xffff00
   ) {
     this.text = text;
-    this.textMesh = add3dTextMesh(text, size, font);
+    this.textMesh = add3dTextMesh(text, size, font, matcap);
     this.textMesh.position.set(0, 0, 0);
     this.textMesh.visible = true;
 

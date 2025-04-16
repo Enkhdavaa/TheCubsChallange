@@ -1,12 +1,12 @@
 import * as THREE from "three";
 
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { matcapMaterial1 } from "./textures.ts";
 
 export default function Add3DTextMesh(
   text: string,
   size: number,
-  font: any
+  font: THREE.Font,
+  matcapMaterial: THREE.MeshMatcapMaterial
 ): THREE.Mesh {
   const textGeometry = new TextGeometry(text, {
     font: font,
@@ -22,5 +22,5 @@ export default function Add3DTextMesh(
 
   textGeometry.center();
 
-  return new THREE.Mesh(textGeometry, matcapMaterial1);
+  return new THREE.Mesh(textGeometry, matcapMaterial);
 }

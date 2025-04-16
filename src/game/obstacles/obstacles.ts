@@ -1,7 +1,11 @@
 import { GetBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
-import { glitch_regular_font } from "../helper/text3dFonts.ts";
+import {
+  glitch_regular_font,
+  helvetiker_regular_font,
+} from "../helper/text3dFonts.ts";
+import { matcapMaterial2 } from "../helper/textures.ts";
 import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
 
@@ -33,9 +37,18 @@ function spawnObstacle() {
   const obstacleText = combined[index];
 
   if (isGoodObstacle(obstacleText)) {
-    setRandomPosition(new TextObstacle(obstacleText, 0.2));
+    setRandomPosition(
+      new TextObstacle(
+        obstacleText,
+        0.2,
+        helvetiker_regular_font,
+        matcapMaterial2
+      )
+    );
   } else {
-    setRandomPosition(new TextObstacle(obstacleText, 0.2, glitch_regular_font));
+    setRandomPosition(
+      new TextObstacle(obstacleText, 0.2, glitch_regular_font, matcapMaterial2)
+    );
   }
 }
 
