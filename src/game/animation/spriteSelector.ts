@@ -87,13 +87,13 @@ export class SpriteSelector {
     }
   }
 
-  public setPosition(x: number, y: number) {
-    this.currentPosition = normalizedToCanvas(x, y);
+  public setPosition(position: THREE.Vector3) {
+    this.currentPosition = position;
     this.currentSelected.setPosition(this.currentPosition);
   }
 
   public getPosition() {
-    return this.currentSelected.getPosition();
+    return this.currentSelected.getPosition().clone();
   }
 
   private elapsedTime = 0;
