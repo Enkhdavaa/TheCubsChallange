@@ -107,7 +107,7 @@ export class SpriteFlipBook {
   private setBoudingBox() {
     this.playerBox.setFromCenterAndSize(
       this.sprite.position,
-      new THREE.Vector3(this.sprite.scale.x / 2, this.sprite.scale.y / 2, 0.1)
+      new THREE.Vector3(this.sprite.scale.x / 4, this.sprite.scale.y / 2, 0.1)
     );
     this.playerBoxHelper.box.copy(this.playerBox);
     this.playerBoxHelper.updateMatrixWorld(true);

@@ -9,4 +9,12 @@ const helvetiker_regular = await fontLoader.loadAsync(
   }
 );
 
+const matrixtype_regular = await fontLoader.loadAsync(
+  "/fonts/matrixtype_display_regular.json",
+  (font: any) => {
+    return font;
+  }
+);
+
 export const helvetiker_regular_font = helvetiker_regular;
+export const matrixtype_regular_font = matrixtype_regular;

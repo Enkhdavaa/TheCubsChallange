@@ -1,12 +1,15 @@
 import * as THREE from "three";
 
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { helvetiker_regular_font } from "./text3dFonts.ts";
 import { matcapMaterial1 } from "./textures.ts";
 
-export default function Add3DTextMesh(text: string, size: number): THREE.Mesh {
+export default function Add3DTextMesh(
+  text: string,
+  size: number,
+  font: any
+): THREE.Mesh {
   const textGeometry = new TextGeometry(text, {
-    font: helvetiker_regular_font,
+    font: font,
     size: size,
     depth: 0.001,
     curveSegments: 1,
