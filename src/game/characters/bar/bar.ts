@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { AddToScene } from "../../scene.ts";
+import { getAspectRatio } from "../../size.ts";
 
 export class Bar {
   private maxBarValue: number;
@@ -13,8 +14,12 @@ export class Bar {
   private offsetX: number = 0;
   private offsetY: number = 0.5;
   private offsetZ: number = 0;
+  private aspectRatio;
 
   constructor() {
+    this.aspectRatio = getAspectRatio();
+    this.setOffset(0, 0.35, 0);
+
     this.maxBarValue = 100;
     this.currentBarValue = 100;
 
@@ -37,9 +42,9 @@ export class Bar {
   }
 
   public setOffset(x: number, y: number, z: number) {
-    this.offsetX = x;
-    this.offsetY = y;
-    this.offsetZ = z;
+    this.offsetX = x * this.aspectRatio;
+    this.offsetY = y * this.aspectRatio;
+    this.offsetZ = z * this.aspectRatio;
   }
 
   public setPosition(position: THREE.Vector3) {
