@@ -22,9 +22,6 @@ const position = normalizedToCanvas(-0.7, 0);
 spriteSelector.setPosition(position);
 spriteSelector.selectAnimation("walk");
 
-const bar = new Bar("Health", 0xffffff);
-bar.setBar(100);
-
 addFrameCallback(() => {
   const characterPosition = spriteSelector.getPosition();
   bar.setPosition(characterPosition);
@@ -35,18 +32,27 @@ const minSpeed = 1;
 const walkMaxSpeed = 5;
 let currentSpeed = 1;
 
+const bar = new Bar("SPEED", 0xffffff);
+
 export const increaseSpeed = () => {
   if (currentSpeed < maxSpeed) {
     currentSpeed = currentSpeed + 1;
     setSpeed(currentSpeed);
+    setBar();
   }
 };
 export const decreaseSpeed = () => {
   if (currentSpeed > 0) {
     currentSpeed = currentSpeed - 1;
     setSpeed(currentSpeed);
+    setBar();
   }
 };
+const barMax = 100;
+
+function setBar() {
+  bar.setBar((barMax / maxSpeed) * currentSpeed);
+}
 const runMinDuration = 0.3;
 const runMaxDuration = 1;
 
