@@ -37,12 +37,12 @@ const tick = () => {
 
 tick();
 
-export function AddToScene(mesh: THREE.Mesh) {
+export function addToScene(mesh: THREE.Mesh) {
   const aspectRation = getAspectRatio();
   mesh.scale.set(aspectRation, aspectRation, 1);
   scene.add(mesh);
 }
 
-export function RemoveFromScene(mesh: THREE.Mesh) {
+export function removeFromScene(mesh: THREE.Mesh) {
   scene.remove(mesh);
 }

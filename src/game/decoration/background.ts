@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AddToScene } from "../scene.ts";
+import { addToScene } from "../scene.ts";
 
 import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragment.glsl";

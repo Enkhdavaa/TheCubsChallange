@@ -22,7 +22,7 @@ const position = normalizedToCanvas(-0.7, 0);
 spriteAnimationSelector.setPosition(position);
 spriteAnimationSelector.selectAnimation("idle");
 
-const bar = new Bar();
+const bar = new Bar("Health", 0xffffff);
 bar.setBar(80);
 
 addFrameCallback(() => {
