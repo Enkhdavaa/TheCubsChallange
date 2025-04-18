@@ -17,41 +17,90 @@ animationMap.set("run", run);
 animationMap.set("walk", walk);
 
 // Animation selector
-const spriteAnimationSelector = new SpriteSelector(animationMap, "idle");
+const spriteSelector = new SpriteSelector(animationMap, "walk");
 const position = normalizedToCanvas(-0.7, 0);
-spriteAnimationSelector.setPosition(position);
-spriteAnimationSelector.selectAnimation("idle");
+spriteSelector.setPosition(position);
+spriteSelector.selectAnimation("walk");
 
 const bar = new Bar("Health", 0xffffff);
-bar.setBar(80);
+bar.setBar(100);
 
 addFrameCallback(() => {
-  const characterPosition = spriteAnimationSelector.getPosition();
+  const characterPosition = spriteSelector.getPosition();
   bar.setPosition(characterPosition);
 });
 
-export const GetBoudingBox = () => {
-  return spriteAnimationSelector.getPlayerBox();
+const maxSpeed = 20;
+const minSpeed = 1;
+const walkMaxSpeed = 5;
+let currentSpeed = 1;
+
+export const increaseSpeed = () => {
+  if (currentSpeed < maxSpeed) {
+    currentSpeed = currentSpeed + 1;
+    setSpeed(currentSpeed);
+  }
+};
+export const decreaseSpeed = () => {
+  if (currentSpeed > 0) {
+    currentSpeed = currentSpeed - 1;
+    setSpeed(currentSpeed);
+  }
+};
+const runMinDuration = 0.3;
+const runMaxDuration = 1;
+
+const walkMinDuration = 0.3;
+const walkMaxDuration = 1.3;
+
+const setSpeed = (speed: number) => {
+  if (speed <= 0) {
+    spriteSelector.selectAnimation("idle");
+    return;
+  }
+  if (speed > maxSpeed) {
+    currentSpeed = maxSpeed;
+  }
+  if (speed < minSpeed) {
+    currentSpeed = minSpeed;
+  }
+  if (currentSpeed > walkMaxSpeed) {
+    setRunSpeedDuration();
+  } else if (currentSpeed <= walkMaxSpeed) {
+    setWalkSpeedDuration();
+  }
+};
+
+export const getBoudingBox = () => {
+  return spriteSelector.getPlayerBox();
 };
 
 export const MainCharacterStart = () => {
   document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowUp") {
-      spriteAnimationSelector.selectAnimation("jump", false);
-    } else if (event.key === "ArrowRight") {
-      spriteAnimationSelector.selectAnimation("run");
-    } else if (event.key === "ArrowLeft") {
-      spriteAnimationSelector.selectAnimation("walk");
+      spriteSelector.selectAnimation("jump", false);
     }
   });
 
   document.addEventListener("touchstart", (event) => {
     if (event.touches[0].clientY < globalThis.innerHeight / 2) {
-      spriteAnimationSelector.selectAnimation("jump", false);
-    } else if (event.touches[0].clientX > globalThis.innerWidth / 2) {
-      spriteAnimationSelector.selectAnimation("run");
-    } else if (event.touches[0].clientX < globalThis.innerWidth / 2) {
-      spriteAnimationSelector.selectAnimation("walk");
+      spriteSelector.selectAnimation("jump", false);
     }
   });
 };
+
+function setWalkSpeedDuration() {
+  const translatedSpeedDuration = -0.25 * currentSpeed + 1.55;
+
+  walk.setDuration(translatedSpeedDuration);
+  spriteSelector.selectAnimation("walk");
+  console.log(translatedSpeedDuration);
+}
+
+function setRunSpeedDuration() {
+  const translatedSpeedDuration = -0.05 * currentSpeed + 1.3;
+  run.setDuration(translatedSpeedDuration);
+  spriteSelector.selectAnimation("run");
+
+  console.log(translatedSpeedDuration);
+}

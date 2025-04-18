@@ -49,6 +49,10 @@ export class SpriteSelector {
     });
   }
 
+  public getDefaultAnimation(): string {
+    return this.defaultAnimation;
+  }
+
   public getPlayerBox() {
     return this.currentSelected.getPlayerBox();
   }

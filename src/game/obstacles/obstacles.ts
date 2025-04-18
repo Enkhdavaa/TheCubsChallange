@@ -1,4 +1,8 @@
-import { GetBoudingBox } from "../characters/main/mainCharacter.ts";
+import {
+  decreaseSpeed,
+  getBoudingBox,
+  increaseSpeed,
+} from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
 import {
@@ -73,7 +77,7 @@ setInterval(() => {
 
 // Update obstacles position
 function updateObstacles() {
-  const playerBoudingBox = GetBoudingBox();
+  const playerBoudingBox = getBoudingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
     // Check if obstacle is colliding with the player
@@ -81,6 +85,13 @@ function updateObstacles() {
 
     if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
       console.log("Collision detected");
+      if (isGoodObstacle(obstacles[i].getText())) {
+        console.log("Good obstacle hit");
+        increaseSpeed();
+      } else {
+        console.log("Bad obstacle hit");
+        decreaseSpeed();
+      }
       removeObstacle(obstacles[i]);
       obstacles.splice(i, 1);
       continue;
