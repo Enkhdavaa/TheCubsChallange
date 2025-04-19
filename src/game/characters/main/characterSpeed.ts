@@ -8,6 +8,7 @@ const minSpeed = 0;
 const walkMaxSpeed = 5;
 let currentSpeed = 1;
 
+setSpeed(currentSpeed);
 setSpeedBar(translateSpeedToPercentage(currentSpeed));
 
 export const increaseSpeed = () => {
@@ -25,7 +26,7 @@ export const decreaseSpeed = () => {
   }
 };
 
-const setSpeed = (speed: number) => {
+function setSpeed(speed: number) {
   console.log("speed", speed);
 
   if (speed > maxSpeed) {
@@ -41,7 +42,7 @@ const setSpeed = (speed: number) => {
   } else if (currentSpeed <= walkMaxSpeed) {
     setWalkSpeedDuration();
   }
-};
+}
 
 function translateSpeedToPercentage(speed: number) {
   const percentage = (speed / maxSpeed) * 100;
