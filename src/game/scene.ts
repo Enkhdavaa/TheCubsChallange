@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { getAspectRatio, sizes } from "./size.ts";
 import camera from "./camera.ts";
+import { bgCamera, bgScene } from "./background/scene.ts";
 
 globalThis.addEventListener("resize", () => {
   // Update sizes
@@ -28,9 +29,12 @@ const renderer = new THREE.WebGLRenderer({
 const { width, height } = sizes();
 
 renderer.setSize(width, height);
-renderer.render(scene, camera);
 
 const tick = () => {
+  renderer.autoClear = false;
+  renderer.clear();
+
+  renderer.render(bgScene, bgCamera);
   renderer.render(scene, camera);
   globalThis.requestAnimationFrame(tick);
 };

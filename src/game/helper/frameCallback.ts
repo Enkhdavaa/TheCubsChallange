@@ -39,3 +39,7 @@ export const addFrameCallback = (callback: () => void) => {
 export const getDeltaTime = () => {
   return deltaTime;
 };
+
+export const getElapsedTime = () => {
+  return clock.getElapsedTime();
+};
