@@ -1,4 +1,3 @@
-import { addFrameCallback } from "../../helper/frameCallback.ts";
 import { spriteSelector } from "./mainCharacter.ts";
 import { setSpeedBar } from "./speedbar.ts";
 import run from "./sprites/run.ts";
@@ -8,12 +7,6 @@ const maxSpeed = 20;
 const minSpeed = 0;
 const walkMaxSpeed = 5;
 let currentSpeed = 1;
-
-const runMinDuration = 0.3;
-const runMaxDuration = 1;
-
-const walkMinDuration = 0.3;
-const walkMaxDuration = 1.3;
 
 export const increaseSpeed = () => {
   if (currentSpeed < maxSpeed) {
@@ -54,6 +47,7 @@ function translateSpeedToPercentage(speed: number) {
 }
 
 function setWalkSpeedDuration() {
+  // max walk duration is 1.3 and max is 0.3 seconds
   const translatedSpeedDuration = -0.25 * currentSpeed + 1.55;
 
   walk.setDuration(translatedSpeedDuration);
@@ -62,6 +56,7 @@ function setWalkSpeedDuration() {
 }
 
 function setRunSpeedDuration() {
+  // max run duration is 1 and min is 0.3 seconds
   const translatedSpeedDuration = -0.05 * currentSpeed + 1.3;
   run.setDuration(translatedSpeedDuration);
   spriteSelector.selectAnimation("run");
