@@ -74,7 +74,7 @@ export class SpriteFlipBook {
     this.sprite.position.set(position.x, position.y, position.z);
   }
 
-  public getPosition() {
+  public getPosition(): THREE.Vector3 {
     return this.sprite.position;
   }
 

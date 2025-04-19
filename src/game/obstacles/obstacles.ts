@@ -1,8 +1,8 @@
 import {
-  decreaseSpeed,
-  getBoudingBox,
   increaseSpeed,
-} from "../characters/main/mainCharacter.ts";
+  decreaseSpeed,
+} from "../characters/main/characterSpeed.ts";
+import { getBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
 import {

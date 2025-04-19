@@ -59,6 +59,9 @@ export class SpriteSelector {
 
   public selectAnimation(animationName: string, loop = true) {
     if (this.oneTimeActionPlaying) {
+      if (loop) {
+        this.defaultAnimation = animationName;
+      }
       return;
     }
 
@@ -96,7 +99,7 @@ export class SpriteSelector {
     this.currentSelected.setPosition(this.currentPosition);
   }
 
-  public getPosition() {
+  public getPosition(): THREE.Vector3 {
     return this.currentSelected.getPosition().clone();
   }
 
