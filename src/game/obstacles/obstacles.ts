@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import {
   increaseSpeed,
   decreaseSpeed,
@@ -5,11 +6,7 @@ import {
 import { getBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { normalizedToCanvasX } from "../helper/helper.ts";
-import {
-  glitch_regular_font,
-  helvetiker_regular_font,
-} from "../helper/text3dFonts.ts";
-import { matcapMaterial2 } from "../helper/textures.ts";
+import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
 
@@ -34,6 +31,14 @@ const xAxisMax = normalizedToCanvasX(1);
 const xAxisMin = normalizedToCanvasX(-1);
 const aspectRatio = getAspectRatio();
 
+const goodMaterial = new THREE.MeshBasicMaterial({
+  color: 0x42f360,
+});
+
+const badMaterial = new THREE.MeshBasicMaterial({
+  color: 0xee7257,
+});
+
 // Spawn obstacle
 function spawnObstacle() {
   const combined = randomTexts["good"].concat(randomTexts["bad"]);
@@ -45,15 +50,15 @@ function spawnObstacle() {
       obstacleText,
       0.2,
       helvetiker_regular_font,
-      matcapMaterial2
+      goodMaterial
     );
     setRandomPosition(textObstacle);
   } else {
     const textObstacle = new TextObstacle(
       obstacleText,
       0.2,
-      glitch_regular_font,
-      matcapMaterial2
+      helvetiker_regular_font,
+      badMaterial
     );
     setRandomPosition(textObstacle);
   }
@@ -111,7 +116,7 @@ function updateObstacles() {
 
 function addEffect(obstacle: TextObstacle) {
   const obstacleText = obstacle.getText();
-  const movementSpeed = 1.5 * getDeltaTime() * aspectRatio;
+  const movementSpeed = 3 * getDeltaTime() * aspectRatio;
   const shake = 0.04;
   const position = obstacle.getPosition();
   const randomShake = (Math.random() - 0.5) * shake;
