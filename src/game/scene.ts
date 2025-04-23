@@ -43,7 +43,7 @@ tick();
 
 export function addToScene(mesh: THREE.Mesh) {
   const aspectRation = getAspectRatio();
-  mesh.scale.set(aspectRation, aspectRation, 1);
+  mesh.scale.set(mesh.scale.x * aspectRation, mesh.scale.y * aspectRation, 1);
   scene.add(mesh);
 }
 

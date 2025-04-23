@@ -10,7 +10,7 @@ export class Obstracle implements IObstacle {
   private boxHelper: THREE.Box3Helper;
   public name: string;
 
-  constructor(name: string, spritePath: string, size: number = 0.1) {
+  constructor(name: string, spritePath: string, size: number = 0.5) {
     this.name = name;
     this.size = size;
 
