@@ -9,9 +9,13 @@ import { normalizedToCanvasX } from "../helper/helper.ts";
 import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
+import { Obstracle } from "./obstracle.ts";
+import { IObstacle } from "./disposable.ts";
 
 // Obstacle list
-const obstacles: TextObstacle[] = [];
+const beer = new Obstracle("beer", "sprites/obstacle/beer.png");
+
+const obstacles: IObstacle[] = [];
 const spawnInterval = 2500; // milliseconds
 
 const randomTexts = {
@@ -39,6 +43,7 @@ const badMaterial = new THREE.MeshBasicMaterial({
   color: 0xee7257,
 });
 
+obstacles.push(beer);
 // Spawn obstacle
 function spawnObstacle() {
   const combined = randomTexts["good"].concat(randomTexts["bad"]);
@@ -64,13 +69,13 @@ function spawnObstacle() {
   }
 }
 
-function setRandomPosition(obstacleMesh: TextObstacle) {
+function setRandomPosition(obstacleMesh: IObstacle) {
   obstacleMesh.setPosition(xAxisMax + 0.2, Math.random() * aspectRatio);
   obstacles.push(obstacleMesh);
 }
 
 // Remove obstacle from scene and array
-function removeObstacle(obstacle: TextObstacle) {
+function removeObstacle(obstacle: IObstacle) {
   console.log("removing obstacle");
   obstacle.dispose();
 }
@@ -90,7 +95,7 @@ function updateObstacles() {
 
     if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
       console.log("Collision detected");
-      if (isGoodObstacle(obstacles[i].getText())) {
+      if (isGoodObstacle(obstacles[i].name)) {
         console.log("Good obstacle hit");
         increaseSpeed();
       } else {
@@ -114,8 +119,8 @@ function updateObstacles() {
   }
 }
 
-function addEffect(obstacle: TextObstacle) {
-  const obstacleText = obstacle.getText();
+function addEffect(obstacle: IObstacle) {
+  const obstacleText = obstacle.name;
   const movementSpeed = 3 * getDeltaTime() * aspectRatio;
   const shake = 0.04;
   const position = obstacle.getPosition();
