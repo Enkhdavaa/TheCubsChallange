@@ -12,10 +12,8 @@ import { TextObstacle } from "./textObstacle.ts";
 import { Obstracle } from "./obstracle.ts";
 import { IObstacle } from "./disposable.ts";
 
-// Obstacle list
-const beer = new Obstracle("beer", "sprites/obstacle/beer.png");
-
 const obstacles: IObstacle[] = [];
+const roadObstacles: IObstacle[] = [];
 const spawnInterval = 2500; // milliseconds
 
 const randomTexts = {
@@ -43,9 +41,21 @@ const badMaterial = new THREE.MeshBasicMaterial({
   color: 0xee7257,
 });
 
-obstacles.push(beer);
 // Spawn obstacle
-function spawnObstacle() {
+function spawnRoadObstacle() {
+  const obstacleList = ["beer", "banana", "puddle"];
+  const randomIndex = Math.floor(Math.random() * obstacleList.length);
+  const obstacleName = obstacleList[randomIndex];
+  const obstacle = new Obstracle(
+    obstacleName,
+    `sprites/obstacle/${obstacleName}.png`,
+    0.4
+  );
+  obstacle.setPosition(xAxisMax + 0.2, -0.15 * aspectRatio);
+  roadObstacles.push(obstacle);
+}
+
+function spawnTextObstacle() {
   const combined = randomTexts["good"].concat(randomTexts["bad"]);
   const index = Math.floor(Math.random() * combined.length);
   const obstacleText = combined[index];
@@ -57,7 +67,7 @@ function spawnObstacle() {
       helvetiker_regular_font,
       goodMaterial
     );
-    setRandomPosition(textObstacle);
+    setTextObstraclePosition(textObstacle);
   } else {
     const textObstacle = new TextObstacle(
       obstacleText,
@@ -65,12 +75,12 @@ function spawnObstacle() {
       helvetiker_regular_font,
       badMaterial
     );
-    setRandomPosition(textObstacle);
+    setTextObstraclePosition(textObstacle);
   }
 }
 
-function setRandomPosition(obstacleMesh: IObstacle) {
-  obstacleMesh.setPosition(xAxisMax + 0.2, Math.random() * aspectRatio);
+function setTextObstraclePosition(obstacleMesh: IObstacle) {
+  obstacleMesh.setPosition(xAxisMax + 0.2, 0.65 * aspectRatio);
   obstacles.push(obstacleMesh);
 }
 
@@ -82,11 +92,12 @@ function removeObstacle(obstacle: IObstacle) {
 
 // Set interval
 setInterval(() => {
-  spawnObstacle();
+  spawnTextObstacle();
+  spawnRoadObstacle();
 }, spawnInterval);
 
 // Update obstacles position
-function updateObstacles() {
+function updateTextObstacles() {
   const playerBoudingBox = getBoudingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -94,12 +105,9 @@ function updateObstacles() {
     const obstacleBoudingBox = obstacles[i].getBoundingBox();
 
     if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
-      console.log("Collision detected");
       if (isGoodObstacle(obstacles[i].name)) {
-        console.log("Good obstacle hit");
         increaseSpeed();
       } else {
-        console.log("Bad obstacle hit");
         decreaseSpeed();
       }
       removeObstacle(obstacles[i]);
@@ -114,26 +122,41 @@ function updateObstacles() {
       removeObstacle(obstacles[i]);
       obstacles.splice(i, 1);
     } else {
-      addEffect(obstacles[i]);
+      const movementSpeed = calculateSpeed();
+      obstacles[i].setPosition(position.x - movementSpeed, position.y);
     }
   }
 }
 
-function addEffect(obstacle: IObstacle) {
-  const obstacleText = obstacle.name;
-  const movementSpeed = 3 * getDeltaTime() * aspectRatio;
-  const shake = 0.04;
-  const position = obstacle.getPosition();
-  const randomShake = (Math.random() - 0.5) * shake;
+function updateRoadObstacles() {
+  const playerBoudingBox = getBoudingBox();
 
-  if (isGoodObstacle(obstacleText)) {
-    obstacle.setPosition(position.x - movementSpeed, position.y);
-  } else {
-    obstacle.setPosition(
-      position.x - movementSpeed + randomShake,
-      position.y + randomShake
-    );
+  for (let i = roadObstacles.length - 1; i >= 0; i--) {
+    // Check if obstacle is colliding with the player
+    const obstacleBoudingBox = roadObstacles[i].getBoundingBox();
+
+    if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
+      decreaseSpeed();
+      removeObstacle(roadObstacles[i]);
+      roadObstacles.splice(i, 1);
+      continue;
+    }
+
+    const position = roadObstacles[i].getPosition();
+
+    // Offscreen to the left of the camera view
+    if (position.x < xAxisMin - 0.5) {
+      removeObstacle(roadObstacles[i]);
+      roadObstacles.splice(i, 1);
+    } else {
+      const movementSpeed = calculateSpeed();
+      roadObstacles[i].setPosition(position.x - movementSpeed, position.y);
+    }
   }
+}
+
+function calculateSpeed() {
+  return 3 * getDeltaTime() * aspectRatio;
 }
 
 function isGoodObstacle(obstacleText: string) {
@@ -142,6 +165,7 @@ function isGoodObstacle(obstacleText: string) {
 
 export const LoadObstacles = () => {
   addFrameCallback(() => {
-    updateObstacles();
+    updateTextObstacles();
+    updateRoadObstacles();
   });
 };

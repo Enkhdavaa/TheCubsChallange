@@ -1,5 +1,5 @@
 import { spriteSelector } from "./mainCharacter.ts";
-import { setSpeedBar } from "./speedbar.ts";
+import { setSpeedBar } from "./distanceBar.ts";
 import run from "./sprites/run.ts";
 import walk from "./sprites/walk.ts";
 
