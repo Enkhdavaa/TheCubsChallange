@@ -1,5 +1,6 @@
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { getCharacterPosition } from "../positions.ts";
+import { scene } from "../scene.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
@@ -15,6 +16,11 @@ export class SpriteSelector {
 
   private isJumping = false;
   private jumpDuration = 0.7;
+
+  private playerBox: THREE.Box3;
+  private playerBoxHelper: THREE.Box3Helper;
+
+  private boundingBoxDimensions: THREE.Vector3;
 
   constructor(
     spriteFlipBook: Map<string, SpriteFlipBook>,
@@ -32,18 +38,43 @@ export class SpriteSelector {
       this.oneTimeActionPlaying = false;
       this.selectAnimation(this.defaultAnimation);
     });
+
+    this.playerBox = new THREE.Box3();
+    this.playerBoxHelper = new THREE.Box3Helper(this.playerBox, 0xffff00);
+    this.playerBoxHelper.visible = true;
+
+    const sprite = this.currentSelected.getSprite();
+    this.boundingBoxDimensions = new THREE.Vector3(
+      sprite.scale.x / 4,
+      sprite.scale.y / 2,
+      0.1
+    );
+
+    this.applyBoundingBox();
+    this.playerBoxHelper.visible = true;
+
+    scene.add(this.playerBoxHelper);
   }
 
   private startAnimation() {
     addFrameCallback(() => {
       this.currentSelected.update();
       this.applyMovement();
+      this.applyBoundingBox();
     });
+  }
+
+  private applyBoundingBox() {
+    this.playerBox.setFromCenterAndSize(
+      this.currentSelected.getPosition(),
+      this.boundingBoxDimensions
+    );
+    this.playerBoxHelper.position.copy(this.playerBox);
   }
 
   public collidedWith(otherBoxes: THREE.Box3[]) {
     otherBoxes.forEach((otherBox) => {
-      if (this.currentSelected.getPlayerBox().intersectsBox(otherBox)) {
+      if (this.playerBox.intersectsBox(otherBox)) {
         console.log("Collision detected");
       }
     });
@@ -54,7 +85,7 @@ export class SpriteSelector {
   }
 
   public getPlayerBox() {
-    return this.currentSelected.getPlayerBox();
+    return this.playerBox;
   }
 
   public selectAnimation(animationName: string, loop = true) {

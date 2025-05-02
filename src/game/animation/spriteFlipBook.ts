@@ -11,10 +11,6 @@ export class SpriteFlipBook {
   private map: THREE.Texture;
   private sprite: THREE.Sprite;
 
-  private playerBox: THREE.Box3;
-  private playerBoxHelper: THREE.Box3Helper;
-  private enabledColision = false;
-
   private playSpriteIndices: number[] = [];
   private positionIndices: THREE.Vector3[] = []; //TODO: use this to set the position of the sprite
 
@@ -44,13 +40,9 @@ export class SpriteFlipBook {
     this.sprite = new THREE.Sprite(material);
     this.sprite.visible = false;
 
-    this.playerBox = new THREE.Box3();
-    this.playerBoxHelper = new THREE.Box3Helper(this.playerBox, 0xffff00);
-
     this.hide();
 
     scene.add(this.sprite);
-    scene.add(this.playerBoxHelper);
   }
 
   public setArrayAndDuration(
@@ -85,8 +77,6 @@ export class SpriteFlipBook {
   public hide() {
     this.elapsedTime = 0;
     this.sprite.visible = false;
-    this.enabledColision = false;
-    this.playerBoxHelper.visible = false;
   }
 
   public show(loop: boolean = true) {
@@ -97,25 +87,14 @@ export class SpriteFlipBook {
     this.runningTileArrayIndex = 0;
     this.setOffsetToSetTile();
     this.sprite.visible = true;
-    this.enabledColision = true;
+  }
+
+  public getSprite() {
+    return this.sprite;
   }
 
   public isVisible() {
     return this.sprite.visible;
-  }
-
-  private setBoudingBox() {
-    this.playerBox.setFromCenterAndSize(
-      this.sprite.position,
-      new THREE.Vector3(this.sprite.scale.x / 4, this.sprite.scale.y / 2, 0.1)
-    );
-    this.playerBoxHelper.box.copy(this.playerBox);
-    this.playerBoxHelper.updateMatrixWorld(true);
-    this.playerBoxHelper.visible = true;
-  }
-
-  public getPlayerBox() {
-    return this.playerBox;
   }
 
   public getAnimationDuration() {
@@ -150,7 +129,6 @@ export class SpriteFlipBook {
       this.elapsedTime = 0;
 
       this.setOffsetToSetTile();
-      this.setBoudingBox();
     }
   }
 
