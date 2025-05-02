@@ -28,9 +28,14 @@ function getCameraBounds() {
   return { left, right, top, bottom };
 }
 
-export function isOffLeft(obstacle: THREE.Object3D, width: number) {
-  const { left } = getCameraBounds();
-  return obstacle.position.x + width / 2 < left;
+export function isOffScreenCached(box: THREE.Box3): boolean {
+  const { left, right, top, bottom } = getCameraBounds();
+  return (
+    box.max.x < left ||
+    box.min.x > right ||
+    box.max.y < bottom ||
+    box.min.y > top
+  );
 }
 
 export function updateOrthographicCamera() {

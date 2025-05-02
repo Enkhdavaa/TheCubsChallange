@@ -5,7 +5,8 @@ import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
 import { RoadObstracle } from "./roadObstracle.ts";
-import { IObstacle } from "./disposable.ts";
+import { IObstacle } from "./interfaces.ts";
+import { isOffScreenCached } from "../camera.ts";
 
 const obstacles: IObstacle[] = [];
 const spawnInterval = 2500; // milliseconds
@@ -105,7 +106,9 @@ function updateObstacles() {
     }
 
     const position = obstacle.getPosition();
-    if (position.x < OFFSCREEN_THRESHOLD) {
+    const boundingBox = obstacle.getBoundingBox();
+
+    if (isOffScreenCached(boundingBox)) {
       removeObstacle(obstacle);
       obstacles.splice(i, 1);
     } else {

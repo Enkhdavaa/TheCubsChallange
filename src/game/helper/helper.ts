@@ -31,6 +31,12 @@ export function getObjectWidth(object: THREE.Object3D): number {
     return width;
   }
 
+  if (object instanceof THREE.Box3) {
+    const box = object;
+    const width = (box.max.x - box.min.x) * object.scale.x;
+    return width;
+  }
+
   console.warn("Unsupported object type for width calculation:", object);
   return 0;
 }

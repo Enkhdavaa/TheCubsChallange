@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { scene } from "../scene.ts";
 import { textureLoader } from "../helper/textures.ts";
-import { IObstacle } from "./disposable.ts";
+import { IObstacle } from "./interfaces.ts";
 import { getRoadObstaclePosition } from "../positions.ts";
 
 export class RoadObstracle implements IObstacle {
