@@ -10,6 +10,7 @@ export class RoadObstracle implements IObstacle {
   private box: THREE.Box3;
   private boxHelper: THREE.Box3Helper;
   public name: string;
+  public speed: number = 0.01;
 
   constructor(name: string, spritePath: string, size: number = 0.5) {
     this.name = name;

@@ -9,6 +9,7 @@ export class TextObstacle implements IObstacle {
   private box: THREE.Box3;
   private boxHelper: THREE.Box3Helper;
   public name: string;
+  public speed: number = 0.01;
 
   constructor(
     text: string,

@@ -1,9 +1,5 @@
 import * as THREE from "three";
-import {
-  increaseSpeed,
-  decreaseSpeed,
-} from "../characters/main/characterSpeed.ts";
-import { getBoudingBox } from "../characters/main/mainCharacter.ts";
+import { mainCharacter } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 import { getAspectRatio } from "../size.ts";
@@ -84,7 +80,7 @@ setInterval(() => {
 
 // Update obstacles position
 function updateObstacles() {
-  const playerBoudingBox = getBoudingBox();
+  const playerBoudingBox = mainCharacter.getBoundingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
     // Check if obstacle is colliding with the player
@@ -92,9 +88,9 @@ function updateObstacles() {
 
     if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
       if (isGoodObstacle(obstacles[i].name)) {
-        increaseSpeed();
+        mainCharacter.increaseSpeed();
       } else {
-        decreaseSpeed();
+        mainCharacter.decreaseSpeed();
       }
       removeObstacle(obstacles[i]);
       obstacles.splice(i, 1);
