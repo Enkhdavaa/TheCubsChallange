@@ -28,7 +28,7 @@ function getCameraBounds() {
   return { left, right, top, bottom };
 }
 
-export function isOffScreenCached(box: THREE.Box3): boolean {
+export function isOffScreen(box: THREE.Box3): boolean {
   const { left, right, top, bottom } = getCameraBounds();
   return (
     box.max.x < left ||
