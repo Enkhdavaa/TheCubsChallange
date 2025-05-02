@@ -18,3 +18,19 @@ export function getScreenAnchor(
 export function generateAscendingArray(n: number): number[] {
   return Array.from({ length: n }, (_, i) => i);
 }
+
+export function getObjectWidth(object: THREE.Object3D): number {
+  if (object instanceof THREE.Sprite) {
+    return object.scale.x;
+  }
+
+  if (object instanceof THREE.Mesh && object.geometry) {
+    object.geometry.computeBoundingBox();
+    const box = object.geometry.boundingBox!;
+    const width = (box.max.x - box.min.x) * object.scale.x;
+    return width;
+  }
+
+  console.warn("Unsupported object type for width calculation:", object);
+  return 0;
+}
