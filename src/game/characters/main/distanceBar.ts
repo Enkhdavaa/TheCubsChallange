@@ -28,10 +28,12 @@ function translateSpeedToPercentage() {
   return percentage;
 }
 
-export const distanceBar = new DistanceBar();
+const distanceBar = new DistanceBar();
 
-addFrameCallback(() => {
-  distanceBar.updateDistanceBar();
-  const characterPosition = mainCharacter.getPosition();
-  bar.setPosition(characterPosition);
-});
+export const spawnDistanceBar = () => {
+  addFrameCallback(() => {
+    distanceBar.updateDistanceBar();
+    const characterPosition = mainCharacter.getPosition();
+    bar.setPosition(characterPosition);
+  });
+};

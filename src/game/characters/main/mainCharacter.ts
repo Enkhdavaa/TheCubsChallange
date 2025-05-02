@@ -2,10 +2,10 @@ import { SpriteFlipBook } from "../../animation/spriteFlipBook.ts";
 import { SpriteSelector } from "../../animation/spriteSelector.ts";
 import * as THREE from "three";
 
-import idle from "./sprites/idle.ts";
-import jump from "./sprites/jump.ts";
-import run from "./sprites/run.ts";
-import walk from "./sprites/walk.ts";
+import idle from "../../animation/sprites/idle.ts";
+import jump from "../../animation/sprites/jump.ts";
+import run from "../../animation/sprites/run.ts";
+import walk from "../../animation/sprites/walk.ts";
 
 // Create animation map
 const animationMap = new Map<string, SpriteFlipBook>();

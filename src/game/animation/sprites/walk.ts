@@ -1,5 +1,5 @@
-import { generateAscendingArray } from "../../../helper/helper.ts";
-import { SpriteFlipBook } from "../../../animation/spriteFlipBook.ts";
+import { generateAscendingArray } from "../../helper/helper.ts";
+import { SpriteFlipBook } from "../spriteFlipBook.ts";
 
 const path = "sprites/player/walk.png";
 
