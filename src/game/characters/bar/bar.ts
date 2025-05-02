@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { scene } from "../../scene.ts";
-import { getAspectRatio } from "../../size.ts";
 import add3DTextMesh from "../../helper/add3dTextMesh.ts";
 import { helvetiker_regular_font } from "../../helper/text3dFonts.ts";
 
@@ -17,10 +16,8 @@ export class Bar {
   private offsetX: number = 0;
   private offsetY: number = 0.5;
   private offsetZ: number = 0;
-  private aspectRatio;
 
   constructor(text: string, color: number) {
-    this.aspectRatio = getAspectRatio();
     this.setOffset(0, 0.35, 0);
 
     this.maxBarValue = 100;
@@ -61,9 +58,9 @@ export class Bar {
   }
 
   public setOffset(x: number, y: number, z: number) {
-    this.offsetX = x * this.aspectRatio;
-    this.offsetY = y * this.aspectRatio;
-    this.offsetZ = z * this.aspectRatio;
+    this.offsetX = x;
+    this.offsetY = y;
+    this.offsetZ = z;
   }
 
   public setPosition(position: THREE.Vector3) {

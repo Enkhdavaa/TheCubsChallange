@@ -28,6 +28,7 @@ class MainCharacter {
 
   constructor() {
     this.spriteSelector = spriteSelector;
+    this.setSpeed(this.currentSpeed);
   }
 
   public getPosition() {

@@ -19,6 +19,20 @@ const orthoCamera = new THREE.OrthographicCamera(
 
 orthoCamera.position.z = 10;
 
+function getCameraBounds() {
+  const left = orthoCamera.left + orthoCamera.position.x;
+  const right = orthoCamera.right + orthoCamera.position.x;
+  const top = orthoCamera.top + orthoCamera.position.y;
+  const bottom = orthoCamera.bottom + orthoCamera.position.y;
+
+  return { left, right, top, bottom };
+}
+
+export function isOffLeft(obstacle: THREE.Object3D, width: number) {
+  const { left } = getCameraBounds();
+  return obstacle.position.x + width / 2 < left;
+}
+
 export function updateOrthographicCamera() {
   const aspect = getAspectRatio();
 

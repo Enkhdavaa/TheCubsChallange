@@ -34,35 +34,47 @@ const badMaterial = new THREE.MeshBasicMaterial({
   color: 0xee7257,
 });
 
-function spawnObstacle() {
-  const combined = randomTexts["good"]
-    .concat(randomTexts["bad"])
-    .concat(randomTexts["roadObstacles"]);
-  const index = Math.floor(Math.random() * combined.length);
-  const obstacleText = combined[index];
+const GOOD_OBSTACLE_SCALE = 0.2;
+const BAD_OBSTACLE_SCALE = 0.2;
+const ROAD_OBSTACLE_SCALE = 0.4;
+const OFFSCREEN_THRESHOLD = -3;
 
+function createObstacle(obstacleText: string) {
   if (isGoodObstacle(obstacleText)) {
-    const textObstacle = new TextObstacle(
+    return new TextObstacle(
       obstacleText,
-      0.2,
+      GOOD_OBSTACLE_SCALE,
       helvetiker_regular_font,
       goodMaterial
     );
-    obstacles.push(textObstacle);
   } else if (randomTexts["bad"].includes(obstacleText)) {
-    const textObstacle = new TextObstacle(
+    return new TextObstacle(
       obstacleText,
-      0.2,
+      BAD_OBSTACLE_SCALE,
       helvetiker_regular_font,
       badMaterial
     );
-    obstacles.push(textObstacle);
   } else if (randomTexts["roadObstacles"].includes(obstacleText)) {
-    const obstacle = new RoadObstracle(
+    return new RoadObstracle(
       obstacleText,
       `sprites/obstacle/${obstacleText}.png`,
-      0.4
+      ROAD_OBSTACLE_SCALE
     );
+  }
+  return null;
+}
+
+function spawnObstacle() {
+  const combined = [
+    ...randomTexts["good"],
+    ...randomTexts["bad"],
+    ...randomTexts["roadObstacles"],
+  ];
+  const index = Math.floor(Math.random() * combined.length);
+  const obstacleText = combined[index];
+  const obstacle = createObstacle(obstacleText);
+
+  if (obstacle) {
     obstacles.push(obstacle);
   }
 }
@@ -80,34 +92,36 @@ setInterval(() => {
 
 // Update obstacles position
 function updateObstacles() {
-  const playerBoudingBox = mainCharacter.getBoundingBox();
+  const playerBoundingBox = mainCharacter.getBoundingBox();
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
-    // Check if obstacle is colliding with the player
-    const obstacleBoudingBox = obstacles[i].getBoundingBox();
+    const obstacle = obstacles[i];
+    const obstacleBoundingBox = obstacle.getBoundingBox();
 
-    if (obstacleBoudingBox.intersectsBox(playerBoudingBox)) {
-      if (isGoodObstacle(obstacles[i].name)) {
-        mainCharacter.increaseSpeed();
-      } else {
-        mainCharacter.decreaseSpeed();
-      }
-      removeObstacle(obstacles[i]);
+    if (obstacleBoundingBox.intersectsBox(playerBoundingBox)) {
+      handleCollision(obstacle);
       obstacles.splice(i, 1);
       continue;
     }
 
-    const position = obstacles[i].getPosition();
-
-    // Offscreen to the left of the camera view
-    if (position.x < -0.5) {
-      removeObstacle(obstacles[i]);
+    const position = obstacle.getPosition();
+    if (position.x < OFFSCREEN_THRESHOLD) {
+      removeObstacle(obstacle);
       obstacles.splice(i, 1);
     } else {
       const movementSpeed = calculateSpeed();
-      obstacles[i].setPosition(position.x - movementSpeed, position.y);
+      obstacle.setPosition(position.x - movementSpeed, position.y);
     }
   }
+}
+
+function handleCollision(obstacle: IObstacle) {
+  if (isGoodObstacle(obstacle.name)) {
+    mainCharacter.increaseSpeed();
+  } else {
+    mainCharacter.decreaseSpeed();
+  }
+  removeObstacle(obstacle);
 }
 
 function calculateSpeed() {
