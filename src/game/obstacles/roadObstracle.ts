@@ -2,8 +2,9 @@ import * as THREE from "three";
 import { scene } from "../scene.ts";
 import { textureLoader } from "../helper/textures.ts";
 import { IObstacle } from "./disposable.ts";
+import { getRoadObstaclePosition } from "../positions.ts";
 
-export class Obstracle implements IObstacle {
+export class RoadObstracle implements IObstacle {
   private size: number;
   private mesh: THREE.Mesh | THREE.Sprite;
   private box: THREE.Box3;
@@ -22,6 +23,8 @@ export class Obstracle implements IObstacle {
     });
     this.mesh = new THREE.Sprite(material);
     this.mesh.scale.set(this.size, this.size, 1);
+    const position = getRoadObstaclePosition();
+    this.mesh.position.set(position.x, position.y, 0);
 
     this.box = new THREE.Box3().setFromObject(this.mesh);
 
@@ -32,6 +35,7 @@ export class Obstracle implements IObstacle {
     scene.add(this.mesh);
     scene.add(this.boxHelper);
   }
+
   getPosition() {
     return this.mesh.position;
   }

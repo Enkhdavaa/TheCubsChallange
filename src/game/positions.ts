@@ -1,9 +1,9 @@
 import { getScreenAnchor } from "./helper/helper.ts";
 
 const introTextPosition = { x: 0.5, y: 0.9 };
-const characterPosition = { x: 0.1, y: 0.1 };
-const textObstaclePosition = { x: 0.5, y: 0 };
-const roadObsraclePosition = { x: 0.5, y: 0 };
+const characterPosition = { x: 0.1, y: 0.4 };
+const textObstaclePosition = { x: 1, y: 0.5 };
+const roadObsraclePosition = { x: 1, y: 0.35 };
 
 export const getIntroTextPosition = () => {
   const anchorPosition = getScreenAnchor(

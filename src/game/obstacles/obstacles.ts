@@ -5,11 +5,10 @@ import {
 } from "../characters/main/characterSpeed.ts";
 import { getBoudingBox } from "../characters/main/mainCharacter.ts";
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
-import { normalizedToCanvasX } from "../helper/helper.ts";
 import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 import { getAspectRatio } from "../size.ts";
 import { TextObstacle } from "./textObstacle.ts";
-import { Obstracle } from "./obstracle.ts";
+import { RoadObstracle } from "./roadObstracle.ts";
 import { IObstacle } from "./disposable.ts";
 
 const obstacles: IObstacle[] = [];
@@ -29,7 +28,6 @@ const randomTexts = {
   roadObstacles: ["beer", "banana", "puddle"],
 };
 
-const xAxisMax = normalizedToCanvasX(1);
 const aspectRatio = getAspectRatio();
 
 const goodMaterial = new THREE.MeshBasicMaterial({
@@ -54,7 +52,7 @@ function spawnObstacle() {
       helvetiker_regular_font,
       goodMaterial
     );
-    setTextObstraclePosition(textObstacle);
+    obstacles.push(textObstacle);
   } else if (randomTexts["bad"].includes(obstacleText)) {
     const textObstacle = new TextObstacle(
       obstacleText,
@@ -62,21 +60,15 @@ function spawnObstacle() {
       helvetiker_regular_font,
       badMaterial
     );
-    setTextObstraclePosition(textObstacle);
+    obstacles.push(textObstacle);
   } else if (randomTexts["roadObstacles"].includes(obstacleText)) {
-    const obstacle = new Obstracle(
+    const obstacle = new RoadObstracle(
       obstacleText,
       `sprites/obstacle/${obstacleText}.png`,
       0.4
     );
-    obstacle.setPosition(xAxisMax + 0.2, -0.15 * aspectRatio);
     obstacles.push(obstacle);
   }
-}
-
-function setTextObstraclePosition(obstacleMesh: IObstacle) {
-  obstacleMesh.setPosition(xAxisMax + 0.2, 0.65 * aspectRatio);
-  obstacles.push(obstacleMesh);
 }
 
 // Remove obstacle from scene and array

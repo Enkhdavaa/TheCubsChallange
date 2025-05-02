@@ -2,6 +2,7 @@ import * as THREE from "three";
 import add3dTextMesh from "../helper/add3dTextMesh.ts";
 import { scene } from "../scene.ts";
 import { IObstacle } from "./disposable.ts";
+import { getTextObstaclePosition } from "../positions.ts";
 
 export class TextObstacle implements IObstacle {
   private textMesh: THREE.Mesh;
@@ -18,7 +19,8 @@ export class TextObstacle implements IObstacle {
   ) {
     this.name = text;
     this.textMesh = add3dTextMesh(text, size, font, matcap);
-    this.textMesh.position.set(0, 0, 0);
+    const position = getTextObstaclePosition();
+    this.textMesh.position.set(position.x, position.y, 0);
     this.textMesh.visible = true;
 
     this.box = new THREE.Box3().setFromObject(this.textMesh);

@@ -1,6 +1,5 @@
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { getCharacterPosition } from "../positions.ts";
-import { getAspectRatio } from "../size.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
