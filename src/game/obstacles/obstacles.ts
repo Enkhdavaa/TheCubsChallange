@@ -30,7 +30,6 @@ const randomTexts = {
 };
 
 const xAxisMax = normalizedToCanvasX(1);
-const xAxisMin = normalizedToCanvasX(-1);
 const aspectRatio = getAspectRatio();
 
 const goodMaterial = new THREE.MeshBasicMaterial({
@@ -113,7 +112,7 @@ function updateObstacles() {
     const position = obstacles[i].getPosition();
 
     // Offscreen to the left of the camera view
-    if (position.x < xAxisMin - 0.5) {
+    if (position.x < -0.5) {
       removeObstacle(obstacles[i]);
       obstacles.splice(i, 1);
     } else {

@@ -1,7 +1,6 @@
 import { SpriteFlipBook } from "../../animation/spriteFlipBook.ts";
 import { SpriteSelector } from "../../animation/spriteSelector.ts";
 import { addFrameCallback } from "../../helper/frameCallback.ts";
-import { normalizedToCanvas } from "../../helper/helper.ts";
 
 import idle from "./sprites/idle.ts";
 import jump from "./sprites/jump.ts";
@@ -17,9 +16,6 @@ animationMap.set("walk", walk);
 
 // Animation selector
 export const spriteSelector = new SpriteSelector(animationMap, "walk");
-
-const position = normalizedToCanvas(-0.7, 0);
-spriteSelector.setPosition(position);
 spriteSelector.selectAnimation("walk");
 
 addFrameCallback(() => {

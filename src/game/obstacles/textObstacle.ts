@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import add3dTextMesh from "../helper/add3dTextMesh.ts";
-import { addToScene, removeFromScene } from "../scene.ts";
+import { scene } from "../scene.ts";
 import { IObstacle } from "./disposable.ts";
 
 export class TextObstacle implements IObstacle {
@@ -26,8 +26,8 @@ export class TextObstacle implements IObstacle {
     this.boxHelper.visible = true;
     this.boxHelper.position.copy(this.textMesh.position);
 
-    addToScene(this.textMesh);
-    addToScene(this.boxHelper);
+    scene.add(this.textMesh);
+    scene.add(this.boxHelper);
   }
 
   public setPosition(x: number, y: number) {
@@ -45,8 +45,8 @@ export class TextObstacle implements IObstacle {
   }
 
   public dispose(): void {
-    removeFromScene(this.textMesh);
-    removeFromScene(this.boxHelper);
+    scene.remove(this.textMesh);
+    scene.remove(this.boxHelper);
 
     this.textMesh.geometry.dispose();
     this.textMesh.material.dispose();

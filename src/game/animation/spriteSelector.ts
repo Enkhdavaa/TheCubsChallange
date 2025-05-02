@@ -1,5 +1,5 @@
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
-import { normalizedToCanvas } from "../helper/helper.ts";
+import { getCharacterPosition } from "../positions.ts";
 import { getAspectRatio } from "../size.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
@@ -23,7 +23,8 @@ export class SpriteSelector {
   ) {
     this.spriteFlipBooks = spriteFlipBook;
     this.currentSelected = spriteFlipBook.get(defaultAnimation)!;
-    this.currentPosition = normalizedToCanvas(0, 0);
+    this.currentPosition = getCharacterPosition();
+    this.setPosition(this.currentPosition);
     this.selectAnimation(defaultAnimation);
     this.startAnimation();
     this.defaultAnimation = defaultAnimation;
@@ -88,7 +89,6 @@ export class SpriteSelector {
     this.currentSelected.show(loop);
 
     if (animationName === "jump") {
-      this.jumpHeight = 0.5 * getAspectRatio();
       this.isJumping = true;
       this.jumpDuration = this.currentSelected.getAnimationDuration();
     }
@@ -104,7 +104,7 @@ export class SpriteSelector {
   }
 
   private elapsedTime = 0;
-  private jumpHeight = 0.5 * getAspectRatio();
+  private jumpHeight = 0.5;
 
   private applyMovement() {
     if (this.isJumping) {

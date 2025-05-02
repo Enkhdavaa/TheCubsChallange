@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { addToScene } from "../../scene.ts";
+import { scene } from "../../scene.ts";
 import { getAspectRatio } from "../../size.ts";
 import add3DTextMesh from "../../helper/add3dTextMesh.ts";
 import { helvetiker_regular_font } from "../../helper/text3dFonts.ts";
@@ -37,7 +37,7 @@ export class Bar {
     this.group.add(this.foreground);
     this.group.add(textMesh);
 
-    addToScene(this.group);
+    scene.add(this.group);
   }
 
   private createTextMesh(text: string, color: number): THREE.Mesh {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { addToScene, removeFromScene } from "../scene.ts";
+import { scene } from "../scene.ts";
 import { textureLoader } from "../helper/textures.ts";
 import { IObstacle } from "./disposable.ts";
 
@@ -29,8 +29,8 @@ export class Obstracle implements IObstacle {
     this.boxHelper.visible = true;
     this.boxHelper.position.copy(this.mesh.position);
 
-    addToScene(this.mesh);
-    addToScene(this.boxHelper);
+    scene.add(this.mesh);
+    scene.add(this.boxHelper);
   }
   getPosition() {
     return this.mesh.position;
@@ -47,8 +47,8 @@ export class Obstracle implements IObstacle {
   }
 
   public dispose() {
-    removeFromScene(this.mesh);
-    removeFromScene(this.boxHelper);
+    scene.remove(this.mesh);
+    scene.remove(this.boxHelper);
 
     this.mesh.geometry.dispose();
     this.mesh.material.dispose();

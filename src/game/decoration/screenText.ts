@@ -1,8 +1,8 @@
-import { addToScene } from "../scene.ts";
-import { normalizedToCanvas } from "../helper/helper.ts";
+import { scene } from "../scene.ts";
 import add3DTextMesh from "../helper/add3dTextMesh.ts";
 import { matrixtype_regular_font } from "../helper/text3dFonts.ts";
 import { matcapMaterial1 } from "../helper/textures.ts";
+import { getIntroTextPosition } from "../positions.ts";
 
 export const RenderScreenText = () => {
   const textMesh = add3DTextMesh(
@@ -12,9 +12,9 @@ export const RenderScreenText = () => {
     matcapMaterial1
   );
 
-  const position = normalizedToCanvas(0, 0.8);
+  const position = getIntroTextPosition();
   textMesh.position.set(position.x, position.y, 0);
   textMesh.rotation.x = (Math.PI / 2) * 0.2;
 
-  addToScene(textMesh);
+  scene.add(textMesh);
 };

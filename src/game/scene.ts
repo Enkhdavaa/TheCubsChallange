@@ -1,15 +1,9 @@
 import * as THREE from "three";
-import { getAspectRatio, sizes } from "./size.ts";
-import camera from "./camera.ts";
-import { bgCamera, bgScene } from "./background/scene.ts";
+import { sizes } from "./size.ts";
+import { orthographicCamera, updateOrthographicCamera } from "./camera.ts";
 
 globalThis.addEventListener("resize", () => {
-  // Update sizes
-  const { width, height } = sizes();
-
-  // Update camera
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
+  updateOrthographicCamera();
 
   // Update renderer
   renderer.setSize(width, height);
@@ -17,8 +11,8 @@ globalThis.addEventListener("resize", () => {
 });
 
 // Scene
-const scene = new THREE.Scene();
-scene.add(camera);
+export const scene = new THREE.Scene();
+scene.add(orthographicCamera);
 
 // Renderer
 const canvas = document.querySelector("canvas.webgl");
@@ -31,22 +25,8 @@ const { width, height } = sizes();
 renderer.setSize(width, height);
 
 const tick = () => {
-  renderer.autoClear = false;
-  renderer.clear();
-
-  renderer.render(bgScene, bgCamera);
-  renderer.render(scene, camera);
+  renderer.render(scene, orthographicCamera);
   globalThis.requestAnimationFrame(tick);
 };
 
 tick();
-
-export function addToScene(mesh: THREE.Mesh) {
-  const aspectRation = getAspectRatio();
-  mesh.scale.set(mesh.scale.x * aspectRation, mesh.scale.y * aspectRation, 1);
-  scene.add(mesh);
-}
-
-export function removeFromScene(mesh: THREE.Mesh) {
-  scene.remove(mesh);
-}
