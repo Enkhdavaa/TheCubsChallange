@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import add3dTextMesh from "../helper/add3dTextMesh.ts";
 import { scene } from "../scene.ts";
-import { IObstacle } from "./disposable.ts";
+import { IObstacle } from "./interfaces.ts";
 import { getTextObstaclePosition } from "../positions.ts";
 
 export class TextObstacle implements IObstacle {
