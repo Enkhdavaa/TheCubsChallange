@@ -1,16 +1,15 @@
 import * as THREE from "three";
-import { cameraViewHeight } from "../camera.ts";
 
 export function getScreenAnchor(
   xFraction: number,
   yFraction: number,
-  viewHeight = cameraViewHeight
-) {
-  const aspect = globalThis.innerWidth / globalThis.innerHeight;
-  const viewWidth = viewHeight * aspect;
+  camera: THREE.Camera
+): THREE.Vector3 {
+  const viewHeight = camera.top - camera.bottom;
+  const viewWidth = camera.right - camera.left;
 
-  const x = -viewWidth / 2 + viewWidth * xFraction;
-  const y = -viewHeight / 2 + viewHeight * yFraction;
+  const x = camera.left + xFraction * viewWidth;
+  const y = camera.bottom + yFraction * viewHeight;
 
   return new THREE.Vector3(x, y, 0);
 }

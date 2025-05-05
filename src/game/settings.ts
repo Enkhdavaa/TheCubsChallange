@@ -1,0 +1,5 @@
+export const SETTINGS = {
+  Min_INTERNAL_WIDTH: 16,
+  MIN_INTERNAL_HEIGHT: 9,
+  ASPECT_RATIO: 16 / 9,
+};

@@ -1,0 +1,29 @@
+html {
+  touch-action: none;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  background: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.webgl {
+  top: 0;
+  left: 0;
+  outline: none;
+}
