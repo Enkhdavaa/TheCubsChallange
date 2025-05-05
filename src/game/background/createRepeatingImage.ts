@@ -24,8 +24,8 @@ export function createRepeatingImage({
     const viewHeight = camera.top - camera.bottom;
 
     // Geometry should match the texture’s world size
-    const geometry = new THREE.PlaneGeometry(viewWidth / 2, viewHeight / 2);
-    // geometry.repeat.set(1, 1);
+    const geometry = new THREE.PlaneGeometry(viewWidth, viewHeight / 2);
+    texture.repeat.set(2, 1);
 
     const material = new THREE.MeshBasicMaterial({
       map: texture,

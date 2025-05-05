@@ -9,11 +9,13 @@ body {
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
-  background: green;
+  background: black;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: fixed;
+  inset: 0;
 }
 
 canvas {
