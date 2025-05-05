@@ -2,12 +2,10 @@ import { isOffScreen } from "../camera.ts";
 import { mainCharacter } from "../characters/main/mainCharacter.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
 import { IObstacle } from "./interfaces.ts";
-import { getWindowAspectRatio } from "../size.ts";
 import { randomTexts } from "./text.ts";
 
 export class ObstacleManager {
   private obstacles: IObstacle[] = [];
-  private aspectRatio = getWindowAspectRatio();
 
   constructor() {}
 
@@ -46,7 +44,7 @@ export class ObstacleManager {
   }
 
   private calculateSpeed() {
-    return 3 * getDeltaTime() * this.aspectRatio;
+    return 10 * getDeltaTime();
   }
 
   private removeObstacle(obstacle: IObstacle) {
