@@ -10,11 +10,11 @@ import { createRepeatingImage } from "./createRepeatingImage.ts";
 // });
 
 export const LoadBackground = () => {
-  //   createRepeatingImage({
-  //     imagePath: "sprites/background/eindhoven.png",
-  //     camera: orthographicCamera,
-  //     scene: scene,
-  //   });
+  createRepeatingImage({
+    imagePath: "sprites/background/eindhoven.png",
+    camera: orthographicCamera,
+    scene: scene,
+  });
   //   const bushGeometry = new THREE.PlaneGeometry(2, 0.5, 32, 32);
   //   const bushMesh = new THREE.Mesh(bushGeometry, bushMaterial);
   //   bushMesh.position.set(0, -0.8, 0);
