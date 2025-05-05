@@ -1,5 +1,14 @@
+const width = 16;
+const height = 9;
+const aspectRatio = width / height;
+
+const mainCharacterScale = 2;
+const jumpHeight = 0.5;
+
 export const SETTINGS = {
-  Min_INTERNAL_WIDTH: 16,
-  MIN_INTERNAL_HEIGHT: 9,
-  ASPECT_RATIO: 16 / 9,
+  MIN_INTERNAL_WIDTH: width,
+  MIN_INTERNAL_HEIGHT: height,
+  ASPECT_RATIO: aspectRatio,
+  MAIN_CHARACTER_SCALE: mainCharacterScale,
+  JUMP_HEIGHT: jumpHeight * mainCharacterScale,
 };

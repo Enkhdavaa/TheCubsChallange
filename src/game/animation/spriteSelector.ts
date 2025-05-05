@@ -1,6 +1,7 @@
 import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
 import { getCharacterPosition } from "../positions.ts";
 import { scene } from "../scene.ts";
+import { SETTINGS } from "../settings.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
 import { SpriteFlipBook } from "./spriteFlipBook.ts";
 import * as THREE from "three";
@@ -134,7 +135,7 @@ export class SpriteSelector {
   }
 
   private elapsedTime = 0;
-  private jumpHeight = 0.5;
+  private jumpHeight = SETTINGS.JUMP_HEIGHT;
 
   private applyMovement() {
     if (this.isJumping) {

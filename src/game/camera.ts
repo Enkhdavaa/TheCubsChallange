@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { SETTINGS } from "./settings.ts";
 
 const {
-  Min_INTERNAL_WIDTH: INTERNAL_WIDTH,
+  MIN_INTERNAL_WIDTH: INTERNAL_WIDTH,
   MIN_INTERNAL_HEIGHT: INTERNAL_HEIGHT,
 } = SETTINGS;
 

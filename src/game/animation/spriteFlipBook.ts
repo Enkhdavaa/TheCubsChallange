@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { scene } from "../scene.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
 import { SpriteAnimationEvent } from "./spriteAnimationEvent.ts";
+import { SETTINGS } from "../settings.ts";
 
 export class SpriteFlipBook {
   private tilesHorizontal: number;
@@ -33,15 +34,21 @@ export class SpriteFlipBook {
     this.tilesVertical = tilesVertical;
 
     this.map = new THREE.TextureLoader().load(spriteTexture);
-    this.map.magFilter = THREE.NearestFilter; // sharp pixels
+    this.map.magFilter = THREE.NearestFilter;
+    this.map.minFilter = THREE.NearestFilter;
     this.map.repeat.set(1 / tilesHorizontal, 1 / tilesVertical);
 
     const material = new THREE.SpriteMaterial({ map: this.map });
     this.sprite = new THREE.Sprite(material);
+
+    this.sprite.scale.set(
+      SETTINGS.MAIN_CHARACTER_SCALE,
+      SETTINGS.MAIN_CHARACTER_SCALE,
+      1
+    );
     this.sprite.visible = false;
 
     this.hide();
-
     scene.add(this.sprite);
   }
 

@@ -3,7 +3,7 @@ import { orthographicCamera } from "./camera.ts";
 import { SETTINGS } from "./settings.ts";
 
 const {
-  Min_INTERNAL_WIDTH: INTERNAL_WIDTH,
+  MIN_INTERNAL_WIDTH: INTERNAL_WIDTH,
   MIN_INTERNAL_HEIGHT: INTERNAL_HEIGHT,
   ASPECT_RATIO: ASPECT_RATIO,
 } = SETTINGS;

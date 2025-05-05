@@ -7,14 +7,14 @@ export default function add3DTextMesh(
   size: number,
   font: THREE.Font,
   matcapMaterial: any,
-  bevelThickness: number = 0.02,
+  bevelThickness: number = 0.05,
   bevelSegments: number = 2,
   bevelSize: number = 0.01
 ): THREE.Mesh {
   const textGeometry = new TextGeometry(text, {
     font: font,
     size: size,
-    depth: 0.001,
+    depth: 0.01,
     curveSegments: 5,
     bevelEnabled: true,
     bevelThickness: bevelThickness,

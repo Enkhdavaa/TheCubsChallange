@@ -7,7 +7,7 @@ import { getIntroTextPosition } from "../positions.ts";
 export const RenderScreenText = () => {
   const textMesh = add3DTextMesh(
     "The Cubs Run Club",
-    0.2,
+    0.6,
     matrixtype_regular_font,
     matcapMaterial1
   );

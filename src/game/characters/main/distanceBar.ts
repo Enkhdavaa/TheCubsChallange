@@ -4,6 +4,7 @@ import { Bar } from "../bar/bar.ts";
 import { mainCharacter } from "./mainCharacter.ts";
 
 const bar = new Bar("42.195 km", 0xffffff);
+bar.setOffset(0, 0.78, 0);
 
 class DistanceBar {
   constructor() {

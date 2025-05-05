@@ -34,6 +34,8 @@ export class Bar {
     this.group.add(this.foreground);
     this.group.add(textMesh);
 
+    const scale = 3;
+    this.group.scale.set(scale, scale, 0.5);
     scene.add(this.group);
   }
 
