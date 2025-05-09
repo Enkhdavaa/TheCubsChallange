@@ -1,15 +1,20 @@
 import * as THREE from "three";
+import { RepeatingImagePosition } from "./repeatingImagePosition.ts";
 
 interface CreateRepeatingImageOptions {
   imagePath: string;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
+  repeatX: number;
+  position: RepeatingImagePosition;
 }
 
 export function createRepeatingImage({
   imagePath,
   camera,
   scene,
+  repeatX,
+  position,
 }: CreateRepeatingImageOptions): void {
   const loader = new THREE.TextureLoader();
 
@@ -24,8 +29,9 @@ export function createRepeatingImage({
     const viewHeight = camera.top - camera.bottom;
 
     // Geometry should match the texture’s world size
-    const geometry = new THREE.PlaneGeometry(viewWidth, viewHeight / 2);
-    texture.repeat.set(2, 1);
+    const height = viewHeight / repeatX;
+    const geometry = new THREE.PlaneGeometry(viewWidth, height);
+    texture.repeat.set(repeatX, 1);
 
     const material = new THREE.MeshBasicMaterial({
       map: texture,
@@ -35,9 +41,16 @@ export function createRepeatingImage({
     });
     const mesh = new THREE.Mesh(geometry, material);
 
+    let heightOffset = 0;
+    if (position === RepeatingImagePosition.BOTTOM) {
+      heightOffset = height / 2;
+    } else if (position === RepeatingImagePosition.TOP) {
+    } else if (position === RepeatingImagePosition.MIDDLE) {
+    }
+
     mesh.position.set(
-      camera.right + camera.left + 2,
-      camera.top + camera.bottom + 1,
+      camera.left + viewWidth / 2,
+      camera.bottom + heightOffset,
       -0.1
     );
 

@@ -32,8 +32,8 @@ function animate() {
   cloud1.position.x += 0.005;
   cloud2.position.x += 0.003;
   // Loop clouds
-  if (cloud1.position.x > 8) cloud1.position.x = -8;
-  if (cloud2.position.x > 8) cloud2.position.x = -8;
+  if (cloud1.position.x > 9) cloud1.position.x = -9;
+  if (cloud2.position.x > 9) cloud2.position.x = -9;
 }
 
 scene.add(cloud1);
