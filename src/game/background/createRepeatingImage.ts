@@ -51,7 +51,7 @@ export function createRepeatingImage({
     mesh.position.set(
       camera.left + viewWidth / 2,
       camera.bottom + heightOffset,
-      -0.1
+      -1
     );
 
     mesh.matrixAutoUpdate = false;
