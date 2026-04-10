@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { RepeatingImagePosition } from "./repeatingImagePosition.ts";
+import { addFrameCallback } from "../helper/frameCallback.ts";
 
 interface CreateRepeatingImageOptions {
   imagePath: string;
@@ -7,6 +8,9 @@ interface CreateRepeatingImageOptions {
   scene: THREE.Scene;
   repeatX: number;
   position: RepeatingImagePosition;
+  speedMultiplier?: number;
+  getSpeed?: () => number;
+  zOffset?: number;
 }
 
 export function createRepeatingImage({
@@ -15,6 +19,9 @@ export function createRepeatingImage({
   scene,
   repeatX,
   position,
+  speedMultiplier = 0.005,
+  getSpeed,
+  zOffset = -1,
 }: CreateRepeatingImageOptions): void {
   const loader = new THREE.TextureLoader();
 
@@ -36,7 +43,7 @@ export function createRepeatingImage({
     const material = new THREE.MeshBasicMaterial({
       map: texture,
       transparent: true,
-      depthTest: false,
+      depthTest: true,
       depthWrite: false,
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -51,12 +58,18 @@ export function createRepeatingImage({
     mesh.position.set(
       camera.left + viewWidth / 2,
       camera.bottom + heightOffset,
-      -1,
+      zOffset,
     );
 
     mesh.matrixAutoUpdate = false;
     mesh.updateMatrix();
 
     scene.add(mesh);
+
+    if (getSpeed) {
+      addFrameCallback(() => {
+        texture.offset.x += getSpeed() * speedMultiplier;
+      });
+    }
   });
 }
