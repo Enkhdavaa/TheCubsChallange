@@ -16,7 +16,7 @@ export default defineConfig({
     assetsInlineLimit: 0,
     target: "esnext",
     emptyOutDir: true,
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         main: "index.html",
         game: "game.html",

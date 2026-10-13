@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+# Deployment is handled by the Deno Deploy GitHub integration
+# (build settings live in the "deploy" section of deno.json).
+jobs:
+  check:
+    name: Type check and build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v7
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+          cache: true
+
+      - name: Install dependencies
+        run: deno install --frozen
+
+      - name: Type check
+        run: deno task check
+
+      - name: Build step
+        run: deno task build

@@ -13,7 +13,11 @@ const cloud2 = createPixelSprite(
   [1.5, 0.8, 1]
 );
 
-function createPixelSprite(url: string, position: number[], scale: number[]) {
+function createPixelSprite(
+  url: string,
+  position: [number, number, number],
+  scale: [number, number, number]
+) {
   const texture = new THREE.TextureLoader().load(url);
   texture.magFilter = THREE.NearestFilter;
   texture.minFilter = THREE.NearestFilter;

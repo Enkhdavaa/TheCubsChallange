@@ -3,7 +3,7 @@ import * as THREE from "three";
 export function getScreenAnchor(
   xFraction: number,
   yFraction: number,
-  camera: THREE.Camera
+  camera: THREE.OrthographicCamera
 ): THREE.Vector3 {
   const viewHeight = camera.top - camera.bottom;
   const viewWidth = camera.right - camera.left;

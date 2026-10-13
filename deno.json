@@ -1,16 +1,25 @@
 {
   "imports": {
     "@oak/oak": "jsr:@oak/oak@^17.2.0",
-    "lit-html": "npm:lit-html@^3.3.2",
-    "three": "npm:three@^0.174.0",
-    "vite": "npm:vite@^5.4.21",
-    "vite-plugin-glsl": "npm:vite-plugin-glsl@^1.6.0"
+    "@types/three": "npm:@types/three@^0.186.0",
+    "lit-html": "npm:lit-html@^3.3.3",
+    "three": "npm:three@^0.186.1",
+    "vite": "npm:vite@^8.3.4",
+    "vite-plugin-glsl": "npm:vite-plugin-glsl@^1.6.2"
   },
   "tasks": {
     "dev": "deno run -A npm:vite --host",
     "clean": "rm -rf ./node_modules && rm -rf ./vendor && rm -rf ./.vite && rm -rf ./deno.lock",
     "serve": "deno run --allow-all ./server.ts",
-    "build": "deno run -A npm:vite build"
+    "build": "deno run -A npm:vite build",
+    "check": "deno check server.ts router.ts vite.config.mts src/"
+  },
+  "deploy": {
+    "install": "deno install",
+    "build": "deno task build",
+    "runtime": {
+      "entrypoint": "./server.ts"
+    }
   },
   "nodeModulesDir": "auto",
   "compilerOptions": {

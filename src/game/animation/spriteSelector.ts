@@ -70,7 +70,6 @@ export class SpriteSelector {
       this.currentSelected.getPosition(),
       this.boundingBoxDimensions
     );
-    this.playerBoxHelper.position.copy(this.playerBox);
   }
 
   public collidedWith(otherBoxes: THREE.Box3[]) {

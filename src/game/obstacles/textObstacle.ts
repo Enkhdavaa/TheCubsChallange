@@ -1,11 +1,12 @@
 import * as THREE from "three";
+import type { Font } from "three/addons/loaders/FontLoader.js";
 import add3dTextMesh from "../helper/add3dTextMesh.ts";
 import { scene } from "../scene.ts";
 import { IObstacle } from "./interfaces.ts";
 import { getTextObstaclePosition } from "../positions.ts";
 
 export class TextObstacle implements IObstacle {
-  private textMesh: THREE.Mesh;
+  private textMesh: THREE.Mesh<THREE.BufferGeometry, THREE.Material>;
   private box: THREE.Box3;
   private boxHelper: THREE.Box3Helper;
   public name: string;
@@ -14,12 +15,12 @@ export class TextObstacle implements IObstacle {
   constructor(
     text: string,
     size: number,
-    font: THREE.Font,
-    matcap: THREE.MeshMatcapMaterial,
+    font: Font,
+    material: THREE.Material,
     color: number = 0xffff00
   ) {
     this.name = text;
-    this.textMesh = add3dTextMesh(text, size, font, matcap);
+    this.textMesh = add3dTextMesh(text, size, font, material);
     const position = getTextObstaclePosition();
     this.textMesh.position.set(position.x, position.y, 0);
     this.textMesh.visible = true;
@@ -55,6 +56,6 @@ export class TextObstacle implements IObstacle {
     this.textMesh.material.dispose();
 
     this.boxHelper.geometry.dispose();
-    this.boxHelper.material.dispose();
+    (this.boxHelper.material as THREE.LineBasicMaterial).dispose();
   }
 }

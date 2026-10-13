@@ -1,16 +1,17 @@
 import * as THREE from "three";
 
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
+import type { Font } from "three/addons/loaders/FontLoader.js";
 
 export default function add3DTextMesh(
   text: string,
   size: number,
-  font: THREE.Font,
-  matcapMaterial: any,
+  font: Font,
+  matcapMaterial: THREE.Material,
   bevelThickness: number = 0.05,
   bevelSegments: number = 2,
   bevelSize: number = 0.01,
-): THREE.Mesh {
+): THREE.Mesh<TextGeometry, THREE.Material> {
   const textGeometry = new TextGeometry(text, {
     font: font,
     size: size,

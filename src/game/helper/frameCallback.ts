@@ -4,14 +4,12 @@ import * as THREE from "three";
 const frameCallbacks: Array<() => void> = [];
 
 // Calculate delta time
-const clock = new THREE.Clock();
-let previousElapsedTime = clock.getElapsedTime();
+const timer = new THREE.Timer();
 let deltaTime = 0;
 
 function calculateDeltaTime() {
-  const currentElapsedTime = clock.getElapsedTime();
-  deltaTime = currentElapsedTime - previousElapsedTime;
-  previousElapsedTime = currentElapsedTime;
+  timer.update();
+  deltaTime = timer.getDelta();
 }
 
 // Call all frame functions
@@ -41,5 +39,5 @@ export const getDeltaTime = () => {
 };
 
 export const getElapsedTime = () => {
-  return clock.getElapsedTime();
+  return timer.getElapsed();
 };

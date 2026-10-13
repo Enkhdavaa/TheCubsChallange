@@ -6,7 +6,7 @@ import { getRoadObstaclePosition } from "../positions.ts";
 
 export class RoadObstracle implements IObstacle {
   private size: number;
-  private mesh: THREE.Mesh | THREE.Sprite;
+  private mesh: THREE.Sprite;
   private box: THREE.Box3;
   private boxHelper: THREE.Box3Helper;
   public name: string;
@@ -59,6 +59,6 @@ export class RoadObstracle implements IObstacle {
     this.mesh.material.dispose();
 
     this.boxHelper.geometry.dispose();
-    this.boxHelper.material.dispose();
+    (this.boxHelper.material as THREE.LineBasicMaterial).dispose();
   }
 }

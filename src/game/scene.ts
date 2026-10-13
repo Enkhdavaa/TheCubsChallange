@@ -17,7 +17,7 @@ export const scene = new THREE.Scene();
 scene.add(orthographicCamera);
 
 // Renderer
-const canvas = document.querySelector("canvas.webgl");
+const canvas = document.querySelector<HTMLCanvasElement>("canvas.webgl")!;
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: false,
