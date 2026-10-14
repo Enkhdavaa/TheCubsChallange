@@ -6,6 +6,12 @@
       "runtimeExecutable": "deno",
       "runtimeArgs": ["run", "-A", "npm:vite", "--port", "5173", "--strictPort"],
       "port": 5173
+    },
+    {
+      "name": "prod",
+      "runtimeExecutable": "deno",
+      "runtimeArgs": ["task", "serve"],
+      "port": 8080
     }
   ]
 }

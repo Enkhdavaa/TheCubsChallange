@@ -1,6 +1,10 @@
 import { challenge } from "./challengeText.ts";
 
-const svgFile = "/assets/challenge/svg/challenge.svg";
+// Resolved through Vite so the build points at the hashed asset
+const svgFile = new URL(
+  "../../assets/challenge/svg/challenge.svg",
+  import.meta.url,
+).href;
 const svgNamespace = "http://www.w3.org/2000/svg";
 
 const container = document.getElementById("challenges")!;
