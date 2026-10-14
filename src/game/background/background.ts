@@ -88,19 +88,22 @@ function createCityTexture(): HTMLCanvasElement {
   return canvas;
 }
 
+const drawScenery: Record<Scenery, () => HTMLCanvasElement> = {
+  city: createCityTexture,
+  trail: createTrailTexture,
+};
 const sceneries = new Map<Scenery, THREE.Mesh>();
 
-export const LoadBackground = (scenery: Scenery) => {
-  addSkyPlaneToScene();
-
-  // The running path (foreground overlay), moving with the ground
-  const textures: Record<Scenery, HTMLCanvasElement> = {
-    city: createCityTexture(),
-    trail: createTrailTexture(),
-  };
-  Object.entries(textures).forEach(([name, canvas]) => {
-    const mesh = createRepeatingImage({
-      texture: new THREE.CanvasTexture(canvas),
+// The running path (foreground overlay), moving with the ground; each
+// scenery is drawn the first time it's shown
+function getScenery(scenery: Scenery) {
+  let mesh = sceneries.get(scenery);
+  if (!mesh) {
+    const texture = new THREE.CanvasTexture(drawScenery[scenery]());
+    // Canvas colors are sRGB; without this they render washed out
+    texture.colorSpace = THREE.SRGBColorSpace;
+    mesh = createRepeatingImage({
+      texture,
       camera: orthographicCamera,
       scene: scene,
       // Same look as before: 1.5 copies across a 16:9 view (16 units wide)
@@ -110,14 +113,19 @@ export const LoadBackground = (scenery: Scenery) => {
       getSpeed: () => mainCharacter.getWorldSpeed(),
       zOffset: -1,
     });
-    sceneries.set(name as Scenery, mesh);
-  });
+    sceneries.set(scenery, mesh);
+  }
+  return mesh;
+}
 
+export const LoadBackground = (scenery: Scenery) => {
+  addSkyPlaneToScene();
   showScenery(scenery);
 };
 
 export function showScenery(scenery: Scenery) {
-  sceneries.forEach((mesh, name) => {
-    mesh.visible = name === scenery;
+  const shown = getScenery(scenery);
+  sceneries.forEach((mesh) => {
+    mesh.visible = mesh === shown;
   });
 }

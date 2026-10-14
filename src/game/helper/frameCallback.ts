@@ -3,6 +3,9 @@ import * as THREE from "three";
 // Add functions to be called every frame
 const frameCallbacks: Array<() => void> = [];
 
+// Draws the frame once every callback has moved things into place
+let renderCallback: (() => void) | null = null;
+
 // Calculate delta time
 const timer = new THREE.Timer();
 let deltaTime = 0;
@@ -25,6 +28,8 @@ const tick = () => {
     callback();
   });
 
+  renderCallback?.();
+
   // Request next frame
   globalThis.requestAnimationFrame(tick);
 };
@@ -35,6 +40,10 @@ tick();
 // Export functions
 export const addFrameCallback = (callback: () => void) => {
   frameCallbacks.push(callback);
+};
+
+export const setRenderCallback = (callback: () => void) => {
+  renderCallback = callback;
 };
 
 export const getDeltaTime = () => {

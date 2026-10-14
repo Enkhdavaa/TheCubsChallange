@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { getViewAspect, orthographicCamera, setCameraAspect } from "./camera.ts";
 import { notifyResize } from "./helper/resizeCallback.ts";
+import { setRenderCallback } from "./helper/frameCallback.ts";
 
 globalThis.addEventListener("resize", () => {
   resizeCanvas();
@@ -29,12 +30,10 @@ export function preloadTexture(texture: THREE.Texture) {
 
 resizeCanvas();
 
-const tick = () => {
+// Rendered in the same frame loop as the updates, after them
+setRenderCallback(() => {
   renderer.render(scene, orthographicCamera);
-  globalThis.requestAnimationFrame(tick);
-};
-
-tick();
+});
 
 function resizeCanvas() {
   const winW = globalThis.innerWidth;
