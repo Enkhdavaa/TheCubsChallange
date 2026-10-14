@@ -34,6 +34,7 @@ function createPixelSprite(
   const texture = new THREE.TextureLoader().load(url);
   texture.magFilter = THREE.NearestFilter;
   texture.minFilter = THREE.NearestFilter;
+  texture.colorSpace = THREE.SRGBColorSpace;
 
   const material = new THREE.SpriteMaterial({
     map: texture,

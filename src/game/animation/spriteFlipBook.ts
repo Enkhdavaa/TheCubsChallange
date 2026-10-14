@@ -36,6 +36,7 @@ export class SpriteFlipBook {
     this.map = new THREE.TextureLoader().load(spriteTexture);
     this.map.magFilter = THREE.NearestFilter;
     this.map.minFilter = THREE.NearestFilter;
+    this.map.colorSpace = THREE.SRGBColorSpace;
     this.map.repeat.set(1 / tilesHorizontal, 1 / tilesVertical);
 
     const material = new THREE.SpriteMaterial({ map: this.map });
