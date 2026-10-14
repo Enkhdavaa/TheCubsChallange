@@ -1,6 +1,6 @@
 import { readItem, writeItem } from "./helper/storage.ts";
 
-export type Scenery = "city" | "trail";
+export type Scenery = "city" | "park" | "trail";
 
 export interface Hill {
   km: number;
@@ -34,7 +34,7 @@ export const LEVELS: Level[] = [
     id: "first-5k",
     name: "First 5K",
     distanceKm: 5,
-    scenery: "city",
+    scenery: "park",
     timeScale: 1,
     intro:
       "Pick a pace you can keep. If you can still chat, it's the right pace. Go too fast and you'll run out of breath.",

@@ -1,27 +1,21 @@
-// A repeating trail scene: hills, trees and a dirt path. One canvas pixel
-// is one art pixel at the runner's scale (24 per world unit), and the
-// path lines up with the city road so the runner and obstacles fit both
-const width = 256;
-const height = 144;
-// Where the path starts, matching the city road (70% down)
-const pathTop = Math.round(height * 0.7);
+import {
+  createTileCanvas,
+  PATH_TOP,
+  TILE_HEIGHT,
+  TILE_WIDTH,
+} from "./tileCanvas.ts";
+
+// A repeating trail scene: hills, trees and a dirt path
+const width = TILE_WIDTH;
+const height = TILE_HEIGHT;
+const pathTop = PATH_TOP;
 
 function wave(x: number, waves: number, phase = 0) {
   return Math.sin((x / width) * Math.PI * 2 * waves + phase);
 }
 
 export function createTrailTexture(): HTMLCanvasElement {
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d")!;
-  const rect = (x: number, y: number, w: number, h: number, color: string) => {
-    ctx.fillStyle = color;
-    // Draw a second copy across the edge so the image tiles seamlessly
-    ctx.fillRect(x, y, w, h);
-    if (x < 0) ctx.fillRect(x + width, y, w, h);
-    if (x + w > width) ctx.fillRect(x - width, y, w, h);
-  };
+  const { canvas, rect } = createTileCanvas();
 
   // Distant hills, then nearer ones; whole waves per width keep them seamless
   for (let x = 0; x < width; x++) {

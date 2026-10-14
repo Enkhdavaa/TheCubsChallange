@@ -4,6 +4,7 @@ import { orthographicCamera } from "../camera.ts";
 import { createRepeatingImage } from "./createRepeatingImage.ts";
 import { addSkyPlaneToScene } from "./sky.ts";
 import { RepeatingImagePosition } from "./repeatingImagePosition.ts";
+import { createParkTexture } from "./parkTexture.ts";
 import { createTrailTexture } from "./trailTexture.ts";
 import { mainCharacter } from "../characters/main/mainCharacter.ts";
 import { Scenery } from "../levels.ts";
@@ -90,6 +91,7 @@ function createCityTexture(): HTMLCanvasElement {
 
 const drawScenery: Record<Scenery, () => HTMLCanvasElement> = {
   city: createCityTexture,
+  park: createParkTexture,
   trail: createTrailTexture,
 };
 const sceneries = new Map<Scenery, THREE.Mesh>();
