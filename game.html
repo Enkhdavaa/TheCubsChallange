@@ -14,41 +14,64 @@
       <canvas class="webgl"></canvas>
 
       <div class="hud" id="hud">
-        <div class="hud-distance">
-          <div class="hud-label">
-            <span id="hud-distance-text">0.0</span> / <span data-goal-km></span> km
+        <div class="hud-top">
+          <div class="hud-distance">
+            <div class="hud-label">
+              <span id="hud-distance-text">0.0</span> / <span data-goal-km></span> km
+            </div>
+            <div class="meter">
+              <div class="meter-fill" id="hud-distance-fill"></div>
+            </div>
           </div>
-          <div class="hud-bar">
-            <div class="hud-bar-fill" id="hud-distance-fill"></div>
+          <div class="hud-clock" id="hud-clock">0:00</div>
+          <div class="hud-energy" id="hud-energy">
+            <div class="hud-label">Energy</div>
+            <div class="meter">
+              <div class="meter-fill" id="hud-energy-fill"></div>
+            </div>
           </div>
         </div>
-        <div class="hud-speed" id="hud-speed">
-          <div class="hud-label">Speed</div>
-          <div class="hud-pips" id="hud-speed-pips"></div>
+
+        <div class="pace-panel" id="pace-panel">
+          <div class="pace-title" id="pace-title">Pace /km</div>
         </div>
+
+        <div class="bubble" id="bubble"></div>
       </div>
 
       <div class="overlay" id="start-screen">
         <div class="card">
-          <h1>Reach the <span data-goal-km></span> km finish line</h1>
+          <h1 data-level-name></h1>
+          <p class="intro" data-level-intro></p>
           <ul class="legend">
             <li>
+              <span class="badge" data-zone="easy" data-zone-badge="easy"></span>
+              <span>Change pace with <kbd>←</kbd> <kbd>→</kbd> or the pace buttons</span>
+            </li>
+            <li>
               <span class="badge badge-pickup">Long Run</span>
-              <span>Jump to grab good habits. They speed you up.</span>
+              <span>Jump to grab good habits. They give you energy.</span>
             </li>
             <li>
               <span class="badge badge-hazard">No Sleep</span>
-              <span>Jump over setbacks. They slow you down.</span>
+              <span>Jump over setbacks. They cost energy.</span>
             </li>
           </ul>
-          <p class="cta">Tap or press <kbd>Space</kbd> to start</p>
+          <p class="cta">Tap or press <kbd>Space</kbd> to start and jump</p>
         </div>
       </div>
 
       <div class="overlay" id="finish-screen" role="status">
         <div class="card">
-          <h1>You ran <span data-goal-km></span> km!</h1>
-          <p class="stats" id="finish-stats"></p>
+          <h1 data-level-finish></h1>
+          <p class="finish-time">
+            <strong id="finish-time"></strong> · <span id="finish-pace"></span> /km
+          </p>
+          <p class="finish-best" id="finish-best"></p>
+          <div class="zone-bar" id="finish-zone-bar"></div>
+          <p class="zone-legend" id="finish-zone-legend"></p>
+          <p class="tip" id="finish-tip"></p>
+          <p class="context" data-level-context></p>
           <p class="cta">Tap or press <kbd>Space</kbd> to run again</p>
         </div>
       </div>

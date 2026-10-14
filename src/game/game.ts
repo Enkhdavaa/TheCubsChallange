@@ -7,6 +7,9 @@ import { ObstacleManager } from "./obstacles/obstracleManager.ts";
 import { Spawner } from "./obstacles/spawner.ts";
 import { addFrameCallback, getDeltaTime } from "./helper/frameCallback.ts";
 import { runState } from "./runState.ts";
+import { effort } from "./effort.ts";
+import { currentLevel } from "./levels.ts";
+import { recordFinish } from "./personalBest.ts";
 import { Hud } from "./hud.ts";
 
 MainCharacterStart();
@@ -18,14 +21,20 @@ const finishLine = new FinishLine();
 const obstracleManager = new ObstacleManager();
 const spawner = new Spawner(obstracleManager);
 
+effort.onChange(() => mainCharacter.setPace(effort.zone));
+
 runState.onPhaseChange((phase) => {
   if (phase === "running") {
     obstracleManager.clear();
     spawner.reset();
-    mainCharacter.start();
+    effort.reset();
+    mainCharacter.start(effort.zone);
   } else if (phase === "finished") {
     obstracleManager.clear();
     mainCharacter.stop();
+    hud.showResult(
+      recordFinish(currentLevel.id, Math.round(runState.getRaceSeconds())),
+    );
   }
   // The distance and speed display takes the title's place while running
   title.visible = phase !== "running";
@@ -34,7 +43,11 @@ runState.onPhaseChange((phase) => {
 hud.showPhase(runState.phase);
 
 addFrameCallback(() => {
-  runState.advance(mainCharacter.getWorldSpeed() * getDeltaTime());
+  const deltaTime = getDeltaTime();
+  if (runState.phase === "running") {
+    effort.update(deltaTime);
+  }
+  runState.update(deltaTime, mainCharacter.getWorldSpeed());
   obstracleManager.updateObstacles();
   spawner.update();
   finishLine.update();

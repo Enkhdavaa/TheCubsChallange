@@ -3,6 +3,7 @@ import { SpriteSelector } from "../../animation/spriteSelector.ts";
 import * as THREE from "three";
 import { addResizeCallback } from "../../helper/resizeCallback.ts";
 import { getCharacterPosition } from "../../positions.ts";
+import { getWorldSpeed, PaceZone } from "../../pace.ts";
 
 import idle from "../../animation/sprites/idle.ts";
 import jump from "../../animation/sprites/jump.ts";
@@ -19,22 +20,21 @@ animationMap.set("walk", walk);
 // Animation selector
 const spriteSelector = new SpriteSelector(animationMap, "idle");
 
-// Speed levels while running; 0 means standing still
-const maxSpeedLevel = 10;
-const minSpeedLevel = 1;
-const startSpeedLevel = 4;
-const walkMaxSpeedLevel = 2;
-
-// World units per second the ground moves at a given level
-const baseWorldSpeed = 3.5;
-const worldSpeedPerLevel = 0.55;
+// Seconds per stride cycle at each pace
+const strideDurations: Record<PaceZone, number> = {
+  walk: 0.8,
+  easy: 0.7,
+  steady: 0.58,
+  fast: 0.48,
+};
 
 const pickupTint = 0x9dff9d;
 const hitTint = 0xff7070;
 
 class MainCharacter {
   private spriteSelector: SpriteSelector;
-  private speedLevel = 0;
+  private isMoving = false;
+  private zone: PaceZone = "easy";
 
   constructor() {
     this.spriteSelector = spriteSelector;
@@ -53,12 +53,29 @@ class MainCharacter {
     return this.spriteSelector.getPlayerBox();
   }
 
-  public start() {
-    this.setSpeedLevel(startSpeedLevel);
+  public start(zone: PaceZone) {
+    this.isMoving = true;
+    this.setPace(zone);
   }
 
   public stop() {
-    this.setSpeedLevel(0);
+    this.isMoving = false;
+    this.idle();
+  }
+
+  public setPace(zone: PaceZone) {
+    this.zone = zone;
+    if (!this.isMoving) {
+      return;
+    }
+
+    if (zone === "walk") {
+      walk.setDuration(strideDurations.walk);
+      this.walk();
+    } else {
+      run.setDuration(strideDurations[zone]);
+      this.run();
+    }
   }
 
   public jump() {
@@ -76,58 +93,16 @@ class MainCharacter {
     spriteSelector.selectAnimation("idle");
   }
 
-  public getSpeedLevel() {
-    return this.speedLevel;
-  }
-
-  public getMaxSpeedLevel() {
-    return maxSpeedLevel;
-  }
-
   public getWorldSpeed() {
-    if (this.speedLevel === 0) {
-      return 0;
-    }
-    return baseWorldSpeed + worldSpeedPerLevel * this.speedLevel;
+    return this.isMoving ? getWorldSpeed(this.zone) : 0;
   }
 
-  public increaseSpeed(amount = 1) {
+  public flashPickup() {
     this.spriteSelector.flash(pickupTint);
-    this.setSpeedLevel(Math.min(maxSpeedLevel, this.speedLevel + amount));
   }
 
-  // Setbacks slow the runner down but never stop them mid-run
-  public decreaseSpeed(amount = 2) {
+  public flashHit() {
     this.spriteSelector.flash(hitTint);
-    this.setSpeedLevel(Math.max(minSpeedLevel, this.speedLevel - amount));
-  }
-
-  private setSpeedLevel(level: number) {
-    this.speedLevel = level;
-
-    if (level === 0) {
-      this.idle();
-    } else if (level <= walkMaxSpeedLevel) {
-      this.setWalkSpeedDuration();
-    } else {
-      this.setRunSpeedDuration();
-    }
-  }
-
-  private setWalkSpeedDuration() {
-    // Walk cycle takes 0.8 seconds at level 1 and 0.65 at the top walk level
-    const translatedSpeedDuration = 0.8 - (this.speedLevel - 1) * 0.15;
-    walk.setDuration(translatedSpeedDuration);
-    this.walk();
-  }
-
-  private setRunSpeedDuration() {
-    // Run cycle takes 0.75 seconds just above walking and 0.45 at max speed
-    const runLevels = maxSpeedLevel - walkMaxSpeedLevel - 1;
-    const progress = (this.speedLevel - walkMaxSpeedLevel - 1) / runLevels;
-    const translatedSpeedDuration = 0.75 - progress * 0.3;
-    run.setDuration(translatedSpeedDuration);
-    this.run();
   }
 }
 

@@ -27,7 +27,9 @@ export const SETTINGS = {
   },
   // Seconds an obstacle is announced at the right edge before it appears
   WARNING_LEAD_TIME: 0.8,
-  RUN_GOAL_KM: 5,
   METERS_PER_UNIT: 10,
+  // One second of play stands for this many seconds of real running,
+  // so the race clock and paces read like a real run
+  TIME_SCALE: 25,
   DEBUG: new URLSearchParams(globalThis.location?.search).has("debug"),
 };

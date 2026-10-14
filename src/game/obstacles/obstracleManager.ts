@@ -2,7 +2,12 @@ import { isPastLeftEdge } from "../camera.ts";
 import { mainCharacter } from "../characters/main/mainCharacter.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
 import { runState } from "../runState.ts";
+import { effort } from "../effort.ts";
 import { IObstacle } from "./interfaces.ts";
+
+// Good habits give energy back; setbacks take it away
+const PICKUP_ENERGY = 15;
+const SETBACK_ENERGY = 20;
 
 export class ObstacleManager {
   private obstacles: IObstacle[] = [];
@@ -27,10 +32,12 @@ export class ObstacleManager {
         obstacleBoundingBox.intersectsBox(playerBoundingBox)
       ) {
         if (obstacle.kind === "pickup") {
-          mainCharacter.increaseSpeed();
+          mainCharacter.flashPickup();
+          effort.gainEnergy(PICKUP_ENERGY);
           runState.recordPickup();
         } else {
-          mainCharacter.decreaseSpeed();
+          mainCharacter.flashHit();
+          effort.loseEnergy(SETBACK_ENERGY);
           runState.recordHit();
         }
         this.removeObstacle(obstacle);
