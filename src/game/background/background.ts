@@ -1,11 +1,14 @@
+import * as THREE from "three";
 import { scene } from "../scene.ts";
 import { orthographicCamera } from "../camera.ts";
 import { createRepeatingImage } from "./createRepeatingImage.ts";
 import { addSkyPlaneToScene } from "./sky.ts";
 import { RepeatingImagePosition } from "./repeatingImagePosition.ts";
+import { createTrailTexture } from "./trailTexture.ts";
 import { mainCharacter } from "../characters/main/mainCharacter.ts";
+import { Scenery } from "../levels.ts";
 
-function createPathTexture(): string {
+function createCityTexture(): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
   canvas.height = 256;
@@ -82,22 +85,39 @@ function createPathTexture(): string {
   ctx.fillStyle = "#4a6336";
   ctx.fillRect(0, pathY, canvas.width, 4);
 
-  return canvas.toDataURL();
+  return canvas;
 }
 
-export const LoadBackground = () => {
+const sceneries = new Map<Scenery, THREE.Mesh>();
+
+export const LoadBackground = (scenery: Scenery) => {
   addSkyPlaneToScene();
 
-  // 2. The running path (foreground overlay), moving with the ground
-  createRepeatingImage({
-    imagePath: createPathTexture(),
-    camera: orthographicCamera,
-    scene: scene,
-    // Same look as before: 1.5 copies across a 16:9 view (16 units wide)
-    tileWidth: 16 / 1.5,
-    height: 6,
-    position: RepeatingImagePosition.BOTTOM,
-    getSpeed: () => mainCharacter.getWorldSpeed(),
-    zOffset: -1,
+  // The running path (foreground overlay), moving with the ground
+  const textures: Record<Scenery, HTMLCanvasElement> = {
+    city: createCityTexture(),
+    trail: createTrailTexture(),
+  };
+  Object.entries(textures).forEach(([name, canvas]) => {
+    const mesh = createRepeatingImage({
+      texture: new THREE.CanvasTexture(canvas),
+      camera: orthographicCamera,
+      scene: scene,
+      // Same look as before: 1.5 copies across a 16:9 view (16 units wide)
+      tileWidth: 16 / 1.5,
+      height: 6,
+      position: RepeatingImagePosition.BOTTOM,
+      getSpeed: () => mainCharacter.getWorldSpeed(),
+      zOffset: -1,
+    });
+    sceneries.set(name as Scenery, mesh);
   });
+
+  showScenery(scenery);
 };
+
+export function showScenery(scenery: Scenery) {
+  sceneries.forEach((mesh, name) => {
+    mesh.visible = name === scenery;
+  });
+}

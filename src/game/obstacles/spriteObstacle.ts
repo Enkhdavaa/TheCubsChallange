@@ -5,6 +5,7 @@ import { getElapsedTime } from "../helper/frameCallback.ts";
 import { SETTINGS } from "../settings.ts";
 import { IObstacle, ObstacleKind } from "./interfaces.ts";
 import { OBSTACLE_COLORS } from "./obstacleColors.ts";
+import { createPixelArtTexture } from "../helper/pixelArt.ts";
 
 export interface SpriteObstacleOptions {
   name: string;
@@ -39,33 +40,14 @@ const MARKER_ART = [
 
 // A pulsing arrow at the right edge while the obstacle is still off screen
 function getMarkerTexture(kind: ObstacleKind) {
-  const cached = markerTextures.get(kind);
-  if (cached) {
-    return cached;
-  }
-
-  const canvas = document.createElement("canvas");
-  canvas.width = MARKER_ART[0].length;
-  canvas.height = MARKER_ART.length;
-  const ctx = canvas.getContext("2d")!;
-
-  MARKER_ART.forEach((row, y) => {
-    [...row].forEach((cell, x) => {
-      if (cell === ".") {
-        return;
-      }
-      ctx.fillStyle = cell === "#"
-        ? "#ffffff"
-        : OBSTACLE_COLORS[kind].background;
-      ctx.fillRect(x, y, 1, 1);
+  let texture = markerTextures.get(kind);
+  if (!texture) {
+    texture = createPixelArtTexture(MARKER_ART, {
+      "#": "#ffffff",
+      o: OBSTACLE_COLORS[kind].background,
     });
-  });
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.magFilter = THREE.NearestFilter;
-  texture.minFilter = THREE.NearestFilter;
-  texture.colorSpace = THREE.SRGBColorSpace;
-  markerTextures.set(kind, texture);
+    markerTextures.set(kind, texture);
+  }
   return texture;
 }
 

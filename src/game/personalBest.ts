@@ -1,23 +1,12 @@
-// Best finish times live in this browser only; storage can be blocked or
-// cleared, so every access is allowed to fail
+import { readItem, writeItem } from "./helper/storage.ts";
+
+// Best finish times, in seconds of real running, per level
 const storageKey = (levelId: string) => `cubs-run:best:${levelId}`;
 
-function loadBest(levelId: string): number | null {
-  try {
-    const value = globalThis.localStorage.getItem(storageKey(levelId));
-    const seconds = value === null ? NaN : Number(value);
-    return Number.isFinite(seconds) ? seconds : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveBest(levelId: string, seconds: number) {
-  try {
-    globalThis.localStorage.setItem(storageKey(levelId), String(seconds));
-  } catch {
-    // Nothing to do; the best time just isn't remembered
-  }
+export function loadBest(levelId: string): number | null {
+  const value = readItem(storageKey(levelId));
+  const seconds = value === null ? NaN : Number(value);
+  return Number.isFinite(seconds) ? seconds : null;
 }
 
 export interface FinishRecord {
@@ -30,7 +19,7 @@ export function recordFinish(levelId: string, seconds: number): FinishRecord {
   const previousBest = loadBest(levelId);
   const isNewBest = previousBest === null || seconds < previousBest;
   if (isNewBest) {
-    saveBest(levelId, seconds);
+    writeItem(storageKey(levelId), String(seconds));
   }
   return { previousBest, isNewBest };
 }

@@ -14,6 +14,9 @@ const pickupLaneGap = 0.45;
 // The line the runner's feet touch
 export const GROUND_Y = runnerY - PLAYER_FEET_OFFSET;
 
+// The far edge of the road, where lights and signs stand
+export const ROAD_BACK_Y = -2.7;
+
 // Pickups float just out of reach, so only a jump collects them
 export const PICKUP_LANE_BOTTOM_Y = runnerY + PLAYER_HITBOX.top + pickupLaneGap;
 

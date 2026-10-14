@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { scene } from "../scene.ts";
-import { getCameraBounds } from "../camera.ts";
-import { getCharacterPosition, GROUND_Y } from "../positions.ts";
-import { runState } from "../runState.ts";
+import { course } from "../course.ts";
+import { GROUND_Y } from "../positions.ts";
+import { placeOnCourse } from "./courseMarkers.ts";
 
 // Pixel art arch, drawn at a size close to the runner's pixel scale
 const pixelWidth = 48;
@@ -60,19 +60,8 @@ export class FinishLine {
     scene.add(this.sprite);
   }
 
-  // Sits exactly the remaining distance ahead of the runner
+  // Sits exactly at the end of the course, behind the runner
   public update() {
-    if (runState.phase === "ready") {
-      this.sprite.visible = false;
-      return;
-    }
-
-    const { x: width, y: height } = this.sprite.scale;
-    const x =getCharacterPosition().x + runState.getRemainingUnits();
-    const { right } = getCameraBounds();
-
-    this.sprite.visible = x - width / 2 < right;
-    // Behind the runner, in front of the background
-    this.sprite.position.set(x, GROUND_Y + height / 2, -0.5);
+    placeOnCourse(this.sprite, course.goalUnits, GROUND_Y, -0.5);
   }
 }

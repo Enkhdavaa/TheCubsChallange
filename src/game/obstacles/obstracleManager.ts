@@ -11,8 +11,12 @@ const SETBACK_ENERGY = 20;
 
 export class ObstacleManager {
   private obstacles: IObstacle[] = [];
+  private onCollide: (obstacle: IObstacle) => void;
 
-  constructor() {}
+  // onCollide hears about every pickup grabbed and setback hit
+  constructor(onCollide: (obstacle: IObstacle) => void) {
+    this.onCollide = onCollide;
+  }
 
   public addObstacle(obstacle: IObstacle) {
     this.obstacles.push(obstacle);
@@ -40,6 +44,7 @@ export class ObstacleManager {
           effort.loseEnergy(SETBACK_ENERGY);
           runState.recordHit();
         }
+        this.onCollide(obstacle);
         this.removeObstacle(obstacle);
         continue;
       }

@@ -34,7 +34,10 @@ const hitTint = 0xff7070;
 class MainCharacter {
   private spriteSelector: SpriteSelector;
   private isMoving = false;
+  private isWaiting = false;
   private zone: PaceZone = "easy";
+  // Below 1 uphill, above 1 downhill
+  private hillFactor = 1;
 
   constructor() {
     this.spriteSelector = spriteSelector;
@@ -55,6 +58,8 @@ class MainCharacter {
 
   public start(zone: PaceZone) {
     this.isMoving = true;
+    this.isWaiting = false;
+    this.hillFactor = 1;
     this.setPace(zone);
   }
 
@@ -63,9 +68,30 @@ class MainCharacter {
     this.idle();
   }
 
+  // Stands still at a red light, then carries on at the same pace
+  public setWaiting(isWaiting: boolean) {
+    if (isWaiting === this.isWaiting) {
+      return;
+    }
+    this.isWaiting = isWaiting;
+    if (isWaiting) {
+      this.idle();
+    } else {
+      this.setPace(this.zone);
+    }
+  }
+
+  public setHillFactor(factor: number) {
+    this.hillFactor = factor;
+  }
+
+  public getHillFactor() {
+    return this.hillFactor;
+  }
+
   public setPace(zone: PaceZone) {
     this.zone = zone;
-    if (!this.isMoving) {
+    if (!this.isMoving || this.isWaiting) {
       return;
     }
 
@@ -94,7 +120,10 @@ class MainCharacter {
   }
 
   public getWorldSpeed() {
-    return this.isMoving ? getWorldSpeed(this.zone) : 0;
+    if (!this.isMoving || this.isWaiting) {
+      return 0;
+    }
+    return getWorldSpeed(this.zone) * this.hillFactor;
   }
 
   public flashPickup() {

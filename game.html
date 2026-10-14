@@ -30,13 +30,33 @@
               <div class="meter-fill" id="hud-distance-fill"></div>
             </div>
           </div>
-          <div class="hud-clock" id="hud-clock">0:00</div>
+          <div class="hud-center">
+            <div class="hud-clock" id="hud-clock">0:00</div>
+            <div class="hud-pace" id="hud-pace"></div>
+          </div>
           <div class="hud-energy" id="hud-energy">
             <div class="hud-label">Energy</div>
             <div class="meter">
               <div class="meter-fill" id="hud-energy-fill"></div>
             </div>
+            <div class="hud-hills" id="hud-hills" hidden>
+              <svg
+                class="elevation"
+                viewBox="0 0 100 24"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <polyline id="hud-elevation-line" />
+                <rect id="hud-elevation-marker" y="0" width="3" height="24" />
+              </svg>
+              <div class="hud-label" id="hud-grade">Flat</div>
+            </div>
           </div>
+        </div>
+
+        <div class="item-tip" id="item-tip" role="status">
+          <span class="item-tip-label" id="item-tip-label"></span>
+          <span id="item-tip-text"></span>
         </div>
 
         <div class="pace-panel" id="pace-panel">
@@ -50,7 +70,12 @@
         <p class="game-title">The Cubs Run Club</p>
 
         <div class="card" id="start-card" hidden>
-          <h1 data-level-name></h1>
+          <div
+            class="level-picker"
+            id="level-picker"
+            role="group"
+            aria-label="Choose a run"
+          ></div>
           <p class="intro" data-level-intro></p>
           <ul class="legend">
             <li>
@@ -58,15 +83,19 @@
               <span>Change pace with <kbd>←</kbd> <kbd>→</kbd> or the pace buttons</span>
             </li>
             <li>
-              <span class="badge badge-pickup">Long Run</span>
+              <span class="badge badge-pickup" data-example="pickup"></span>
               <span>Jump to grab good habits. They give you energy.</span>
             </li>
             <li>
-              <span class="badge badge-hazard">No Sleep</span>
+              <span class="badge badge-hazard" data-example="setback"></span>
               <span>Jump over setbacks. They cost energy.</span>
             </li>
           </ul>
-          <p class="cta">Tap or press <kbd>Space</kbd> to start and jump</p>
+          <p class="level-best" id="level-best"></p>
+          <p class="cta">
+            Tap or press <kbd>Space</kbd> to start<span class="keys-hint">,
+            <kbd>←</kbd> <kbd>→</kbd> to pick a run</span>
+          </p>
         </div>
 
         <div class="card" id="finish-card" role="status" hidden>
@@ -79,7 +108,7 @@
           <p class="zone-legend" id="finish-zone-legend"></p>
           <p class="tip" id="finish-tip"></p>
           <p class="context" data-level-context></p>
-          <p class="cta">Tap or press <kbd>Space</kbd> to run again</p>
+          <p class="cta">Tap or press <kbd>Space</kbd> to continue</p>
         </div>
       </div>
     </div>

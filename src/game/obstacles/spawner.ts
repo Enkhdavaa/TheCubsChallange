@@ -1,9 +1,10 @@
 import { ObstacleManager } from "./obstracleManager.ts";
-import { randomTexts } from "./text.ts";
 import { TextObstacle } from "./textObstacle.ts";
-import { RoadObstracle, roadIconNames } from "./roadObstracle.ts";
+import { RoadObstracle } from "./roadObstracle.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
 import { getCameraBounds } from "../camera.ts";
+import { course, getHillSpeedFactor } from "../course.ts";
+import { getWorldSpeed } from "../pace.ts";
 import { getCharacterPosition } from "../positions.ts";
 import { mainCharacter } from "../characters/main/mainCharacter.ts";
 import { runState } from "../runState.ts";
@@ -14,8 +15,14 @@ const ROAD_ICON_CHANCE = 0.5;
 
 // Seconds before the first obstacle, so the start is calm
 const FIRST_SPAWN_DELAY = 1.5;
-// No obstacles this close to the finish line
-const FINISH_CLEARANCE = 4;
+// No obstacles this close to a crossing or the finish line
+const CLEARANCE = 4;
+// Wider than any obstacle, in world units
+const MAX_OBSTACLE_WIDTH = 3;
+// Text setbacks are up to about 1.5 units wide. Slower than this (walking
+// up a hill) there isn't time to jump clear of one, so only the narrow
+// ground hazards go where the runner might be that slow
+const MIN_SPEED_FOR_TEXT_SETBACKS = 4.1;
 
 function pickRandom<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];
@@ -37,7 +44,8 @@ export class Spawner {
   }
 
   public update() {
-    if (runState.phase !== "running") {
+    // Nothing new comes while the runner waits at a light
+    if (runState.phase !== "running" || mainCharacter.getWorldSpeed() === 0) {
       return;
     }
 
@@ -60,21 +68,28 @@ export class Spawner {
     const leadDistance = mainCharacter.getWorldSpeed() * SETTINGS.WARNING_LEAD_TIME;
     const startX = right + leadDistance;
 
-    const finishX = getCharacterPosition().x + runState.getRemainingUnits();
-    if (finishX < startX + FINISH_CLEARANCE) {
+    const startUnits = runState.getDistanceUnits() +
+      (startX - getCharacterPosition().x);
+    if (!course.isClear(startUnits, startUnits + MAX_OBSTACLE_WIDTH, CLEARANCE)) {
       return;
     }
 
-    this.obstacleManager.addObstacle(this.createObstacle(startX));
+    this.obstacleManager.addObstacle(this.createObstacle(startX, startUnits));
   }
 
-  private createObstacle(startX: number) {
+  // Each level has its own good habits, setbacks and ground hazards
+  private createObstacle(startX: number, startUnits: number) {
+    const { pickups, setbacks, roadIcons } = course.level;
     if (Math.random() < PICKUP_CHANCE) {
-      return new TextObstacle(pickRandom(randomTexts.good), "pickup", startX);
+      return new TextObstacle(pickRandom(pickups), "pickup", startX);
     }
-    if (Math.random() < ROAD_ICON_CHANCE) {
-      return new RoadObstracle(pickRandom(roadIconNames), startX);
+    // The slowest the runner could be when it gets there: walking that hill
+    const slowest = getWorldSpeed("walk") *
+      getHillSpeedFactor(course.getGrade(startUnits));
+    const isSlow = slowest < MIN_SPEED_FOR_TEXT_SETBACKS;
+    if (isSlow || Math.random() < ROAD_ICON_CHANCE) {
+      return new RoadObstracle(pickRandom(roadIcons), startX);
     }
-    return new TextObstacle(pickRandom(randomTexts.bad), "hazard", startX);
+    return new TextObstacle(pickRandom(setbacks), "hazard", startX);
   }
 }

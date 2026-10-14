@@ -1,13 +1,13 @@
 import { getElapsedTime } from "./helper/frameCallback.ts";
-import { currentLevel } from "./levels.ts";
+import { course } from "./course.ts";
+import { getSelectedLevel } from "./levels.ts";
 import { SETTINGS } from "./settings.ts";
 
 export type RunPhase = "ready" | "running" | "finished";
 type PhaseListener = (phase: RunPhase) => void;
 
-const goalUnits = (currentLevel.distanceKm * 1000) / SETTINGS.METERS_PER_UNIT;
-// Seconds after finishing before a tap restarts, so a late jump doesn't
-const restartDelay = 1;
+// Seconds after finishing before a tap continues, so a late jump doesn't
+const continueDelay = 1;
 
 class RunState {
   public phase: RunPhase = "ready";
@@ -20,7 +20,9 @@ class RunState {
   private finishedAt = 0;
   private listeners: PhaseListener[] = [];
 
+  // Runs the level picked on the start screen
   public start() {
+    course.build(getSelectedLevel());
     this.distance = 0;
     this.elapsed = 0;
     this.pickups = 0;
@@ -28,31 +30,40 @@ class RunState {
     this.setPhase("running");
   }
 
-  public update(deltaTime: number, worldSpeed: number) {
+  // Back to the start screen to pick the next run
+  public showMenu() {
+    this.setPhase("ready");
+  }
+
+  // stopUnits keeps the runner from passing a red light
+  public update(deltaTime: number, worldSpeed: number, stopUnits = Infinity) {
     if (this.phase !== "running") {
       return;
     }
 
-    const units = worldSpeed * deltaTime;
-    const remaining = goalUnits - this.distance;
+    this.elapsed += deltaTime;
+    const remaining = course.goalUnits - this.distance;
+    const units = Math.min(
+      worldSpeed * deltaTime,
+      Math.max(0, stopUnits - this.distance),
+    );
 
     if (units < remaining) {
       this.distance += units;
-      this.elapsed += deltaTime;
       return;
     }
 
     // Count only the part of this frame before the finish line
-    this.distance = goalUnits;
-    this.elapsed += units > 0 ? deltaTime * (remaining / units) : 0;
+    this.distance = course.goalUnits;
+    this.elapsed -= units > 0 ? deltaTime * (1 - remaining / units) : 0;
     this.finishedAt = getElapsedTime();
     this.setPhase("finished");
   }
 
-  public canRestart() {
+  public canContinue() {
     return (
       this.phase === "finished" &&
-      getElapsedTime() - this.finishedAt >= restartDelay
+      getElapsedTime() - this.finishedAt >= continueDelay
     );
   }
 
@@ -64,22 +75,31 @@ class RunState {
     this.hits++;
   }
 
+  public getDistanceUnits() {
+    return this.distance;
+  }
+
   public getDistanceKm() {
-    return (this.distance * SETTINGS.METERS_PER_UNIT) / 1000;
+    return (this.distance * course.metersPerUnit) / 1000;
+  }
+
+  // Seconds of play, waiting at lights included
+  public getElapsed() {
+    return this.elapsed;
   }
 
   // The time a real runner would have taken
   public getRaceSeconds() {
-    return this.elapsed * SETTINGS.TIME_SCALE;
+    return this.elapsed * SETTINGS.TIME_SCALE * course.level.timeScale;
   }
 
   // 0 at the start, 1 at the finish line
   public getProgress() {
-    return this.distance / goalUnits;
+    return this.distance / course.goalUnits;
   }
 
   public getRemainingUnits() {
-    return goalUnits - this.distance;
+    return course.goalUnits - this.distance;
   }
 
   public onPhaseChange(listener: PhaseListener) {

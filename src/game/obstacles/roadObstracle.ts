@@ -10,6 +10,8 @@ const ROAD_ICONS: Record<string, { width: number; height: number }> = {
   banana: { width: 0.74, height: 0.67 },
   // Squashed so the top-down puddle reads as lying flat on the road
   puddle: { width: 1.03, height: 0.35 },
+  mud: { width: 1.03, height: 0.35 },
+  rocks: { width: 0.7, height: 0.6 },
 };
 
 function loadIconTexture(name: string) {
@@ -26,8 +28,6 @@ function loadIconTexture(name: string) {
 const textures = new Map(
   Object.keys(ROAD_ICONS).map((name) => [name, loadIconTexture(name)]),
 );
-
-export const roadIconNames = Object.keys(ROAD_ICONS);
 
 // A picture hazard lying on the road
 export class RoadObstracle extends SpriteObstacle {

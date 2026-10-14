@@ -3,6 +3,8 @@ import { PACE_ZONE_ORDER, PACE_ZONES, PaceZone } from "./pace.ts";
 const maxEnergy = 100;
 // After running out, the runner walks until energy is back to this
 const recoveredEnergy = 50;
+// Energy per second while standing at a red light
+const restingEnergy = 20;
 
 export type EffortEvent = "zone" | "exhausted" | "recovered" | "boost" | "drain";
 type EffortListener = (event: EffortEvent) => void;
@@ -17,8 +19,9 @@ class Effort {
   public energy = maxEnergy;
   public isExhausted = false;
   public exhaustions = 0;
-  // Seconds of play spent at each pace this run
+  // Seconds of play spent at each pace this run, and waiting at lights
   public zoneSeconds = emptyZoneSeconds();
+  public waitingSeconds = 0;
 
   private listeners: EffortListener[] = [];
 
@@ -28,6 +31,7 @@ class Effort {
     this.isExhausted = false;
     this.exhaustions = 0;
     this.zoneSeconds = emptyZoneSeconds();
+    this.waitingSeconds = 0;
     this.notify("zone");
   }
 
@@ -47,11 +51,17 @@ class Effort {
     this.selectZone(PACE_ZONE_ORDER[clamped]);
   }
 
-  public update(deltaTime: number) {
+  // hillEnergy is the extra cost of climbing (or gain going down)
+  public update(deltaTime: number, isWaiting: boolean, hillEnergy: number) {
+    if (isWaiting) {
+      this.waitingSeconds += deltaTime;
+      this.setEnergy(this.energy + restingEnergy * deltaTime);
+      return;
+    }
+
     this.zoneSeconds[this.zone] += deltaTime;
-    this.setEnergy(
-      this.energy + PACE_ZONES[this.zone].energyPerSecond * deltaTime,
-    );
+    const perSecond = PACE_ZONES[this.zone].energyPerSecond + hillEnergy;
+    this.setEnergy(this.energy + perSecond * deltaTime);
   }
 
   public gainEnergy(amount: number) {
