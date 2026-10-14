@@ -1,34 +1,51 @@
 import {
   createTileCanvas,
+  PARALLAX,
   PATH_TOP,
+  SceneryLayer,
   TILE_HEIGHT,
   TILE_WIDTH,
 } from "./tileCanvas.ts";
 
-// A repeating trail scene: hills, trees and a dirt path
-const width = TILE_WIDTH;
+// A repeating trail scene: far hills, nearer hills with trees, and a dirt
+// path
 const height = TILE_HEIGHT;
 const pathTop = PATH_TOP;
+// Where the trees stand, behind the grass along the path
+const verge = pathTop - 4;
 
-function wave(x: number, waves: number, phase = 0) {
+// Whole waves across a layer keep it seamless
+function wave(x: number, width: number, waves: number, phase = 0) {
   return Math.sin((x / width) * Math.PI * 2 * waves + phase);
 }
 
-export function createTrailTexture(): HTMLCanvasElement {
-  const { canvas, rect } = createTileCanvas();
-
-  // Distant hills, then nearer ones; whole waves per width keep them seamless
+function drawFar() {
+  const width = TILE_WIDTH;
+  const { canvas, rect } = createTileCanvas(width);
   for (let x = 0; x < width; x++) {
-    const far = Math.round(78 + 10 * wave(x, 2) + 5 * wave(x, 5, 1));
-    rect(x, far, 1, pathTop - far, "#8cbf6e");
-    const near = Math.round(90 + 5 * wave(x, 3, 2) + 3 * wave(x, 7));
-    rect(x, near, 1, pathTop - near, "#6aa356");
+    const top = Math.round(
+      78 + 10 * wave(x, width, 2) + 5 * wave(x, width, 5, 1),
+    );
+    rect(x, top, 1, pathTop - top, "#8cbf6e");
+  }
+  return canvas;
+}
+
+// Twice as wide as the others, so the same tree comes round less often
+function drawNear() {
+  const width = TILE_WIDTH * 2;
+  const { canvas, rect } = createTileCanvas(width);
+  for (let x = 0; x < width; x++) {
+    const top = Math.round(
+      90 + 5 * wave(x, width, 6, 2) + 3 * wave(x, width, 14),
+    );
+    rect(x, top, 1, pathTop - top, "#6aa356");
   }
 
   // Trees standing on the verge
-  const verge = pathTop - 4;
-  for (let i = 0; i < 9; i++) {
-    const x = Math.floor((i / 9) * width + Math.random() * 20);
+  const trees = 18;
+  for (let i = 0; i < trees; i++) {
+    const x = Math.floor((i / trees) * width + Math.random() * 20);
     if (i % 3 === 1) {
       // Leafy tree: a round crown on a trunk
       const size = 10 + Math.floor(Math.random() * 5);
@@ -51,6 +68,12 @@ export function createTrailTexture(): HTMLCanvasElement {
       }
     }
   }
+  return canvas;
+}
+
+function drawGround() {
+  const width = TILE_WIDTH;
+  const { canvas, rect } = createTileCanvas(width);
 
   // Grass verge with tufts, then the dirt path
   rect(0, verge, width, pathTop - verge, "#4f8a3a");
@@ -74,4 +97,12 @@ export function createTrailTexture(): HTMLCanvasElement {
   rect(0, height - 5, width, 5, "#3f6b2e");
 
   return canvas;
+}
+
+export function createTrailLayers(): SceneryLayer[] {
+  return [
+    { canvas: drawFar(), parallax: PARALLAX.far },
+    { canvas: drawNear(), parallax: PARALLAX.near },
+    { canvas: drawGround(), parallax: PARALLAX.ground },
+  ];
 }

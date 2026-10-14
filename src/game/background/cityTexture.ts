@@ -1,18 +1,20 @@
+import { LandmarkName } from "../levels.ts";
 import {
   createTileCanvas,
   disc,
+  PARALLAX,
   PATH_TOP,
   pick,
   randomInt,
   Rect,
+  SceneryLayer,
   TILE_HEIGHT,
+  TILE_WIDTH,
 } from "./tileCanvas.ts";
 
-// A repeating stretch of Eindhoven, from the center out west: the
-// Catharinakerk, the Blob, the Lichttoren, the Witte Dame, the Evoluon and
-// Strijp-S, with ordinary streets between. It's four times as wide as the
-// other sceneries, so each landmark comes round only now and then
-const width = 1024;
+// Eindhoven: a hazy skyline, streets of ordinary buildings, and the road.
+// Its landmarks are drawn here too, but stand once each along the route
+// instead of repeating with the streets
 const height = TILE_HEIGHT;
 const pathTop = PATH_TOP;
 // Where buildings stand, at the back of the pavement
@@ -244,7 +246,7 @@ function evoluon(rect: Rect, x: number) {
   const concrete = "#e6e6e0";
   const shade = "#c9c9c1";
   const center = x + 44;
-  rect(x - 4, base - 3, 96, 3, "#6aa356");
+  rect(x, base - 3, 88, 3, "#6aa356");
   rect(center - 18, base - 13, 36, 13, "#47606f");
   for (let row = 0; row < 14; row++) {
     const out = 15 + Math.floor(row / 2);
@@ -333,64 +335,65 @@ function strijpS(rect: Rect, x: number) {
   }
 }
 
-const landmarks = [
-  { width: 60, draw: catharinakerk },
-  { width: 64, draw: blob },
-  { width: 64, draw: lichttoren },
-  { width: 92, draw: witteDame },
-  { width: 88, draw: evoluon },
-  { width: 150, draw: strijpS },
-];
+const landmarks: Record<
+  LandmarkName,
+  { width: number; draw: (rect: Rect, x: number) => void }
+> = {
+  catharinakerk: { width: 60, draw: catharinakerk },
+  blob: { width: 64, draw: blob },
+  lichttoren: { width: 64, draw: lichttoren },
+  witteDame: { width: 92, draw: witteDame },
+  evoluon: { width: 88, draw: evoluon },
+  strijpS: { width: 150, draw: strijpS },
+};
 
-export function createCityTexture(): HTMLCanvasElement {
+// A landmark on its own, as tall as the scenery so its rows line up
+export function createLandmarkCanvas(name: LandmarkName) {
+  const { width, draw } = landmarks[name];
   const { canvas, rect } = createTileCanvas(width);
+  draw(rect, 0);
+  return canvas;
+}
 
-  // Far-off blocks of the rest of the city, pale in the haze
+// Far-off blocks of the rest of the city, pale in the haze
+function drawFar() {
+  const width = TILE_WIDTH * 2;
+  const { canvas, rect } = createTileCanvas(width);
   for (let x = 0; x < width;) {
     const w = randomInt(14, 30);
     const tall = randomInt(36, 76);
     rect(x, base - tall, w, tall, pick(["#b4cbd8", "#a7c0cf"]));
     x += w + randomInt(0, 6);
   }
+  return canvas;
+}
 
-  // A street of ordinary buildings before each landmark; the first street
-  // takes what's left over
-  const spare = landmarks.reduce(
-    (left, landmark) => left - landmark.width,
-    width,
-  );
-  const streetWidth = Math.floor(spare / landmarks.length);
-  const streets: [number, number][] = [];
-  let x = 0;
-  landmarks.forEach((landmark, i) => {
-    const gap = i === 0
-      ? spare - streetWidth * (landmarks.length - 1)
-      : streetWidth;
-    street(rect, x, x + gap);
-    streets.push([x, x + gap]);
-    landmark.draw(rect, x + gap);
-    x += gap + landmark.width;
-  });
+// Streets of ordinary buildings, four tiles wide so the same building
+// comes round only now and then
+function drawNear() {
+  const width = TILE_WIDTH * 4;
+  const { canvas, rect } = createTileCanvas(width);
+  street(rect, 0, width);
+  return canvas;
+}
 
-  // Pavement, with trees along the streets
+// Pavement with street trees, then the road
+function drawGround() {
+  const width = TILE_WIDTH;
+  const { canvas, rect } = createTileCanvas(width);
   rect(0, base, width, pathTop - base, "#bab6ae");
   for (let joint = 0; joint < width; joint += 6) {
     rect(joint, base, 1, pathTop - base, "#aaa69e");
   }
-  streets.forEach(([from, to]) => {
-    for (
-      let tree = from + randomInt(8, 14);
-      tree < to - 8;
-      tree += randomInt(26, 36)
-    ) {
-      streetTree(rect, tree);
-    }
-  });
+  for (let tree = randomInt(8, 20); tree < width - 24;) {
+    streetTree(rect, tree);
+    tree += randomInt(48, 80);
+  }
 
-  // The road: a kerb, asphalt with a dashed line, then grass at the bottom
+  // A kerb, asphalt with a dashed line, then grass at the bottom
   rect(0, pathTop, width, 1, "#d7d3cb");
   rect(0, pathTop + 1, width, height - pathTop - 7, "#55595c");
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < 80; i++) {
     const y = randomInt(pathTop + 2, height - 8);
     rect(randomInt(0, width - 1), y, 1, 1, "#62676a");
   }
@@ -401,4 +404,12 @@ export function createCityTexture(): HTMLCanvasElement {
   rect(0, height - 5, width, 5, "#4f8a3a");
 
   return canvas;
+}
+
+export function createCityLayers(): SceneryLayer[] {
+  return [
+    { canvas: drawFar(), parallax: PARALLAX.far },
+    { canvas: drawNear(), parallax: PARALLAX.near },
+    { canvas: drawGround(), parallax: PARALLAX.ground },
+  ];
 }

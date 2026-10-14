@@ -3,6 +3,7 @@ import { mainCharacter } from "./characters/main/mainCharacter.ts";
 import { LoadBackground, showScenery } from "./background/background.ts";
 import { FinishLine } from "./decoration/finishLine.ts";
 import { HillSigns, TrafficLights } from "./decoration/courseMarkers.ts";
+import { Landmarks } from "./decoration/landmarks.ts";
 import { ObstacleManager } from "./obstacles/obstracleManager.ts";
 import { Spawner } from "./obstacles/spawner.ts";
 import { addFrameCallback, getDeltaTime } from "./helper/frameCallback.ts";
@@ -20,6 +21,8 @@ const hud = new Hud();
 const finishLine = new FinishLine();
 const trafficLights = new TrafficLights();
 const hillSigns = new HillSigns();
+const landmarks = new Landmarks((message) => hud.say(message));
+landmarks.reset(getSelectedLevel());
 
 // Each item's tip shows once per run, the first time it comes up
 const tipsShown = new Set<string>();
@@ -36,6 +39,7 @@ effort.onChange(() => mainCharacter.setPace(effort.zone));
 // The start screen previews the scenery of the run being picked
 onLevelChange((level) => {
   showScenery(level.scenery);
+  landmarks.reset(level);
   hud.showLevel(level);
 });
 
@@ -48,6 +52,7 @@ runState.onPhaseChange((phase) => {
     spawner.reset();
     trafficLights.reset();
     hillSigns.reset();
+    landmarks.reset(course.level);
     tipsShown.clear();
     wasWaiting = false;
     currentStretch = null;
@@ -101,6 +106,7 @@ addFrameCallback(() => {
   spawner.update();
   trafficLights.update();
   hillSigns.update();
+  landmarks.update();
   finishLine.update();
   hud.update();
 });

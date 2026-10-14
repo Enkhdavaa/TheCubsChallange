@@ -6,6 +6,16 @@ export const TILE_WIDTH = 256;
 export const TILE_HEIGHT = 144;
 export const PATH_TOP = Math.round(TILE_HEIGHT * 0.7);
 
+// How fast each layer of a scenery scrolls compared with the road: far
+// things drift by slowly, which also makes them repeat less often
+export const PARALLAX = { far: 0.2, near: 0.5, ground: 1 };
+
+// One repeating image of a scenery, and how fast it scrolls
+export interface SceneryLayer {
+  canvas: HTMLCanvasElement;
+  parallax: number;
+}
+
 export type Rect = (
   x: number,
   y: number,

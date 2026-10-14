@@ -8,6 +8,11 @@ export interface Stretch {
   grade: number;
 }
 
+// Longer runs are squeezed more, so a world unit covers more ground
+export function getMetersPerUnit(level: Level) {
+  return SETTINGS.METERS_PER_UNIT * level.timeScale;
+}
+
 // The route of one run in world units: its length, crossings and hills
 class Course {
   public level: Level = getSelectedLevel();
@@ -22,8 +27,7 @@ class Course {
 
   public build(level: Level) {
     this.level = level;
-    // Longer runs are squeezed more, so a world unit covers more ground
-    this.metersPerUnit = SETTINGS.METERS_PER_UNIT * level.timeScale;
+    this.metersPerUnit = getMetersPerUnit(level);
     this.goalUnits = this.unitsFromKm(level.distanceKm);
     this.lightUnits = (level.trafficLightsKm ?? []).map((km) =>
       this.unitsFromKm(km)

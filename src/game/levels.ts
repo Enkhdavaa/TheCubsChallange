@@ -8,6 +8,21 @@ export interface Hill {
   grade: number;
 }
 
+export type LandmarkName =
+  | "catharinakerk"
+  | "blob"
+  | "lichttoren"
+  | "witteDame"
+  | "strijpS"
+  | "evoluon";
+
+export interface Landmark {
+  km: number;
+  name: LandmarkName;
+  // What the runner says on the way past
+  message: string;
+}
+
 export interface Level {
   id: string;
   name: string;
@@ -27,6 +42,8 @@ export interface Level {
   trafficLightsKm?: number[];
   // The course as stretches of hill and flat, in order
   hills?: Hill[];
+  // Landmarks passed once each along the way, in order
+  landmarks?: Landmark[];
 }
 
 export const LEVELS: Level[] = [
@@ -51,7 +68,7 @@ export const LEVELS: Level[] = [
     scenery: "city",
     timeScale: 1.6,
     intro:
-      "Twice as far, through Eindhoven: past the Catharinakerk, the Witte Dame, the Evoluon and Strijp-S. Pick a pace you can hold for an hour. Red lights stop you: ease off when you see one, and use the wait to catch your breath.",
+      "Twice as far, through Eindhoven: past the Catharinakerk, the Witte Dame, Strijp-S and the Evoluon. Pick a pace you can hold for an hour. Red lights stop you: ease off when you see one, and use the wait to catch your breath.",
     finishTitle: "You ran a city 10K!",
     typicalFinish: "Most new runners finish a 10K in 60 to 80 minutes.",
     pickups: [
@@ -64,6 +81,23 @@ export const LEVELS: Level[] = [
     setbacks: ["Bad Weather", "No Sleep", "No Food", "Overdoing It", "No Run"],
     roadIcons: ["banana", "puddle"],
     trafficLightsKm: [1.5, 3.5, 5.5, 7.5, 9],
+    // From the center out west, between the lights
+    landmarks: [
+      { km: 0.45, name: "catharinakerk", message: "Passing the Catharinakerk" },
+      { km: 1, name: "blob", message: "There's the Blob!" },
+      {
+        km: 2.5,
+        name: "lichttoren",
+        message: "Lichttoren: where bulbs were tested",
+      },
+      {
+        km: 4.5,
+        name: "witteDame",
+        message: "Witte Dame: once a Philips factory",
+      },
+      { km: 6.5, name: "strijpS", message: "Strijp-S, Philips' old works" },
+      { km: 8.3, name: "evoluon", message: "The Evoluon looks like a UFO!" },
+    ],
   },
   {
     id: "trail-6k",

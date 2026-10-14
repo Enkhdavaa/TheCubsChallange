@@ -1,15 +1,17 @@
 import {
   createTileCanvas,
   disc,
+  PARALLAX,
   PATH_TOP,
   randomInt,
   Rect,
+  SceneryLayer,
   TILE_HEIGHT,
   TILE_WIDTH,
 } from "./tileCanvas.ts";
 
-// A repeating city park: a mown lawn with trees, a pond, lamps and
-// benches behind a gravel path
+// A repeating city park: far trees, then a mown lawn with trees, a pond,
+// lamps and benches behind a gravel path
 const width = TILE_WIDTH;
 const height = TILE_HEIGHT;
 const pathTop = PATH_TOP;
@@ -101,49 +103,71 @@ function bench(rect: Rect, x: number) {
   rect(x + 11, verge - 10, 1, 10, iron);
 }
 
-export function createParkTexture(): HTMLCanvasElement {
-  const { canvas, rect } = createTileCanvas();
+// A pond with ripples and a duck; the far bank is darker
+function pond(rect: Rect, x: number) {
+  const y = horizon + 8;
+  const halfWidth = 22;
+  const halfHeight = 4;
+  for (let row = -halfHeight; row <= halfHeight; row++) {
+    const half = Math.round(
+      halfWidth * Math.sqrt(1 - (row / halfHeight) ** 2),
+    );
+    const color = row === -halfHeight ? "#4a90bd" : "#64b2df";
+    rect(x - half, y + row, half * 2 + 1, 1, color);
+  }
+  rect(x - 14, y - 1, 5, 1, "#a8dcf5");
+  rect(x - 2, y + 2, 6, 1, "#a8dcf5");
+  rect(x + 8, y - 1, 4, 2, "#ffffff");
+  rect(x + 11, y - 2, 2, 1, "#ffffff");
+  rect(x + 13, y - 2, 1, 1, "#ff9f1a");
+}
 
-  // Far trees: a soft, lumpy line of crowns along the back of the lawn
+// Far trees: a soft, lumpy line of crowns along the back of the lawn
+function drawFar() {
+  const { canvas, rect } = createTileCanvas();
   for (let x = 0; x < width; x += randomInt(8, 14)) {
     disc(rect, x, horizon - 1, randomInt(6, 9), "#9fcdb0");
   }
   for (let x = 4; x < width; x += randomInt(9, 15)) {
     disc(rect, x, horizon, randomInt(4, 6), "#80b892");
   }
+  return canvas;
+}
+
+// Two different sections of park side by side, so the same tree or the
+// pond comes round less often
+const sections = [
+  { trees: [20, 88, 206], lamps: [56, 178], benches: [108, 228], pond: 146 },
+  { trees: [30, 116, 150, 236], lamps: [84, 190], benches: [52, 204] },
+];
+
+function drawNear() {
+  const nearWidth = width * sections.length;
+  const { canvas, rect } = createTileCanvas(nearWidth);
 
   // Lawn with mowing stripes
   for (let y = horizon; y < pathTop; y += 3) {
-    rect(0, y, width, 3, (y - horizon) % 6 === 0 ? "#7cc35a" : "#72b852");
+    const color = (y - horizon) % 6 === 0 ? "#7cc35a" : "#72b852";
+    rect(0, y, nearWidth, 3, color);
   }
-
-  // A pond with ripples and a duck; the far bank is darker
-  const pondX = 146 + randomInt(-4, 4);
-  const pondY = horizon + 8;
-  const pondWidth = 22;
-  const pondHeight = 4;
-  for (let row = -pondHeight; row <= pondHeight; row++) {
-    const half = Math.round(
-      pondWidth * Math.sqrt(1 - (row / pondHeight) ** 2),
-    );
-    const color = row === -pondHeight ? "#4a90bd" : "#64b2df";
-    rect(pondX - half, pondY + row, half * 2 + 1, 1, color);
-  }
-  rect(pondX - 14, pondY - 1, 5, 1, "#a8dcf5");
-  rect(pondX - 2, pondY + 2, 6, 1, "#a8dcf5");
-  rect(pondX + 8, pondY - 1, 4, 2, "#ffffff");
-  rect(pondX + 11, pondY - 2, 2, 1, "#ffffff");
-  rect(pondX + 13, pondY - 2, 1, 1, "#ff9f1a");
+  sections.forEach((section, i) => {
+    if (section.pond) {
+      pond(rect, i * width + section.pond + randomInt(-4, 4));
+    }
+  });
 
   // Flowers dotted along the front of the lawn
   const flowers = ["#ff6b6b", "#ffd43b", "#ffffff", "#c084fc"];
-  for (let x = randomInt(0, 5); x < width; x += randomInt(4, 9)) {
+  for (let x = randomInt(0, 5); x < nearWidth; x += randomInt(4, 9)) {
     rect(x, verge - randomInt(1, 4), 1, 1, flowers[randomInt(0, 3)]);
   }
 
   // Trees, one of them in blossom, then lamps and benches
-  const blossom = randomInt(0, 2);
-  [20, 88, 206].forEach((x, i) => {
+  const trees = sections.flatMap((section, i) =>
+    section.trees.map((x) => i * width + x)
+  );
+  const blossom = randomInt(0, trees.length - 1);
+  trees.forEach((x, i) => {
     const at = x + randomInt(-4, 4);
     if (i === blossom) {
       blossomTree(rect, at);
@@ -151,10 +175,16 @@ export function createParkTexture(): HTMLCanvasElement {
       tree(rect, at, randomInt(11, 14));
     }
   });
-  [56, 178].forEach((x) => lamp(rect, x));
-  [108, 228].forEach((x) => bench(rect, x));
+  sections.forEach((section, i) => {
+    section.lamps.forEach((x) => lamp(rect, i * width + x));
+    section.benches.forEach((x) => bench(rect, i * width + x));
+  });
+  return canvas;
+}
 
-  // A neat lawn edge, then the gravel path between stone edges
+// A neat lawn edge, then the gravel path between stone edges
+function drawGround() {
+  const { canvas, rect } = createTileCanvas();
   rect(0, verge, width, pathTop - verge, "#5fa746");
   rect(0, pathTop, width, height - pathTop, "#b59f76");
   for (let i = 0; i < 160; i++) {
@@ -166,6 +196,13 @@ export function createParkTexture(): HTMLCanvasElement {
   rect(0, pathTop, width, 1, "#d8cbae");
   rect(0, height - 6, width, 1, "#d8cbae");
   rect(0, height - 5, width, 5, "#5fa746");
-
   return canvas;
+}
+
+export function createParkLayers(): SceneryLayer[] {
+  return [
+    { canvas: drawFar(), parallax: PARALLAX.far },
+    { canvas: drawNear(), parallax: PARALLAX.near },
+    { canvas: drawGround(), parallax: PARALLAX.ground },
+  ];
 }
