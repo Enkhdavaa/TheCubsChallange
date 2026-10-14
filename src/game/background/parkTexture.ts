@@ -31,17 +31,58 @@ function disc(rect: Rect, x: number, y: number, radius: number, color: string) {
 }
 
 // A round crown on a trunk: shade on the lower right, light on the upper left
-function tree(rect: Rect, x: number, radius: number, isBlossom: boolean) {
-  const [shade, leaf, light] = isBlossom
-    ? ["#c9708f", "#e595b0", "#f6c3d3"]
-    : ["#2f7a34", "#3f9440", "#5cb04c"];
+function tree(rect: Rect, x: number, radius: number) {
   const trunk = 9;
   const y = verge - trunk - radius + 2;
   rect(x - 1, verge - trunk, 3, trunk, "#6b4423");
-  disc(rect, x, y, radius, shade);
-  disc(rect, x - 1, y - 1, radius - 2, leaf);
+  disc(rect, x, y, radius, "#2f7a34");
+  disc(rect, x - 1, y - 1, radius - 2, "#3f9440");
   const third = Math.round(radius / 3);
-  disc(rect, x - third, y - third, third, light);
+  disc(rect, x - third, y - third, third, "#5cb04c");
+}
+
+// Puffs of a cherry crown as [x, y, radius] from its center: wider than
+// tall, like a cloud
+const blossomPuffs = [
+  [-10, 2, 5],
+  [10, 2, 5],
+  [-5, -2, 7],
+  [5, -2, 7],
+  [-3, -7, 5],
+  [4, -8, 4],
+];
+
+// A cherry tree in bloom: a dark trunk forking under a cloudy crown, with
+// a few fresh leaves showing and petals fallen on the lawn
+function blossomTree(rect: Rect, x: number) {
+  const bark = "#5a3a2e";
+  const trunk = 9;
+  rect(x - 1, verge - trunk, 3, trunk, bark);
+  for (let step = 1; step <= 5; step++) {
+    rect(x - step, verge - trunk - step, 2, 1, bark);
+    rect(x + step - 1, verge - trunk - step, 2, 1, bark);
+  }
+
+  const y = verge - trunk - 12;
+  blossomPuffs.forEach(([dx, dy, radius]) => {
+    disc(rect, x + dx, y + dy, radius, "#d4879f");
+  });
+  blossomPuffs.forEach(([dx, dy, radius]) => {
+    disc(rect, x + dx - 1, y + dy - 1, radius - 1, "#eeaac0");
+  });
+
+  // Specks of blossom, light up top and deeper below, and a few fresh
+  // leaves low down, where the blossom is thinner
+  for (let i = 0; i < 30; i++) {
+    const [dx, dy, radius] = blossomPuffs[randomInt(0, blossomPuffs.length - 1)];
+    const spread = radius - 3;
+    const row = randomInt(-spread, spread);
+    const color = row < 0 ? "#fad4e1" : i % 3 === 0 ? "#5cb04c" : "#d4879f";
+    rect(x + dx - 1 + randomInt(-spread, spread), y + dy - 1 + row, 1, 1, color);
+  }
+  for (let i = 0; i < 8; i++) {
+    rect(x + randomInt(-16, 16), verge - randomInt(1, 2), 1, 1, "#fad4e1");
+  }
 }
 
 function lamp(rect: Rect, x: number) {
@@ -106,7 +147,12 @@ export function createParkTexture(): HTMLCanvasElement {
   // Trees, one of them in blossom, then lamps and benches
   const blossom = randomInt(0, 2);
   [20, 88, 206].forEach((x, i) => {
-    tree(rect, x + randomInt(-4, 4), randomInt(11, 14), i === blossom);
+    const at = x + randomInt(-4, 4);
+    if (i === blossom) {
+      blossomTree(rect, at);
+    } else {
+      tree(rect, at, randomInt(11, 14));
+    }
   });
   [56, 178].forEach((x) => lamp(rect, x));
   [108, 228].forEach((x) => bench(rect, x));
