@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { PIXEL_FONT } from "./pixelFont.ts";
 
 export interface Badge {
   texture: THREE.CanvasTexture;
@@ -6,17 +7,16 @@ export interface Badge {
   aspect: number;
 }
 
+// Canvas pixels; one "art pixel" of the frame is `pixel` canvas pixels
+const pixel = 6;
 const badgeHeight = 96;
-const fontSize = 54;
+const fontSize = 52;
 const paddingX = 30;
-const borderWidth = 6;
-const radius = 26;
-const font =
-  `700 ${fontSize}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`;
+const font = `${fontSize}px ${PIXEL_FONT}`;
 
 const cache = new Map<string, Badge>();
 
-// A rounded label with white text, drawn once per text and color
+// A square pixel-art label with white text, drawn once per text and color
 export function getBadgeTexture(
   text: string,
   background: string,
@@ -35,34 +35,36 @@ export function getBadgeTexture(
   const textWidth = Math.ceil(ctx.measureText(text).width);
   canvas.width = textWidth + paddingX * 2;
   canvas.height = badgeHeight;
+  const { width, height } = canvas;
+
+  // Border with notched corners
+  ctx.fillStyle = border;
+  ctx.fillRect(pixel, 0, width - pixel * 2, height);
+  ctx.fillRect(0, pixel, width, height - pixel * 2);
+
+  // Face, with a light top edge and a dark bottom edge for depth
+  ctx.fillStyle = background;
+  ctx.fillRect(pixel, pixel, width - pixel * 2, height - pixel * 2);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+  ctx.fillRect(pixel, pixel, width - pixel * 2, pixel);
+  ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+  ctx.fillRect(pixel, height - pixel * 2, width - pixel * 2, pixel);
 
   // Resizing the canvas resets the context, so set the font again
-  ctx.fillStyle = border;
-  ctx.beginPath();
-  ctx.roundRect(0, 0, canvas.width, canvas.height, radius);
-  ctx.fill();
-
-  ctx.fillStyle = background;
-  ctx.beginPath();
-  ctx.roundRect(
-    borderWidth,
-    borderWidth,
-    canvas.width - borderWidth * 2,
-    canvas.height - borderWidth * 2,
-    radius - borderWidth,
-  );
-  ctx.fill();
-
   ctx.font = font;
-  ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 3);
+  const x = width / 2;
+  const y = height / 2;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
+  ctx.fillText(text, x + 4, y + 4);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(text, x, y);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
 
-  const badge = { texture, aspect: canvas.width / canvas.height };
+  const badge = { texture, aspect: width / height };
   cache.set(key, badge);
   return badge;
 }

@@ -20,9 +20,22 @@ export interface SpriteObstacleOptions {
   hitboxScale?: { x: number; y: number };
 }
 
-const markerSize = 0.5;
+const markerSize = 0.6;
 const markerInset = 0.4;
 const markerTextures = new Map<ObstacleKind, THREE.CanvasTexture>();
+
+// Left-pointing pixel arrow: "#" is the outline, "o" the fill
+const MARKER_ART = [
+  "....##",
+  "...#o#",
+  "..#oo#",
+  ".#ooo#",
+  "#oooo#",
+  ".#ooo#",
+  "..#oo#",
+  "...#o#",
+  "....##",
+];
 
 // A pulsing arrow at the right edge while the obstacle is still off screen
 function getMarkerTexture(kind: ObstacleKind) {
@@ -32,23 +45,25 @@ function getMarkerTexture(kind: ObstacleKind) {
   }
 
   const canvas = document.createElement("canvas");
-  canvas.width = 64;
-  canvas.height = 64;
+  canvas.width = MARKER_ART[0].length;
+  canvas.height = MARKER_ART.length;
   const ctx = canvas.getContext("2d")!;
 
-  ctx.beginPath();
-  ctx.moveTo(8, 32);
-  ctx.lineTo(54, 8);
-  ctx.lineTo(54, 56);
-  ctx.closePath();
-  ctx.lineJoin = "round";
-  ctx.lineWidth = 6;
-  ctx.strokeStyle = "#ffffff";
-  ctx.stroke();
-  ctx.fillStyle = OBSTACLE_COLORS[kind].background;
-  ctx.fill();
+  MARKER_ART.forEach((row, y) => {
+    [...row].forEach((cell, x) => {
+      if (cell === ".") {
+        return;
+      }
+      ctx.fillStyle = cell === "#"
+        ? "#ffffff"
+        : OBSTACLE_COLORS[kind].background;
+      ctx.fillRect(x, y, 1, 1);
+    });
+  });
 
   const texture = new THREE.CanvasTexture(canvas);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
   texture.colorSpace = THREE.SRGBColorSpace;
   markerTextures.set(kind, texture);
   return texture;
@@ -92,7 +107,8 @@ export class SpriteObstacle implements IObstacle {
     this.marker = new THREE.Sprite(
       new THREE.SpriteMaterial({ map: getMarkerTexture(kind) }),
     );
-    this.marker.scale.set(markerSize, markerSize, 1);
+    // Keep the art's 2:3 proportions
+    this.marker.scale.set(markerSize * (2 / 3), markerSize, 1);
 
     this.setPosition(startX + width / 2, centerY);
 

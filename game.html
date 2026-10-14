@@ -7,6 +7,13 @@
     <link rel="icon" href="./assets/challenge/cubslogo_christmas.png" />
     <link rel="stylesheet" href="./lib/style.css" />
     <link rel="stylesheet" href="./game.css" />
+    <link
+      rel="preload"
+      href="/fonts/tiny5/tiny5-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <script type="module" src="/src/game/game.ts"></script>
   </head>
   <body>
@@ -39,8 +46,10 @@
         <div class="bubble" id="bubble"></div>
       </div>
 
-      <div class="overlay" id="start-screen">
-        <div class="card">
+      <div class="overlay" id="menu">
+        <p class="game-title">The Cubs Run Club</p>
+
+        <div class="card" id="start-card" hidden>
           <h1 data-level-name></h1>
           <p class="intro" data-level-intro></p>
           <ul class="legend">
@@ -59,10 +68,8 @@
           </ul>
           <p class="cta">Tap or press <kbd>Space</kbd> to start and jump</p>
         </div>
-      </div>
 
-      <div class="overlay" id="finish-screen" role="status">
-        <div class="card">
+        <div class="card" id="finish-card" role="status" hidden>
           <h1 data-level-finish></h1>
           <p class="finish-time">
             <strong id="finish-time"></strong> · <span id="finish-pace"></span> /km

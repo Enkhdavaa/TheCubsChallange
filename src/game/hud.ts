@@ -1,4 +1,6 @@
 import { getCameraBounds } from "./camera.ts";
+// Waits for the pixel font so no text shows in a fallback font first
+import "./helper/pixelFont.ts";
 import { getElapsedTime } from "./helper/frameCallback.ts";
 import { addResizeCallback } from "./helper/resizeCallback.ts";
 import { effort } from "./effort.ts";
@@ -40,8 +42,9 @@ export class Hud {
   private pacePanel = byId("pace-panel");
   private paceTitle = byId("pace-title");
   private bubble = byId("bubble");
-  private startScreen = byId("start-screen");
-  private finishScreen = byId("finish-screen");
+  private menu = byId("menu");
+  private startCard = byId("start-card");
+  private finishCard = byId("finish-card");
 
   private paceButtons = new Map<PaceZone, HTMLButtonElement>();
   private shownDistance = "";
@@ -99,8 +102,10 @@ export class Hud {
   }
 
   public showPhase(phase: RunPhase) {
-    this.startScreen.classList.toggle("is-visible", phase === "ready");
-    this.finishScreen.classList.toggle("is-visible", phase === "finished");
+    // The title and a card show between runs; the HUD shows during one
+    this.menu.classList.toggle("is-visible", phase !== "running");
+    this.startCard.hidden = phase !== "ready";
+    this.finishCard.hidden = phase !== "finished";
     this.hud.classList.toggle("is-visible", phase === "running");
   }
 

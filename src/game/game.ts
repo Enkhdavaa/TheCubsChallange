@@ -1,7 +1,6 @@
 import { MainCharacterStart } from "./characters/main/characterControl.ts";
 import { mainCharacter } from "./characters/main/mainCharacter.ts";
 import { LoadBackground } from "./background/background.ts";
-import { RenderScreenText } from "./decoration/screenText.ts";
 import { FinishLine } from "./decoration/finishLine.ts";
 import { ObstacleManager } from "./obstacles/obstracleManager.ts";
 import { Spawner } from "./obstacles/spawner.ts";
@@ -14,7 +13,6 @@ import { Hud } from "./hud.ts";
 
 MainCharacterStart();
 LoadBackground();
-const title = RenderScreenText();
 
 const hud = new Hud();
 const finishLine = new FinishLine();
@@ -36,8 +34,6 @@ runState.onPhaseChange((phase) => {
       recordFinish(currentLevel.id, Math.round(runState.getRaceSeconds())),
     );
   }
-  // The distance and speed display takes the title's place while running
-  title.visible = phase !== "running";
   hud.showPhase(phase);
 });
 hud.showPhase(runState.phase);
