@@ -1,9 +1,7 @@
 import { defineConfig } from "vite";
-import glsl from "vite-plugin-glsl";
 
 export default defineConfig({
   appType: "mpa",
-  plugins: [glsl()],
   server: {
     open: true,
     proxy: {
@@ -22,8 +20,5 @@ export default defineConfig({
         game: "game.html",
       },
     },
-  },
-  optimizeDeps: {
-    exclude: ["lit-html"],
   },
 });
