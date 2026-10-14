@@ -1,20 +1,42 @@
 import { MainCharacterStart } from "./characters/main/characterControl.ts";
+import { mainCharacter } from "./characters/main/mainCharacter.ts";
 import { LoadBackground } from "./background/background.ts";
 import { RenderScreenText } from "./decoration/screenText.ts";
-import { spawnDistanceBar } from "./characters/main/distanceBar.ts";
+import { FinishLine } from "./decoration/finishLine.ts";
 import { ObstacleManager } from "./obstacles/obstracleManager.ts";
 import { Spawner } from "./obstacles/spawner.ts";
-import { addFrameCallback } from "./helper/frameCallback.ts";
+import { addFrameCallback, getDeltaTime } from "./helper/frameCallback.ts";
+import { runState } from "./runState.ts";
+import { Hud } from "./hud.ts";
 
 MainCharacterStart();
 LoadBackground();
-RenderScreenText();
-spawnDistanceBar();
+const title = RenderScreenText();
 
+const hud = new Hud();
+const finishLine = new FinishLine();
 const obstracleManager = new ObstacleManager();
 const spawner = new Spawner(obstracleManager);
 
+runState.onPhaseChange((phase) => {
+  if (phase === "running") {
+    obstracleManager.clear();
+    spawner.reset();
+    mainCharacter.start();
+  } else if (phase === "finished") {
+    obstracleManager.clear();
+    mainCharacter.stop();
+  }
+  // The distance and speed display takes the title's place while running
+  title.visible = phase !== "running";
+  hud.showPhase(phase);
+});
+hud.showPhase(runState.phase);
+
 addFrameCallback(() => {
+  runState.advance(mainCharacter.getWorldSpeed() * getDeltaTime());
   obstracleManager.updateObstacles();
   spawner.update();
+  finishLine.update();
+  hud.update();
 });

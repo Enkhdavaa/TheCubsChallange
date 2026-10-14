@@ -7,9 +7,12 @@ const frameCallbacks: Array<() => void> = [];
 const timer = new THREE.Timer();
 let deltaTime = 0;
 
+// Cap a single step so a frame after a hidden tab doesn't teleport obstacles
+const maxDeltaTime = 0.1;
+
 function calculateDeltaTime() {
   timer.update();
-  deltaTime = timer.getDelta();
+  deltaTime = Math.min(timer.getDelta(), maxDeltaTime);
 }
 
 // Call all frame functions

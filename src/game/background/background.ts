@@ -88,15 +88,16 @@ function createPathTexture(): string {
 export const LoadBackground = () => {
   addSkyPlaneToScene();
 
-  // 2. The running path (foreground overlay)
+  // 2. The running path (foreground overlay), moving with the ground
   createRepeatingImage({
     imagePath: createPathTexture(),
     camera: orthographicCamera,
     scene: scene,
-    repeatX: 1.5, // Stretch wider
+    // Same look as before: 1.5 copies across a 16:9 view (16 units wide)
+    tileWidth: 16 / 1.5,
+    height: 6,
     position: RepeatingImagePosition.BOTTOM,
-    speedMultiplier: 0.0008, // Move faster to create parallax depth!
-    getSpeed: () => mainCharacter.getCurrentSpeed(),
+    getSpeed: () => mainCharacter.getWorldSpeed(),
     zOffset: -1,
   });
 };

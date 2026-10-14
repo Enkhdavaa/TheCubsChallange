@@ -1,64 +1,48 @@
 import * as THREE from "three";
-import { scene } from "../scene.ts";
 import { textureLoader } from "../helper/textures.ts";
-import { IObstacle } from "./interfaces.ts";
-import { getRoadObstaclePosition } from "../positions.ts";
+import { GROUND_Y } from "../positions.ts";
+import { preloadTexture } from "../scene.ts";
+import { SpriteObstacle } from "./spriteObstacle.ts";
 
-export class RoadObstracle implements IObstacle {
-  private size: number;
-  private mesh: THREE.Sprite;
-  private box: THREE.Box3;
-  private boxHelper: THREE.Box3Helper;
-  public name: string;
-  public speed: number = 0.01;
+// Pixel art SVGs at their real pixel size, cropped to the art.
+// World sizes keep the look the original PNGs had
+const ROAD_ICONS: Record<string, { width: number; height: number }> = {
+  banana: { width: 0.74, height: 0.67 },
+  // Squashed so the top-down puddle reads as lying flat on the road
+  puddle: { width: 1.03, height: 0.35 },
+};
 
-  constructor(name: string, spritePath: string, size: number = 0.5) {
-    this.name = name;
-    this.size = size;
+function loadIconTexture(name: string) {
+  const texture = textureLoader.load(
+    `sprites/obstacle/${name}.svg`,
+    preloadTexture,
+  );
+  texture.magFilter = THREE.NearestFilter;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
 
-    const map = textureLoader.load(spritePath);
-    map.magFilter = THREE.NearestFilter;
+// Loaded and uploaded up front so they are ready before the first one spawns
+const textures = new Map(
+  Object.keys(ROAD_ICONS).map((name) => [name, loadIconTexture(name)]),
+);
 
-    const material = new THREE.SpriteMaterial({
-      map: map,
+export const roadIconNames = Object.keys(ROAD_ICONS);
+
+// A picture hazard lying on the road
+export class RoadObstracle extends SpriteObstacle {
+  constructor(name: string, startX: number) {
+    const { width, height } = ROAD_ICONS[name];
+
+    super({
+      name,
+      kind: "hazard",
+      texture: textures.get(name)!,
+      width,
+      height,
+      startX,
+      bottomY: GROUND_Y,
+      hitboxScale: { x: 0.8, y: 0.85 },
     });
-    this.mesh = new THREE.Sprite(material);
-    this.mesh.scale.set(this.size, this.size, 1);
-    const position = getRoadObstaclePosition();
-    this.mesh.position.set(position.x, position.y, 0);
-
-    this.box = new THREE.Box3().setFromObject(this.mesh);
-
-    this.boxHelper = new THREE.Box3Helper(this.box, 0xff0000);
-    this.boxHelper.visible = true;
-    this.boxHelper.position.copy(this.mesh.position);
-
-    scene.add(this.mesh);
-    scene.add(this.boxHelper);
-  }
-
-  getPosition() {
-    return this.mesh.position;
-  }
-
-  setPosition(x: number, y: number): void {
-    this.mesh.position.set(x, y, 0);
-    this.box.setFromObject(this.mesh);
-    this.boxHelper.position.copy(this.mesh.position);
-  }
-
-  getBoundingBox() {
-    return this.box;
-  }
-
-  public dispose() {
-    scene.remove(this.mesh);
-    scene.remove(this.boxHelper);
-
-    this.mesh.geometry.dispose();
-    this.mesh.material.dispose();
-
-    this.boxHelper.geometry.dispose();
-    (this.boxHelper.material as THREE.LineBasicMaterial).dispose();
   }
 }

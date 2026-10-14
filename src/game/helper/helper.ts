@@ -1,19 +1,5 @@
 import * as THREE from "three";
 
-export function getScreenAnchor(
-  xFraction: number,
-  yFraction: number,
-  camera: THREE.OrthographicCamera
-): THREE.Vector3 {
-  const viewHeight = camera.top - camera.bottom;
-  const viewWidth = camera.right - camera.left;
-
-  const x = camera.left + xFraction * viewWidth;
-  const y = camera.bottom + yFraction * viewHeight;
-
-  return new THREE.Vector3(x, y, 0);
-}
-
 export function generateAscendingArray(n: number): number[] {
   return Array.from({ length: n }, (_, i) => i);
 }

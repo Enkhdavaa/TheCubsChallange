@@ -17,4 +17,5 @@ export const RenderScreenText = () => {
   textMesh.rotation.x = (Math.PI / 2) * 0.2;
 
   scene.add(textMesh);
+  return textMesh;
 };

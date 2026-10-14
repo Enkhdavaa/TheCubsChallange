@@ -1,8 +1,8 @@
-import { isOffScreen } from "../camera.ts";
+import { isPastLeftEdge } from "../camera.ts";
 import { mainCharacter } from "../characters/main/mainCharacter.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
+import { runState } from "../runState.ts";
 import { IObstacle } from "./interfaces.ts";
-import { randomTexts } from "./text.ts";
 
 export class ObstacleManager {
   private obstacles: IObstacle[] = [];
@@ -15,36 +15,41 @@ export class ObstacleManager {
 
   public updateObstacles() {
     const playerBoundingBox = mainCharacter.getBoundingBox();
+    // Obstacles lie on the ground, so they move exactly as fast as it does
+    const movement = mainCharacter.getWorldSpeed() * getDeltaTime();
 
     for (let i = this.obstacles.length - 1; i >= 0; i--) {
       const obstacle = this.obstacles[i];
       const obstacleBoundingBox = obstacle.getBoundingBox();
 
-      if (obstacleBoundingBox.intersectsBox(playerBoundingBox)) {
-        if (this.isGoodObstacle(obstacle.name)) {
+      if (
+        runState.phase === "running" &&
+        obstacleBoundingBox.intersectsBox(playerBoundingBox)
+      ) {
+        if (obstacle.kind === "pickup") {
           mainCharacter.increaseSpeed();
+          runState.recordPickup();
         } else {
           mainCharacter.decreaseSpeed();
+          runState.recordHit();
         }
         this.removeObstacle(obstacle);
         continue;
       }
 
-      const boundingBox = obstacle.getBoundingBox();
-
-      if (isOffScreen(boundingBox)) {
+      if (isPastLeftEdge(obstacleBoundingBox)) {
         this.removeObstacle(obstacle);
         continue;
       }
 
       const position = obstacle.getPosition();
-      const movementSpeed = this.calculateSpeed();
-      obstacle.setPosition(position.x - movementSpeed, position.y);
+      obstacle.setPosition(position.x - movement, position.y);
     }
   }
 
-  private calculateSpeed() {
-    return 10 * getDeltaTime();
+  public clear() {
+    this.obstacles.forEach((obstacle) => obstacle.dispose());
+    this.obstacles = [];
   }
 
   private removeObstacle(obstacle: IObstacle) {
@@ -52,11 +57,6 @@ export class ObstacleManager {
     if (index > -1) {
       this.obstacles.splice(index, 1);
       obstacle.dispose();
-      console.log("removing obstacle");
     }
-  }
-
-  private isGoodObstacle(obstacleText: string) {
-    return randomTexts["good"].includes(obstacleText);
   }
 }

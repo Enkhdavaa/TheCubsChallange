@@ -100,6 +100,10 @@ export class SpriteFlipBook {
     return this.sprite;
   }
 
+  public setTint(color: THREE.ColorRepresentation) {
+    this.sprite.material.color.set(color);
+  }
+
   public isVisible() {
     return this.sprite.visible;
   }

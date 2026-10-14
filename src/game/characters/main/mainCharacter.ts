@@ -1,6 +1,8 @@
 import { SpriteFlipBook } from "../../animation/spriteFlipBook.ts";
 import { SpriteSelector } from "../../animation/spriteSelector.ts";
 import * as THREE from "three";
+import { addResizeCallback } from "../../helper/resizeCallback.ts";
+import { getCharacterPosition } from "../../positions.ts";
 
 import idle from "../../animation/sprites/idle.ts";
 import jump from "../../animation/sprites/jump.ts";
@@ -15,20 +17,28 @@ animationMap.set("run", run);
 animationMap.set("walk", walk);
 
 // Animation selector
-const spriteSelector = new SpriteSelector(animationMap, "walk");
-spriteSelector.selectAnimation("walk");
+const spriteSelector = new SpriteSelector(animationMap, "idle");
 
-const maxSpeed: number = 20;
-const minSpeed: number = 0;
-const walkMaxSpeed: number = 5;
+// Speed levels while running; 0 means standing still
+const maxSpeedLevel = 10;
+const minSpeedLevel = 1;
+const startSpeedLevel = 4;
+const walkMaxSpeedLevel = 2;
+
+// World units per second the ground moves at a given level
+const baseWorldSpeed = 3.5;
+const worldSpeedPerLevel = 0.55;
+
+const pickupTint = 0x9dff9d;
+const hitTint = 0xff7070;
 
 class MainCharacter {
   private spriteSelector: SpriteSelector;
-  private currentSpeed = 1;
+  private speedLevel = 0;
 
   constructor() {
     this.spriteSelector = spriteSelector;
-    this.setSpeed(this.currentSpeed);
+    addResizeCallback(() => this.setPosition(getCharacterPosition()));
   }
 
   public getPosition() {
@@ -41,6 +51,14 @@ class MainCharacter {
 
   public getBoundingBox() {
     return this.spriteSelector.getPlayerBox();
+  }
+
+  public start() {
+    this.setSpeedLevel(startSpeedLevel);
+  }
+
+  public stop() {
+    this.setSpeedLevel(0);
   }
 
   public jump() {
@@ -58,60 +76,56 @@ class MainCharacter {
     spriteSelector.selectAnimation("idle");
   }
 
-  public getCurrentSpeed() {
-    return this.currentSpeed;
+  public getSpeedLevel() {
+    return this.speedLevel;
   }
 
-  public getMaxSpeed() {
-    return maxSpeed;
+  public getMaxSpeedLevel() {
+    return maxSpeedLevel;
   }
 
-  public decreaseSpeed(amount = 1) {
-    if (this.currentSpeed > 0) {
-      this.currentSpeed = this.currentSpeed - amount;
-    } else {
-      this.currentSpeed = 0;
+  public getWorldSpeed() {
+    if (this.speedLevel === 0) {
+      return 0;
     }
-    this.setSpeed(this.currentSpeed);
+    return baseWorldSpeed + worldSpeedPerLevel * this.speedLevel;
   }
 
   public increaseSpeed(amount = 1) {
-    if (this.currentSpeed < maxSpeed) {
-      this.currentSpeed = this.currentSpeed + amount;
-    } else {
-      this.currentSpeed = maxSpeed;
-    }
-    this.setSpeed(this.currentSpeed);
+    this.spriteSelector.flash(pickupTint);
+    this.setSpeedLevel(Math.min(maxSpeedLevel, this.speedLevel + amount));
   }
 
-  private setSpeed(speed: number) {
-    console.log("speed", speed);
+  // Setbacks slow the runner down but never stop them mid-run
+  public decreaseSpeed(amount = 2) {
+    this.spriteSelector.flash(hitTint);
+    this.setSpeedLevel(Math.max(minSpeedLevel, this.speedLevel - amount));
+  }
 
-    if (speed > maxSpeed) {
-      this.currentSpeed = maxSpeed;
-    }
-    if (speed < minSpeed) {
-      this.currentSpeed = minSpeed;
-    }
-    if (this.currentSpeed == 0) {
-      mainCharacter.idle();
-    } else if (this.currentSpeed > walkMaxSpeed) {
-      this.setRunSpeedDuration();
-    } else if (this.currentSpeed <= walkMaxSpeed) {
+  private setSpeedLevel(level: number) {
+    this.speedLevel = level;
+
+    if (level === 0) {
+      this.idle();
+    } else if (level <= walkMaxSpeedLevel) {
       this.setWalkSpeedDuration();
+    } else {
+      this.setRunSpeedDuration();
     }
   }
 
   private setWalkSpeedDuration() {
-    // max walk duration is 1.3 and max is 0.3 seconds
-    const translatedSpeedDuration = -0.25 * this.currentSpeed + 1.55;
+    // Walk cycle takes 0.8 seconds at level 1 and 0.65 at the top walk level
+    const translatedSpeedDuration = 0.8 - (this.speedLevel - 1) * 0.15;
     walk.setDuration(translatedSpeedDuration);
     this.walk();
   }
 
   private setRunSpeedDuration() {
-    // max run duration is 1 and min is 0.3 seconds
-    const translatedSpeedDuration = -0.05 * this.currentSpeed + 1.3;
+    // Run cycle takes 0.75 seconds just above walking and 0.45 at max speed
+    const runLevels = maxSpeedLevel - walkMaxSpeedLevel - 1;
+    const progress = (this.speedLevel - walkMaxSpeedLevel - 1) / runLevels;
+    const translatedSpeedDuration = 0.75 - progress * 0.3;
     run.setDuration(translatedSpeedDuration);
     this.run();
   }

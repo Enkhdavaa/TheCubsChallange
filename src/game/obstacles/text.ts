@@ -9,5 +9,4 @@ export const randomTexts = {
     "No Water",
     "No Sleep",
   ],
-  roadObstacles: ["beer", "banana", "puddle"],
 };

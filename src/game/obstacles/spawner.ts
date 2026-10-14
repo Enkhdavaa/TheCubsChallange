@@ -1,39 +1,46 @@
-import * as THREE from "three";
-import { helvetiker_regular_font } from "../helper/text3dFonts.ts";
 import { ObstacleManager } from "./obstracleManager.ts";
 import { randomTexts } from "./text.ts";
 import { TextObstacle } from "./textObstacle.ts";
-import { RoadObstracle } from "./roadObstracle.ts";
+import { RoadObstracle, roadIconNames } from "./roadObstracle.ts";
 import { getDeltaTime } from "../helper/frameCallback.ts";
+import { getCameraBounds } from "../camera.ts";
+import { getCharacterPosition } from "../positions.ts";
+import { mainCharacter } from "../characters/main/mainCharacter.ts";
+import { runState } from "../runState.ts";
+import { SETTINGS } from "../settings.ts";
 
-const BAD_OBSTACLE_SCALE = 0.2;
-const ROAD_OBSTACLE_SCALE = 0.4;
+const PICKUP_CHANCE = 0.45;
+const ROAD_ICON_CHANCE = 0.5;
 
-const goodMaterial = new THREE.MeshBasicMaterial({
-  color: 0x42f360,
-});
+// Seconds before the first obstacle, so the start is calm
+const FIRST_SPAWN_DELAY = 1.5;
+// No obstacles this close to the finish line
+const FINISH_CLEARANCE = 4;
 
-const badMaterial = new THREE.MeshBasicMaterial({
-  color: 0xee7257,
-});
-
-const combined = [
-  ...randomTexts["good"],
-  ...randomTexts["bad"],
-  ...randomTexts["roadObstacles"],
-];
+function pickRandom<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
 
 export class Spawner {
   private obstacleManager: ObstacleManager;
 
   private elapsed = 0;
-  private nextSpawnTime = this.getNextInterval();
+  private nextSpawnTime = FIRST_SPAWN_DELAY;
 
   constructor(obstacleManager: ObstacleManager) {
     this.obstacleManager = obstacleManager;
   }
 
+  public reset() {
+    this.elapsed = 0;
+    this.nextSpawnTime = FIRST_SPAWN_DELAY;
+  }
+
   public update() {
+    if (runState.phase !== "running") {
+      return;
+    }
+
     this.elapsed += getDeltaTime();
 
     if (this.elapsed >= this.nextSpawnTime) {
@@ -48,37 +55,26 @@ export class Spawner {
   }
 
   private spawn() {
-    const index = Math.floor(Math.random() * combined.length);
-    const obstacleText = combined[index];
-    const obstacle = this.createObstacle(obstacleText);
+    // Start off screen far enough that the edge marker shows for a moment
+    const { right } = getCameraBounds();
+    const leadDistance = mainCharacter.getWorldSpeed() * SETTINGS.WARNING_LEAD_TIME;
+    const startX = right + leadDistance;
 
-    if (obstacle) {
-      this.obstacleManager.addObstacle(obstacle);
+    const finishX = getCharacterPosition().x + runState.getRemainingUnits();
+    if (finishX < startX + FINISH_CLEARANCE) {
+      return;
     }
+
+    this.obstacleManager.addObstacle(this.createObstacle(startX));
   }
 
-  public createObstacle(obstacleText: string) {
-    if (randomTexts["good"].includes(obstacleText)) {
-      return new TextObstacle(
-        obstacleText,
-        BAD_OBSTACLE_SCALE,
-        helvetiker_regular_font,
-        goodMaterial
-      );
-    } else if (randomTexts["bad"].includes(obstacleText)) {
-      return new TextObstacle(
-        obstacleText,
-        BAD_OBSTACLE_SCALE,
-        helvetiker_regular_font,
-        badMaterial
-      );
-    } else if (randomTexts["roadObstacles"].includes(obstacleText)) {
-      return new RoadObstracle(
-        obstacleText,
-        `sprites/obstacle/${obstacleText}.png`,
-        ROAD_OBSTACLE_SCALE
-      );
+  private createObstacle(startX: number) {
+    if (Math.random() < PICKUP_CHANCE) {
+      return new TextObstacle(pickRandom(randomTexts.good), "pickup", startX);
     }
-    return null;
+    if (Math.random() < ROAD_ICON_CHANCE) {
+      return new RoadObstracle(pickRandom(roadIconNames), startX);
+    }
+    return new TextObstacle(pickRandom(randomTexts.bad), "hazard", startX);
   }
 }

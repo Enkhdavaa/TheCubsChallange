@@ -1,12 +1,6 @@
 import * as THREE from "three";
-import { orthographicCamera } from "./camera.ts";
-import { SETTINGS } from "./settings.ts";
-
-const {
-  MIN_INTERNAL_WIDTH: INTERNAL_WIDTH,
-  MIN_INTERNAL_HEIGHT: INTERNAL_HEIGHT,
-  ASPECT_RATIO: ASPECT_RATIO,
-} = SETTINGS;
+import { getViewAspect, orthographicCamera, setCameraAspect } from "./camera.ts";
+import { notifyResize } from "./helper/resizeCallback.ts";
 
 globalThis.addEventListener("resize", () => {
   resizeCanvas();
@@ -17,6 +11,7 @@ export const scene = new THREE.Scene();
 scene.add(orthographicCamera);
 
 // Renderer
+const container = document.querySelector<HTMLElement>(".game")!;
 const canvas = document.querySelector<HTMLCanvasElement>("canvas.webgl")!;
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
@@ -24,9 +19,13 @@ const renderer = new THREE.WebGLRenderer({
   alpha: false,
 });
 
-renderer.setSize(INTERNAL_WIDTH, INTERNAL_HEIGHT, false);
 renderer.setClearColor(0x000000, 1);
-renderer.setPixelRatio(1);
+
+// Uploads a loaded texture to the GPU now, so the first frame that
+// shows it doesn't stall
+export function preloadTexture(texture: THREE.Texture) {
+  renderer.initTexture(texture);
+}
 
 resizeCanvas();
 
@@ -40,20 +39,28 @@ tick();
 function resizeCanvas() {
   const winW = globalThis.innerWidth;
   const winH = globalThis.innerHeight;
-  const winAspect = winW / winH;
-
-  const targetAspect = ASPECT_RATIO;
+  const aspect = getViewAspect();
 
   let viewWidth, viewHeight;
 
-  if (winAspect > targetAspect) {
+  if (winW / winH > aspect) {
     viewHeight = winH;
-    viewWidth = viewHeight * targetAspect;
+    viewWidth = viewHeight * aspect;
   } else {
     viewWidth = winW;
-    viewHeight = viewWidth / targetAspect;
+    viewHeight = viewWidth / aspect;
   }
 
-  renderer.setSize(viewWidth, viewHeight);
+  viewWidth = Math.floor(viewWidth);
+  viewHeight = Math.floor(viewHeight);
+
+  // The container holds the canvas and the HUD overlays
+  container.style.width = `${viewWidth}px`;
+  container.style.height = `${viewHeight}px`;
+
   renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio, 2));
+  renderer.setSize(viewWidth, viewHeight);
+
+  setCameraAspect(aspect);
+  notifyResize();
 }

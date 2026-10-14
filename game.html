@@ -10,11 +10,50 @@
     <script type="module" src="/src/game/game.ts"></script>
   </head>
   <body>
-    <canvas class="webgl"></canvas>
-    <!-- <img
-      class="logo"
-      src="./assets/challenge/cubslogo_christmas.png"
-      alt="Background"
-    /> -->
+    <div class="game">
+      <canvas class="webgl"></canvas>
+
+      <div class="hud" id="hud">
+        <div class="hud-distance">
+          <div class="hud-label">
+            <span id="hud-distance-text">0.0</span> / <span data-goal-km></span> km
+          </div>
+          <div class="hud-bar">
+            <div class="hud-bar-fill" id="hud-distance-fill"></div>
+          </div>
+        </div>
+        <div class="hud-speed" id="hud-speed">
+          <div class="hud-label">Speed</div>
+          <div class="hud-pips" id="hud-speed-pips"></div>
+        </div>
+      </div>
+
+      <div class="overlay" id="start-screen">
+        <div class="card">
+          <h1>Reach the <span data-goal-km></span> km finish line</h1>
+          <ul class="legend">
+            <li>
+              <span class="badge badge-pickup">Long Run</span>
+              <span>Jump to grab good habits. They speed you up.</span>
+            </li>
+            <li>
+              <span class="badge badge-hazard">No Sleep</span>
+              <span>Jump over setbacks. They slow you down.</span>
+            </li>
+          </ul>
+          <p class="cta">Tap or press <kbd>Space</kbd> to start</p>
+        </div>
+      </div>
+
+      <div class="overlay" id="finish-screen" role="status">
+        <div class="card">
+          <h1>You ran <span data-goal-km></span> km!</h1>
+          <p class="stats" id="finish-stats"></p>
+          <p class="cta">Tap or press <kbd>Space</kbd> to run again</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="rotate-hint">Turn your phone sideways for a bigger view</p>
   </body>
 </html>

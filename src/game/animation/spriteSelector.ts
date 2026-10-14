@@ -22,6 +22,10 @@ export class SpriteSelector {
   private playerBoxHelper: THREE.Box3Helper;
 
   private boundingBoxDimensions: THREE.Vector3;
+  private boundingBoxOffset: THREE.Vector3;
+
+  private tintTimeLeft = 0;
+  private tintDuration = 0.3;
 
   constructor(
     spriteFlipBook: Map<string, SpriteFlipBook>,
@@ -42,17 +46,14 @@ export class SpriteSelector {
 
     this.playerBox = new THREE.Box3();
     this.playerBoxHelper = new THREE.Box3Helper(this.playerBox, 0xffff00);
-    this.playerBoxHelper.visible = true;
 
-    const sprite = this.currentSelected.getSprite();
-    this.boundingBoxDimensions = new THREE.Vector3(
-      sprite.scale.x / 4,
-      sprite.scale.y / 2,
-      0.1
-    );
+    // Match the visible body instead of the whole sprite frame
+    const { width, bottom, top } = SETTINGS.PLAYER_HITBOX;
+    this.boundingBoxDimensions = new THREE.Vector3(width, top - bottom, 0.1);
+    this.boundingBoxOffset = new THREE.Vector3(0, (top + bottom) / 2, 0);
 
     this.applyBoundingBox();
-    this.playerBoxHelper.visible = true;
+    this.playerBoxHelper.visible = SETTINGS.DEBUG;
 
     scene.add(this.playerBoxHelper);
   }
@@ -62,14 +63,36 @@ export class SpriteSelector {
       this.currentSelected.update();
       this.applyMovement();
       this.applyBoundingBox();
+      this.applyTint();
     });
   }
 
   private applyBoundingBox() {
     this.playerBox.setFromCenterAndSize(
-      this.currentSelected.getPosition(),
+      this.currentSelected.getPosition().clone().add(this.boundingBoxOffset),
       this.boundingBoxDimensions
     );
+  }
+
+  // Briefly color the runner, e.g. green for a pickup and red for a hit
+  public flash(color: THREE.ColorRepresentation) {
+    this.tintTimeLeft = this.tintDuration;
+    this.spriteFlipBooks.forEach((spriteFlipBook) => {
+      spriteFlipBook.setTint(color);
+    });
+  }
+
+  private applyTint() {
+    if (this.tintTimeLeft <= 0) {
+      return;
+    }
+
+    this.tintTimeLeft -= getDeltaTime();
+    if (this.tintTimeLeft <= 0) {
+      this.spriteFlipBooks.forEach((spriteFlipBook) => {
+        spriteFlipBook.setTint(0xffffff);
+      });
+    }
   }
 
   public collidedWith(otherBoxes: THREE.Box3[]) {

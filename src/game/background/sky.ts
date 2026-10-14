@@ -1,22 +1,35 @@
 import * as THREE from "three";
 import { scene } from "../scene.ts";
-import { addFrameCallback } from "../helper/frameCallback.ts";
+import { addFrameCallback, getDeltaTime } from "../helper/frameCallback.ts";
+import { getCameraBounds } from "../camera.ts";
+import { mainCharacter } from "../characters/main/mainCharacter.ts";
 
-const cloud1 = createPixelSprite(
-  "sprites/clouds/cloud1.png",
-  [-2, 2.5, -1],
-  [2, 1, 1]
-);
-const cloud2 = createPixelSprite(
-  "sprites/clouds/cloud2.png",
-  [1, 2.8, -1],
-  [1.5, 0.8, 1]
-);
+// Clouds drift slowly on their own and a little faster while running
+const clouds = [
+  {
+    sprite: createPixelSprite(
+      "sprites/clouds/cloud1.png",
+      [-2, 2.5, -1],
+      [2, 1, 1],
+    ),
+    drift: 0.25,
+    parallax: 0.06,
+  },
+  {
+    sprite: createPixelSprite(
+      "sprites/clouds/cloud2.png",
+      [1, 2.8, -1],
+      [1.5, 0.8, 1],
+    ),
+    drift: 0.15,
+    parallax: 0.04,
+  },
+];
 
 function createPixelSprite(
   url: string,
   position: [number, number, number],
-  scale: [number, number, number]
+  scale: [number, number, number],
 ) {
   const texture = new THREE.TextureLoader().load(url);
   texture.magFilter = THREE.NearestFilter;
@@ -33,15 +46,21 @@ function createPixelSprite(
 }
 
 function animate() {
-  cloud1.position.x += 0.005;
-  cloud2.position.x += 0.003;
-  // Loop clouds
-  if (cloud1.position.x > 9) cloud1.position.x = -9;
-  if (cloud2.position.x > 9) cloud2.position.x = -9;
+  const { left, right } = getCameraBounds();
+  const worldSpeed = mainCharacter.getWorldSpeed();
+
+  clouds.forEach(({ sprite, drift, parallax }) => {
+    sprite.position.x -= (drift + worldSpeed * parallax) * getDeltaTime();
+
+    // Loop clouds back in from the right
+    const halfWidth = sprite.scale.x / 2;
+    if (sprite.position.x < left - halfWidth) {
+      sprite.position.x = right + halfWidth;
+    }
+  });
 }
 
-scene.add(cloud1);
-scene.add(cloud2);
+clouds.forEach(({ sprite }) => scene.add(sprite));
 
 export const addSkyPlaneToScene = () => {
   addFrameCallback(animate);

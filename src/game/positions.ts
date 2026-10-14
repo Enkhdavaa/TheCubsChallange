@@ -1,43 +1,28 @@
-import { orthographicCamera } from "./camera.ts";
-import { getScreenAnchor } from "./helper/helper.ts";
+import * as THREE from "three";
+import { getCameraBounds } from "./camera.ts";
+import { SETTINGS } from "./settings.ts";
 
-const introTextPosition = { x: 0.5, y: 0.9 };
-const characterPosition = { x: 0.05, y: 0.15 };
-const textObstaclePosition = { x: 1, y: 0.55 };
-const roadObsraclePosition = { x: 1, y: 0.15 };
+const { PLAYER_FEET_OFFSET, PLAYER_HITBOX } = SETTINGS;
+
+// World units; the view is always 9 units tall, centered on 0
+const introTextY = 3.6;
+const runnerY = -3.15;
+// Distance from the left edge, so there is room to see what is coming
+const runnerOffsetX = 1.6;
+// Gap between the runner's head (hitbox top) and the pickup lane
+const pickupLaneGap = 0.45;
+
+// The line the runner's feet touch
+export const GROUND_Y = runnerY - PLAYER_FEET_OFFSET;
+
+// Pickups float just out of reach, so only a jump collects them
+export const PICKUP_LANE_BOTTOM_Y = runnerY + PLAYER_HITBOX.top + pickupLaneGap;
 
 export const getIntroTextPosition = () => {
-  const anchorPosition = getScreenAnchor(
-    introTextPosition.x,
-    introTextPosition.y,
-    orthographicCamera,
-  );
-  return anchorPosition;
+  return new THREE.Vector3(0, introTextY, 0);
 };
 
 export const getCharacterPosition = () => {
-  const anchorPosition = getScreenAnchor(
-    characterPosition.x,
-    characterPosition.y,
-    orthographicCamera,
-  );
-  return anchorPosition;
-};
-
-export const getTextObstaclePosition = () => {
-  const anchorPosition = getScreenAnchor(
-    textObstaclePosition.x,
-    textObstaclePosition.y,
-    orthographicCamera,
-  );
-  return anchorPosition;
-};
-
-export const getRoadObstaclePosition = () => {
-  const anchorPosition = getScreenAnchor(
-    roadObsraclePosition.x,
-    roadObsraclePosition.y,
-    orthographicCamera,
-  );
-  return anchorPosition;
+  const { left } = getCameraBounds();
+  return new THREE.Vector3(left + runnerOffsetX, runnerY, 0);
 };
