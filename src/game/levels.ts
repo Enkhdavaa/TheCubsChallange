@@ -51,7 +51,7 @@ export const LEVELS: Level[] = [
     scenery: "city",
     timeScale: 1.6,
     intro:
-      "Twice as far, through the city. Pick a pace you can hold for an hour. Red lights stop you: ease off when you see one, and use the wait to catch your breath.",
+      "Twice as far, through Eindhoven: past the Catharinakerk, the Witte Dame, the Evoluon and Strijp-S. Pick a pace you can hold for an hour. Red lights stop you: ease off when you see one, and use the wait to catch your breath.",
     finishTitle: "You ran a city 10K!",
     typicalFinish: "Most new runners finish a 10K in 60 to 80 minutes.",
     pickups: [

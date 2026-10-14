@@ -1,6 +1,8 @@
 import {
   createTileCanvas,
+  disc,
   PATH_TOP,
+  randomInt,
   Rect,
   TILE_HEIGHT,
   TILE_WIDTH,
@@ -17,18 +19,6 @@ const horizon = 80;
 const verge = pathTop - 3;
 
 const iron = "#2e3b3a";
-
-function randomInt(min: number, max: number) {
-  return min + Math.floor(Math.random() * (max - min + 1));
-}
-
-// A filled circle, drawn one row at a time
-function disc(rect: Rect, x: number, y: number, radius: number, color: string) {
-  for (let row = -radius; row <= radius; row++) {
-    const half = Math.round(Math.sqrt(radius ** 2 - row ** 2));
-    rect(x - half, y + row, half * 2 + 1, 1, color);
-  }
-}
 
 // A round crown on a trunk: shade on the lower right, light on the upper left
 function tree(rect: Rect, x: number, radius: number) {
@@ -74,11 +64,18 @@ function blossomTree(rect: Rect, x: number) {
   // Specks of blossom, light up top and deeper below, and a few fresh
   // leaves low down, where the blossom is thinner
   for (let i = 0; i < 30; i++) {
-    const [dx, dy, radius] = blossomPuffs[randomInt(0, blossomPuffs.length - 1)];
+    const [dx, dy, radius] =
+      blossomPuffs[randomInt(0, blossomPuffs.length - 1)];
     const spread = radius - 3;
     const row = randomInt(-spread, spread);
     const color = row < 0 ? "#fad4e1" : i % 3 === 0 ? "#5cb04c" : "#d4879f";
-    rect(x + dx - 1 + randomInt(-spread, spread), y + dy - 1 + row, 1, 1, color);
+    rect(
+      x + dx - 1 + randomInt(-spread, spread),
+      y + dy - 1 + row,
+      1,
+      1,
+      color,
+    );
   }
   for (let i = 0; i < 8; i++) {
     rect(x + randomInt(-16, 16), verge - randomInt(1, 2), 1, 1, "#fad4e1");
