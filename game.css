@@ -397,6 +397,10 @@ canvas {
 
 .game-title {
   flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
   margin: 0;
   color: var(--highlight);
   font-size: 2.3em;
@@ -408,6 +412,16 @@ canvas {
     0 2px var(--ink),
     0 -2px var(--ink),
     4px 4px var(--ink);
+}
+
+/* Outlined like the title text; the negative margin keeps the row from growing */
+.game-logo {
+  width: auto;
+  height: 1.15em;
+  margin: -0.15em 0;
+  filter: drop-shadow(2px 0 0 var(--ink)) drop-shadow(-2px 0 0 var(--ink))
+    drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 -2px 0 var(--ink))
+    drop-shadow(4px 4px 0 var(--ink));
 }
 
 .card {
